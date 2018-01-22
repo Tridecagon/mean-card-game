@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MaterialModule } from '../shared/material/material.module';
 
-import { ChatComponent } from './chat.component';
+import { PlayspaceComponent } from './playspace.component';
 import { SocketService } from './shared/services/socket.service';
 import { DialogUserComponent } from './dialog-user/dialog-user.component';
 
@@ -16,10 +16,10 @@ import { DialogUserComponent } from './dialog-user/dialog-user.component';
     MaterialModule
   ],
   exports: [
-    ChatComponent
+    PlayspaceComponent
   ],
-  declarations: [ChatComponent, DialogUserComponent],
+  declarations: [PlayspaceComponent, DialogUserComponent],
   providers: [SocketService],
   entryComponents: [DialogUserComponent]
 })
-export class ChatModule { }
+export class PlayspaceModule { }

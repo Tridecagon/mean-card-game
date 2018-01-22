@@ -6,17 +6,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatModule } from './chat/chat.module';
 import { SharedModule } from './shared/shared.module';
+import { PlayspaceModule } from './playspace/playspace.module';
+import { MainpanelComponent } from './mainpanel/mainpanel.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainpanelComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     ChatModule,
-    SharedModule
+    SharedModule,
+    PlayspaceModule
   ],
   providers: [],
   bootstrap: [AppComponent]
