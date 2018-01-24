@@ -1,4 +1,12 @@
+## Intention
+This project will become an app for hosting playing card games in the browser. I am using the wonderful SocketIO Typescript Chat project below as a starting point. The rest of the info in this file regards that project; more info regarding the card game engine as it's built.
+
+
+
+
 <p align="center">
+    <a href="https://github.com/tridecagon/mean-card-game">
+    </a>
     <a href="https://github.com/luixaviles/socket-io-typescript-chat">
         <img src="https://img.shields.io/github/stars/luixaviles/socket-io-typescript-chat.svg?style=social&label=Star" alt="GitHub stars">
     </a>
@@ -7,10 +15,6 @@
     </a>
 </p>
 
-A Socket.io Chat Example Using TypeScript
-=========================================
-
-This repository contains server & client side code using `TypeScript` language
 
 ## Blog Post
 Read the blog post with details about this project: [Real Time Apps with TypeScript: Integrating Web Sockets, Node & Angular](https://medium.com/dailyjs/real-time-apps-with-typescript-integrating-web-sockets-node-angular-e2b57cbd1ec1) 
