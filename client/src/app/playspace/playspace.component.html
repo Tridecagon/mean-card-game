@@ -1,5 +1,10 @@
 <div align="center">
   playspace works!
   <br>
-  <button (click)="onDealClick">Deal me in!</button>
+  <button (click)="onDealClick()">Deal me in!</button>
+  <ul>
+    <li>First list item</li>
+    <li *ngFor="let card of hand">{{card.suit}}{{card.rank}}"</li>
+    <li>Last list item</li>
+  </ul>
 </div>

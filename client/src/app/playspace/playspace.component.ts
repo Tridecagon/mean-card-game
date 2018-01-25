@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Card } from './shared/model/card';
+
 
 @Component({
   selector: 'tcc-playspace',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlayspaceComponent implements OnInit {
 
+  hand: Card[] = [];
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onDealClick() {
+    this.hand.push(
+      {
+        suit: "Spades",
+        rank: "Ace"
+      });
   }
 
 }
