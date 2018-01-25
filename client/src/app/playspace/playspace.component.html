@@ -3,8 +3,6 @@
   <br>
   <button (click)="onDealClick()">Deal me in!</button>
   <ul>
-    <li>First list item</li>
-    <li *ngFor="let card of hand">{{card.suit}}{{card.rank}}"</li>
-    <li>Last list item</li>
+    <li *ngFor="let card of hand">{{card.suit}} {{card.rank}}</li>
   </ul>
 </div>
