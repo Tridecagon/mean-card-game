@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from './shared/model/card';
+import { Card } from '../shared/model/card';
 
 
 @Component({
