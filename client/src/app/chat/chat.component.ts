@@ -22,7 +22,6 @@ export class ChatComponent implements OnInit {
   user: User;
   messages: Message[] = [];
   messageContent: string;
-  ioConnection: any;
   dialogRef: MatDialogRef<DialogUserComponent> | null;
   defaultDialogUserParams: any = {
     disableClose: true,
@@ -54,7 +53,7 @@ export class ChatComponent implements OnInit {
   private initIoConnection(): void {
     this.socketService.initSocket();
 
-    this.ioConnection = this.socketService.onMessage()
+      this.socketService.onMessage('chatMessage')
       .subscribe((message: Message) => {
         this.messages.push(message);
         Element

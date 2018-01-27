@@ -20,9 +20,19 @@ export class SocketService {
         this.socket.emit('message', message);
     }
 
-    public onMessage(): Observable<Message> {
+    public sendAction(actionType: string, data: any): void {
+        this.socket.emit(actionType, data);
+    }
+
+    public onMessage(messageType: string): Observable<Message> {
         return new Observable<Message>(observer => {
-            this.socket.on('message', (data: Message) => observer.next(data));
+            this.socket.on(messageType, (data: Message) => observer.next(data));
+        });
+    }
+
+    public onAction<T>(actionType: string): Observable<T> {
+        return new Observable<T>(observer => {
+            this.socket.on(actionType, (data: T) => observer.next(data));
         });
     }
 

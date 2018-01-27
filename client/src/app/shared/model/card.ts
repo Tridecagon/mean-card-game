@@ -1,4 +1,5 @@
 export interface Card {
 suit: string,
-rank: string
+description: string,
+sort?: number
 }

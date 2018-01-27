@@ -10,6 +10,8 @@ export class ChatServer {
     private server: Server;
     private io: SocketIO.Server;
     private port: string | number;
+    private shuffler: any;
+    private deck: any;
 
     constructor() {
         this.createApp();
@@ -17,6 +19,9 @@ export class ChatServer {
         this.createServer();
         this.sockets();
         this.listen();
+
+        this.shuffler = require('shuffle');
+        this.deck = this.shuffler.shuffle();
     }
 
     private createApp(): void {
@@ -44,7 +49,14 @@ export class ChatServer {
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: Message) => {
                 console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
+                this.io.emit('chatMessage', m);
+            });
+
+            socket.on('dealRequest', () => {
+                console.log('Dealing hand to socket ' + socket.id);
+                var newHand = this.deck.draw(5);
+                console.log(newHand);
+                socket.emit('dealResponse', newHand);
             });
 
             socket.on('disconnect', () => {
