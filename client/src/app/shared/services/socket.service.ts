@@ -11,9 +11,11 @@ const SERVER_URL = 'http://localhost:8080';
 @Injectable()
 export class SocketService {
     private socket;
+    public onInit: Event;
 
     public initSocket(): void {
-        this.socket = socketIo(SERVER_URL);
+        if(!this.socket)
+            this.socket = socketIo(SERVER_URL);
     }
 
     public send(message: Message): void {

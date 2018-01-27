@@ -1,11 +1,4 @@
 
-[mat-fab] {
-    position: absolute;
-    right: 2%;
-    top: 35px;
-    z-index: 1;
-}
-
 .chat-container {
     position: fixed;
     bottom:0px;

@@ -17,29 +17,25 @@ export class PlayspaceComponent implements OnInit {
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
+    this.setupListeners();
   
   }
 
   onDealClick() {
-    /*this.hand.push(
-      {
-        suit: "Spades",
-        description: "Ace"
-      });
-      */
-
-      // don't do this in the click handler; initialize sockets earlier and then do this on init
-      this.socketService.onAction<Array<Card>>('dealResponse')
-      .subscribe((newHand) => {
-        console.log(newHand);
-        this.hand = [];
-        for(let card of newHand)
-        {
-          this.hand.push(card);
-        }
-      });
-
       this.socketService.sendAction('dealRequest', '');
+  }
+
+  private setupListeners(): void{
+    this.socketService.initSocket();
+    this.socketService.onAction<Array<Card>>('dealResponse')
+    .subscribe((newHand) => {
+      console.log(newHand);
+      this.hand = [];
+      for(let card of newHand)
+      {
+        this.hand.push(card);
+      }
+    });
   }
 
   
