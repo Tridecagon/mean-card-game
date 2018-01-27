@@ -28,10 +28,11 @@ export class PlayspaceComponent implements OnInit {
       });
       */
 
+      // don't do this in the click handler; initialize sockets earlier and then do this on init
       this.socketService.onAction<Array<Card>>('dealResponse')
       .subscribe((newHand) => {
         console.log(newHand);
-        //this.hand = [];
+        this.hand = [];
         for(let card of newHand)
         {
           this.hand.push(card);
