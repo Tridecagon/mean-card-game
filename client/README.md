@@ -1,4 +1,4 @@
-# TypescriptChatClient
+# Card Game Engine
 
 This project uses Angular 5.
 

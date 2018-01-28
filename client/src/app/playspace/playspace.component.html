@@ -1,6 +1,7 @@
 <div class="playspace-container">
   <button (click)="onDealClick()">Deal me in!</button>
-  <ul>
-    <li *ngFor="let card of hand"><img src="{{card.imageString}}"></li>
-  </ul>
+  <div class="player-hand">
+      <img *ngFor="let card of hand" src="{{card.imageString}}" class="player-card">
+  </div>
+
 </div>
