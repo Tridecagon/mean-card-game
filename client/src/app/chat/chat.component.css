@@ -16,7 +16,7 @@
     top: 10px;
     left: 25px;
     right: 25px;
-    max-height: 60%;
+    max-height: 80%;
 }
 
 .chat-list-item {
@@ -33,7 +33,7 @@
 
 .chat-footer-container {
     position:fixed;
-    bottom:5px;
+    bottom:0px;
     left:25px;
     right:25px;
 }
