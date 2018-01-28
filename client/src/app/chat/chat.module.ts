@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material/material.module';
 
 import { ChatComponent } from './chat.component';
-import { SocketService } from '../shared/services/socket.service';
+ import { SocketService } from '../shared/services/socket.service';
 
 @NgModule({
   imports: [
