@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Card } from '../shared/model/card';
+import { User } from '../shared/model/user';
 
 import { Message } from '../shared/model/message';
 import { SocketService } from 'app/shared/services/socket.service';
@@ -10,15 +11,16 @@ import { SocketService } from 'app/shared/services/socket.service';
   templateUrl: './playspace.component.html',
   styleUrls: ['./playspace.component.css']
 })
+
 export class PlayspaceComponent implements OnInit {
 
+  @Input() user: User;
   hand: Card[] = [];
 
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
     this.setupListeners();
-  
   }
 
   onDealClick() {
@@ -31,13 +33,10 @@ export class PlayspaceComponent implements OnInit {
     .subscribe((newHand) => {
       console.log(newHand);
       this.hand = [];
-      for(let card of newHand)
+      for (const card of newHand)
       {
         this.hand.push(new Card(card.suit, card.description, card.sort));
       }
     });
   }
-
-  
-
 }

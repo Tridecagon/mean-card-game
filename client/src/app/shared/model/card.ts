@@ -18,9 +18,8 @@ public toString = function(){
 
 
 private setImageString(suit: string, sort: number): string {
-    //var suit = this.suit.toLowerCase();
-    var value;
-    switch(sort){
+  let value;
+  switch (sort) {
       case 11:
         value = 'J';
         break;

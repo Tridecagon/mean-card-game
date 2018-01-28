@@ -11,8 +11,7 @@ import { SocketService } from '../shared/services/socket.service';
 @Component({
   selector: 'tcc-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css'],
-  inputs: ['user']
+  styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
 
