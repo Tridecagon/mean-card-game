@@ -1,8 +1,12 @@
 export class Card {
-suit: string;
-description: string;
-sort?: number;
-imageString: './assets/img/deck/club-3.png';
+
+  suit: string;
+  description: string;
+  sort?: number;
+  imageString: string;
+public constructor(suit: string, description: string, sort?: number) {
+  this.imageString = this.setImageString(suit, sort);
+}
 
 public cardBackImage(): string {
     return 'back.png';
@@ -12,11 +16,11 @@ public toString = function(){
     return this.description + ' of ' + this.suit + 's';
   }
 
-  /*
-get imageString(): string {
-    var suit = this.suit.toLowerCase();
+
+private setImageString(suit: string, sort: number): string {
+    //var suit = this.suit.toLowerCase();
     var value;
-    switch(this.sort){
+    switch(sort){
       case 11:
         value = 'J';
         break;
@@ -30,9 +34,8 @@ get imageString(): string {
         value = 'A';
         break;
       default:
-        value = this.sort;
+        value = sort;
     }
-    return './assets/img/deck/' + suit + '-' + value + '.png';
+    return './assets/img/deck/' + suit.toLowerCase() + '-' + value + '.png';
   }
-  */
 }

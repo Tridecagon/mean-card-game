@@ -33,7 +33,7 @@ export class PlayspaceComponent implements OnInit {
       this.hand = [];
       for(let card of newHand)
       {
-        this.hand.push(card);
+        this.hand.push(new Card(card.suit, card.description, card.sort));
       }
     });
   }
