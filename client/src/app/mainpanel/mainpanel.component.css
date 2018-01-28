@@ -1,6 +1,6 @@
 [mat-fab] {
     position: absolute;
     right: 2%;
-    top: 35px;
+    top: -35px;
     z-index: 1;
 }
