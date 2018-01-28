@@ -27,7 +27,7 @@ export class PlayspaceComponent implements OnInit {
       this.socketService.sendAction('dealRequest', '');
   }
 
-  private setupListeners(): void{
+  private setupListeners(): void {
     this.socketService.initSocket();
     this.socketService.onAction<Array<Card>>('dealResponse')
     .subscribe((newHand) => {

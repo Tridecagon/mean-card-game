@@ -46,7 +46,6 @@ export class ChatComponent implements OnInit {
     this.socketService.onMessage('chatMessage')
     .subscribe((message: Message) => {
       this.messages.push(message);
-      Element
     });
   }
 }
