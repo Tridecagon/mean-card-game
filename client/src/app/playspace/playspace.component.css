@@ -6,14 +6,26 @@
     overflow-y: auto;
 }
 
+.playspace-felt-bound {
+    position: relative;
+    height: 55.5vh;
+    max-width: 93vh;
+    margin: auto;
+}
+
 .playspace-felt {
     position: absolute;
     width: 98%;
-    padding-bottom: 56.25%;
+    max-width: 93vh;
+    padding-bottom: 55%;
     background: green;
     border-radius: 5px;
     border: 5px;
-    margin: 1%;
+    margin: auto auto auto 1%;
+    height: 0;
+    top: 0;
+    bottom: 0;
+    box-sizing: border-box;
 }
 
 .player-hand {

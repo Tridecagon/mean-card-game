@@ -1,8 +1,10 @@
 <div class="playspace-container">
-  <div class="playspace-felt">
-    <button (click)="onDealClick()">Deal me in!</button>
-    <div class="player-hand">
-        <img *ngFor="let card of hand; let i = index" src="{{card.imageString}}" class="player-card" [style.left.%]="i * 4">
+  <div class="playspace-felt-bound">
+    <div class="playspace-felt">
+      <button (click)="onDealClick()">Deal me in!</button>
+      <div class="player-hand">
+          <img *ngFor="let card of hand; let i = index" src="{{card.imageString}}" class="player-card" [style.left.%]="i * 4">
+      </div>
     </div>
   </div>
 </div>
