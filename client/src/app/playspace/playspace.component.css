@@ -8,7 +8,7 @@
 
 .playspace-felt-bound {
     position: relative;
-    height: 55.5vh;
+    height: 55vh;
     max-width: 93vh;
     margin: auto;
 }
@@ -17,7 +17,7 @@
     position: absolute;
     width: 98%;
     max-width: 93vh;
-    padding-bottom: 55%;
+    padding-bottom: 56.25%;
     background: green;
     border-radius: 5px;
     border: 5px;
