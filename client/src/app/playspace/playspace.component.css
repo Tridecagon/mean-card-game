@@ -6,17 +6,27 @@
     overflow-y: auto;
 }
 
+.playspace-felt {
+    position: absolute;
+    width: 98%;
+    padding-bottom: 56.25%;
+    background: green;
+    border-radius: 5px;
+    border: 5px;
+    margin: 1%;
+}
+
 .player-hand {
-    position: relative;
-    bottom: 5%;
+    position: absolute;
     height: 20%;
-    width: 30%;
+    width: 30.4%;
+    left: 34.8%;
+    bottom: 5%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 28%;
 }
 
 img {
-    position: relative;
+    position: absolute;
     max-height: 100%;
 }
