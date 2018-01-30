@@ -19,7 +19,6 @@ public toString = function(){
   }
 
 public toggleSelection() {
-  console.log('ToggleSelection called');
   this.isSelected = !this.isSelected;
 }
 
