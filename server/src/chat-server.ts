@@ -56,7 +56,7 @@ export class ChatServer {
                 console.log('Dealing hand to socket ' + socket.id);
                 // temporary  reclaim deck
                 this.deck = this.shuffler.shuffle();
-                var newHand = this.deck.draw(21);
+                var newHand = this.deck.draw(13);
                 console.log(newHand);
                 socket.emit('dealResponse', newHand);
             });

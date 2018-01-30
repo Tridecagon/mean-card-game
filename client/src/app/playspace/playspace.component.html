@@ -3,7 +3,14 @@
     <div class="playspace-felt">
       <button (click)="onDealClick()">Deal me in!</button>
       <div class="player-hand">
-          <img *ngFor="let card of hand; let i = index" src="{{card.imageString}}" class="player-card" [style.left.%]="i * 4">
+        <div class="hand-wrapper">
+          <img *ngFor="let card of hand; let i = index" 
+            src="{{card.imageString}}" 
+            class="player-card" 
+            [style.left.%]="(i * 3.3) + ((26 - hand.length) * 1.65)" 
+            [style.top.%]="(!card.isSelected) * 25"
+            (click)="card.toggleSelection()">
+        </div>
       </div>
     </div>
   </div>

@@ -30,15 +30,24 @@
 
 .player-hand {
     position: absolute;
-    height: 20%;
-    width: 30.4%;
-    left: 34.8%;
-    bottom: 5%;
-    margin-left: auto;
+    height: 40%;
+    width: 100%;
+    left: 50%;
+    bottom: 1px;
+    margin-left: -50%;
     margin-right: auto;
+}
+
+.hand-wrapper {
+    overflow-y: hidden;
+    overflow-x: visible;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
 img {
     position: absolute;
     max-height: 100%;
+    overflow: hidden;
 }

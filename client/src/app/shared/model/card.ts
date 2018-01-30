@@ -4,8 +4,10 @@ export class Card {
   description: string;
   sort?: number;
   imageString: string;
+  isSelected: boolean;
 public constructor(suit: string, description: string, sort?: number) {
   this.imageString = this.setImageString(suit, sort);
+  this.isSelected = false;
 }
 
 public cardBackImage(): string {
@@ -15,6 +17,11 @@ public cardBackImage(): string {
 public toString = function(){
     return this.description + ' of ' + this.suit + 's';
   }
+
+public toggleSelection() {
+  console.log('ToggleSelection called');
+  this.isSelected = !this.isSelected;
+}
 
 
 private setImageString(suit: string, sort: number): string {
