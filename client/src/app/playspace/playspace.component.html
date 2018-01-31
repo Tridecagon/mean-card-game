@@ -9,7 +9,7 @@
             class="player-card" 
             [style.left.%]="(i * 3.3) + ((26 - hand.length) * 1.65)" 
             [style.top.%]="(!card.isSelected) * 25"
-            (click)="card.toggleSelection()">
+            (click)="onClick(card, i)">
         </div>
       </div>
     </div>

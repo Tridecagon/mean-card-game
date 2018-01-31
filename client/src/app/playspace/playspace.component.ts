@@ -16,6 +16,8 @@ export class PlayspaceComponent implements OnInit {
 
   @Input() user: User;
   hand: Card[] = [];
+  selectedCards: number[] = [];
+  maxSelectedCards = 1;
 
   constructor(private socketService: SocketService) { }
 
@@ -27,12 +29,31 @@ export class PlayspaceComponent implements OnInit {
       this.socketService.sendAction('dealRequest', '');
   }
 
+  onClick(card: Card, index: number) {
+    if (card.isSelected) {
+      console.log('Attempting to play ${card}');
+      this.socketService.sendAction('playRequest', card);
+    } else {
+      this.selectCard(card, index);
+    }
+  }
+
+  selectCard(card: Card, index: number) {
+    card.toggleSelection();
+    if (this.selectedCards.length === this.maxSelectedCards) {
+      const deselectCard = this.selectedCards.shift();
+      this.hand[deselectCard].toggleSelection();
+    }
+    this.selectedCards.push(index);
+  }
+
   private setupListeners(): void {
     this.socketService.initSocket();
     this.socketService.onAction<Array<Card>>('dealResponse')
     .subscribe((newHand) => {
       console.log(newHand);
       this.hand = [];
+      this.selectedCards = [];
       for (const card of newHand)
       {
         this.hand.push(new Card(card.suit, card.description, card.sort));
