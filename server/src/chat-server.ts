@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as socketIo from 'socket.io';
 
 import { Message } from './model';
+import { Card } from './model';
 
 export class ChatServer {
     public static readonly PORT:number = 8080;
@@ -12,6 +13,9 @@ export class ChatServer {
     private port: string | number;
     private shuffler: any;
     private deck: any;
+
+    private hand: Card[] = [];
+
 
     constructor() {
         this.createApp();
@@ -56,9 +60,15 @@ export class ChatServer {
                 console.log('Dealing hand to socket ' + socket.id);
                 // temporary  reclaim deck
                 this.deck = this.shuffler.shuffle();
-                var newHand = this.deck.draw(13);
-                console.log(newHand);
+                var newHand = this.deck.draw(10);
+                // console.log(newHand);
+
                 socket.emit('dealResponse', newHand);
+            });
+
+            socket.on('playRequest', (card: Card) => {
+                console.log(socket.id + ' trying to play ' + card.suit + ' ' + card.description);
+                socket.emit('playResponse', card);
             });
 
             socket.on('disconnect', () => {
