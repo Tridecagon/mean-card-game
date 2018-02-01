@@ -5,9 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:4200/",
+            "webRoot": "${workspaceFolder}/client/src"
+        },
+        {
+            "name": "Attach",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/client/src"
+        },
+        {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Debug Server",
             "program": "${workspaceFolder}/server/src/index.ts",
             "outFiles": [
                 "${workspaceFolder}/server/**/*.js"

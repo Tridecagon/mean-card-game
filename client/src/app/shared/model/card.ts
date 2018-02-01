@@ -1,11 +1,7 @@
 export class Card {
-
-  suit: string;
-  description: string;
-  sort?: number;
   imageString: string;
   isSelected: boolean;
-public constructor(suit: string, description: string, sort?: number) {
+public constructor(readonly suit: string, readonly description: string, readonly sort: number) {
   this.imageString = this.setImageString(suit, sort);
   this.isSelected = false;
 }
