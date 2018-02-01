@@ -14,8 +14,7 @@ export class SocketService {
     public onInit: Event;
 
     public initSocket(): void {
-        if (!this.socket)
-        {
+        if (!this.socket) {
             this.socket = socketIo(SERVER_URL);
         }
     }
