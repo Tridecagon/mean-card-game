@@ -68,7 +68,7 @@ export class ChatServer {
 
             socket.on('playRequest', (card: Card) => {
                 console.log(socket.id + ' trying to play ' + card.suit + ' ' + card.description);
-                socket.emit('playResponse', card);
+                this.io.emit('playResponse', card);
             });
 
             socket.on('disconnect', () => {
