@@ -1,4 +1,4 @@
-import { Card } from '.';
+import { Card } from '../../../shared/model';
 
 export class User {
     constructor(private name: string) {}

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Card } from '../shared/model/card';
+import { Card } from '../../../../shared/model/card';
 import { User } from '../shared/model/user';
 
 import { Message } from '../shared/model/message';

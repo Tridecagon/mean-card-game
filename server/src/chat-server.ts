@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as socketIo from 'socket.io';
 
 import { Message } from './model';
-import { Card } from './model';
+import { Card } from '../../shared/model';
 
 export class ChatServer {
     public static readonly PORT:number = 8080;
