@@ -7,12 +7,12 @@ import { SocketService } from 'app/shared/services/socket.service';
 
 
 @Component({
-  selector: 'tcc-playspace',
-  templateUrl: './playspace.component.html',
-  styleUrls: ['./playspace.component.css']
+  selector: 'tcc-tablespace',
+  templateUrl: './tablespace.component.html',
+  styleUrls: ['./tablespace.component.css']
 })
 
-export class PlayspaceComponent implements OnInit {
+export class TablespaceComponent implements OnInit {
 
   @Input() user: User;
   hand: Card[] = [];

@@ -1,4 +1,4 @@
-.playspace-container {
+.tablespace-container {
     position: relative;
     top:0px;
     width: 100%; 
@@ -6,14 +6,14 @@
     overflow-y: auto;
 }
 
-.playspace-felt-bound {
+.tablespace-felt-bound {
     position: relative;
     height: 55vh;
     max-width: 93vh;
     margin: auto;
 }
 
-.playspace-felt {
+.tablespace-felt {
     position: absolute;
     width: 98%;
     max-width: 93vh;

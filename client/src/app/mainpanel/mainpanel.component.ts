@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ChatModule } from '../chat/chat.module';
 import { ChatComponent } from '../chat/chat.component';
 import { SharedModule } from '../shared/shared.module';
-import { PlayspaceModule } from '../playspace/playspace.module';
-import { PlayspaceComponent } from '../playspace/playspace.component';
+import { TablespaceModule } from '../tablespace/tablespace.module';
+import { TablespaceComponent } from '../tablespace/tablespace.component';
 
 import { Action } from '../shared/model/action';
 import { Event } from '../shared/model/event';
@@ -30,7 +30,6 @@ const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 
 
 export class MainpanelComponent implements OnInit {
-  
   action = Action;
   user: User;
   dialogRef: MatDialogRef<DialogUserComponent> | null;
@@ -45,7 +44,7 @@ export class MainpanelComponent implements OnInit {
   constructor(private socketService: SocketService,
     public dialog: MatDialog) { }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.initModel();
     // Using timeout due to https://github.com/angular/angular/issues/14748
     setTimeout(() => {
@@ -78,7 +77,7 @@ export class MainpanelComponent implements OnInit {
       .subscribe(() => {
         console.log('connected');
       });
-      
+
     this.socketService.onEvent(Event.DISCONNECT)
       .subscribe(() => {
         console.log('disconnected');

@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatModule } from './chat/chat.module';
 import { SharedModule } from './shared/shared.module';
-import { PlayspaceModule } from './playspace/playspace.module';
+import { TablespaceModule } from './tablespace/tablespace.module';
 import { MainpanelComponent } from './mainpanel/mainpanel.component';
 
 import { SocketService } from './shared/services/socket.service';
@@ -28,7 +28,7 @@ import { DialogUserComponent } from 'app/dialog-user/dialog-user.component';
     AppRoutingModule,
     ChatModule,
     SharedModule,
-    PlayspaceModule,
+    TablespaceModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

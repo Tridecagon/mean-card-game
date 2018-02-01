@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlayspaceComponent } from './playspace.component';
+import { TablespaceComponent } from './tablespace.component';
 
-describe('PlayspaceComponent', () => {
-  let component: PlayspaceComponent;
-  let fixture: ComponentFixture<PlayspaceComponent>;
+describe('TablespaceComponent', () => {
+  let component: TablespaceComponent;
+  let fixture: ComponentFixture<TablespaceComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayspaceComponent ]
+      declarations: [ TablespaceComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PlayspaceComponent);
+    fixture = TestBed.createComponent(TablespaceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

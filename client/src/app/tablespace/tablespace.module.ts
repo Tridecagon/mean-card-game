@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '../shared/material/material.module';
 
-import { PlayspaceComponent } from './playspace.component';
+import { TablespaceComponent } from './tablespace.component';
 import { SocketService } from '../shared/services/socket.service';
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 
@@ -13,9 +13,9 @@ import { DialogUserComponent } from '../dialog-user/dialog-user.component';
     MaterialModule
   ],
   exports: [
-    PlayspaceComponent
+    TablespaceComponent
   ],
-  declarations: [PlayspaceComponent],
+  declarations: [TablespaceComponent],
   providers: [SocketService]
 })
-export class PlayspaceModule { }
+export class TablespaceModule { }
