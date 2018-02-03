@@ -30,10 +30,10 @@
 
 .player-hand {
     position: absolute;
-    height: 40%;
+    height: 100%;
     width: 100%;
     left: 50%;
-    bottom: 1px;
+    top: 0;
     margin-left: -50%;
     margin-right: auto;
 }
@@ -48,12 +48,6 @@
 
 .player-card {
     position: absolute;
-    height: 100%;
-    top: 0;
-}
-
-img {
-    position: absolute;
-    max-height: 100%;
-    overflow: hidden;
+    height: 40%;
+    width: 18%;
 }

@@ -1,9 +1,16 @@
-export class Card {  
-  imageString: string;
+export class Card {
   isSelected: boolean;
   state = "inHand";
+  face = 'down';
+  cardFlipping = 'in';
+  imageSrc: string;
+  storedImageSrc: string;
+  backImageSrc = 'back.png';
+
+
 public constructor(readonly suit: string, readonly description: string, readonly sort: number) {
-  this.imageString = this.setImageString(suit, sort);
+  this.storedImageSrc = this.setImageString(suit, sort);
+  this.imageSrc = this.backImageSrc;
   this.isSelected = false;
 }
 
@@ -21,6 +28,18 @@ public toggleSelection() {
 
 public play() {
   this.state = 'played';
+}
+
+public flip() {
+  this.face = this.face === 'up' ? 'down' : 'up';
+  this.cardFlipping = 'out';
+}
+
+public onFlipDone() {
+  if (this.cardFlipping === 'out' ) {
+      this.imageSrc = this.face === 'up' ? this.storedImageSrc : this.backImageSrc;
+      this.cardFlipping = 'in';
+  }
 }
 
 
@@ -42,6 +61,6 @@ private setImageString(suit: string, sort: number): string {
       default:
         value = sort;
     }
-    return './assets/img/deck/' + suit.toLowerCase() + '-' + value + '.png';
+    return suit.toLowerCase() + '-' + value + '.png';
   }
 }

@@ -15,14 +15,13 @@ import { SocketService } from 'app/shared/services/socket.service';
     trigger('playCard', [
         // state('void', style({left: '-50%'})),
         // state('inHand', style({left: '*'})),
-        state('played', style({ top: '-120%', left: '20%'})),
+        state('played', style({ top: '35%', left: '42%'})),
         // transition(':enter',  animate(300)),
         transition(
           '* => played', animate(200)),
         transition(
           ':enter', [
-            style({top: '-150%', left: '20%'}),
-            animate(300, style({top: '0%', left: '20%'})),
+            style({top: '35%', left: '42%'}),
             animate(300, style({top: '*', left: '*'}))
           ])
     ]),
