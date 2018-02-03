@@ -12,18 +12,20 @@ import { SocketService } from 'app/shared/services/socket.service';
   templateUrl: './tablespace.component.html',
   styleUrls: ['./tablespace.component.css'],
   animations: [
+    trigger('dealCard', [
+      transition(
+        ':enter', [
+          style({top: '35%', left: '42%'}),
+          animate(300, style({top: '*', left: '*'}))
+        ])
+    ]),
     trigger('playCard', [
         // state('void', style({left: '-50%'})),
         // state('inHand', style({left: '*'})),
         state('played', style({ top: '35%', left: '42%'})),
         // transition(':enter',  animate(300)),
         transition(
-          '* => played', animate(200)),
-        transition(
-          ':enter', [
-            style({top: '35%', left: '42%'}),
-            animate(300, style({top: '*', left: '*'}))
-          ])
+          '* => played', animate(200))
     ]),
     trigger('flipCard', [
       transition(
