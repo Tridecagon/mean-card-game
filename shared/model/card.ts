@@ -1,6 +1,7 @@
-export class Card {
+export class Card {  
   imageString: string;
   isSelected: boolean;
+  state = "inHand";
 public constructor(readonly suit: string, readonly description: string, readonly sort: number) {
   this.imageString = this.setImageString(suit, sort);
   this.isSelected = false;
@@ -16,6 +17,10 @@ public toString = function(){
 
 public toggleSelection() {
   this.isSelected = !this.isSelected;
+}
+
+public play() {
+  this.state = 'played';
 }
 
 
