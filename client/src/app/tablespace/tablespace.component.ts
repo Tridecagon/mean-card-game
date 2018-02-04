@@ -19,13 +19,12 @@ import { SocketService } from 'app/shared/services/socket.service';
           animate(300, style({top: '*', left: '*'}))
         ])
     ]),
-    trigger('playCard', [
-        // state('void', style({left: '-50%'})),
-        // state('inHand', style({left: '*'})),
-        state('played', style({ top: '35%', left: '42%'})),
-        // transition(':enter',  animate(300)),
+    trigger('playCard-bottom', [
         transition(
-          '* => played', animate(200))
+          '* => *', [
+         style({ top: '70%', left: '42%'}),
+         animate(200, style({top: '*', left: '*'}))
+          ])
     ]),
     trigger('flipCard', [
       transition(
@@ -50,6 +49,7 @@ export class TablespaceComponent implements OnInit {
   hand: Card[] = [];
   selectedCards: number[] = [];
   maxSelectedCards = 1;
+  playedCard: Card;
 
   constructor(private socketService: SocketService) { }
 
@@ -108,5 +108,6 @@ export class TablespaceComponent implements OnInit {
       this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
     }
     this.hand[i].play();
+    this.playedCard = this.hand.splice(i, 1)[0];
   }
 }

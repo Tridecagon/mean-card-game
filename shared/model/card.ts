@@ -1,3 +1,5 @@
+import { ElementRef } from "../../client/node_modules/@angular/core/src/linker/element_ref";
+
 export class Card {
   isSelected: boolean;
   state = "inHand";

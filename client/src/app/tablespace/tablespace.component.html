@@ -11,12 +11,19 @@
             [style.top.%]="card.isSelected ? 70 : 80"
             (click)="onClick(card, i)"
             [@dealCard]
-            (@dealCard.done)="card.flip()"
-            [@playCard]="card.state">
+            (@dealCard.done)="card.flip()">
             <img  src="./assets/img/deck/{{card.imageSrc}}" 
                   style="position:absolute; height: 100%; top: 0; width: 100%; left: 0"
                   [@flipCard]="card.cardFlipping"
                   (@flipCard.done)="card.onFlipDone()">
+          </div>
+          <div class="player-card"
+              [style.left.%]="42"
+              [style.top.%]="35"
+               [@playCard-bottom]="playedCard"
+               [hidden] = "!playedCard">
+               <img  src="./assets/img/deck/{{playedCard?.imageSrc}}" 
+                  style="position:absolute; height: 100%; top: 0; width: 100%; left: 0">
           </div>
         </div>
       </div>
