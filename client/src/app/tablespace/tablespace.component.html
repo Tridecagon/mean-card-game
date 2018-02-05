@@ -7,7 +7,7 @@
         <button [style.z-index] = 10 (click)="onDealClick()">Deal me in!</button>
           <div *ngFor="let card of hand; let i = index"
             class="player-card" 
-            [style.left.%]="(i * 3.3) + ((26 - hand.length) * 1.65) + .1" 
+            [style.left.%]="computeLeft(card, i)" 
             [style.top.%]="card.isSelected ? 70 : 80"
             (click)="onClick(card, i)"
             [@dealCard]
@@ -17,12 +17,12 @@
                   [@flipCard]="card.cardFlipping"
                   (@flipCard.done)="card.onFlipDone()">
           </div>
-          <div class="player-card"
+          <div *ngIf="playedCard" class="player-card"
               [style.left.%]="42"
               [style.top.%]="35"
-               [@playCard-bottom]="playedCard"
-               [hidden] = "!playedCard">
-               <img  src="./assets/img/deck/{{playedCard?.imageSrc}}" 
+               [@playCard-bottom]="{value: 'played', params: {leftStart: playedCard.leftPos}}"
+               (click)="playedCard = null">
+               <img  src="./assets/img/deck/{{playedCard.imageSrc}}" 
                   style="position:absolute; height: 100%; top: 0; width: 100%; left: 0">
           </div>
         </div>

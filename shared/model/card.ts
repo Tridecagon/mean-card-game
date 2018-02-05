@@ -8,6 +8,7 @@ export class Card {
   imageSrc: string;
   storedImageSrc: string;
   backImageSrc = 'back.png';
+  leftPos: number;
 
 
 public constructor(readonly suit: string, readonly description: string, readonly sort: number) {
