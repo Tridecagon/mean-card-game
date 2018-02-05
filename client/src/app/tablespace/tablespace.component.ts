@@ -20,7 +20,6 @@ import { SocketService } from 'app/shared/services/socket.service';
         ])
     ]),
     trigger('playCard-bottom', [
-      state('in',  style({top: '35%', left: '42%'})),
         transition(
           ':enter', [
          style({ top: '70%', left: '{{leftStart}}%'}),
