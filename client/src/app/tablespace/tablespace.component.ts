@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { trigger, style, state, transition, animate } from '@angular/animations';
-import { Card } from '../../../../shared/model/card';
+import {UiCard } from '../shared/model/uiCard';
 import { User } from '../shared/model/user';
-
+import { Card } from '../../../../shared/model/card';
 import { Message } from '../shared/model/message';
 import { SocketService } from 'app/shared/services/socket.service';
 
@@ -46,11 +46,10 @@ import { SocketService } from 'app/shared/services/socket.service';
 export class TablespaceComponent implements OnInit {
 
   @Input() user: User;
-  hand: Card[] = [];
+  hand: UiCard[] = [];
   selectedCards: number[] = [];
   maxSelectedCards = 1;
-  playedCard: Card;
-  playedCardState = 'in';
+  playedCard: UiCard;
 
   constructor(private socketService: SocketService) { }
 
@@ -62,16 +61,16 @@ export class TablespaceComponent implements OnInit {
       this.socketService.sendAction('dealRequest', '');
   }
 
-  onClick(card: Card, index: number) {
-    if (card.isSelected) {
+  onClick(clickedCard: UiCard, index: number) {
+    if (clickedCard.isSelected) {
       console.log('Attempting to play ${card}');
-      this.socketService.sendAction('playRequest', card);
+      this.socketService.sendAction('playRequest', clickedCard.card);
     } else {
-      this.selectCard(card, index);
+      this.selectCard(clickedCard, index);
     }
   }
 
-  selectCard(card: Card, index: number) {
+  selectCard(card: UiCard, index: number) {
     if (!card.isSelected) {
       card.toggleSelection();
       if (this.selectedCards.length === this.maxSelectedCards) {
@@ -91,7 +90,7 @@ export class TablespaceComponent implements OnInit {
         this.selectedCards = [];
         for (const card of newHand)
         {
-          this.hand.push(new Card(card.suit, card.description, card.sort));
+          this.hand.push(new UiCard(card));
         }
       });
 
@@ -103,22 +102,21 @@ export class TablespaceComponent implements OnInit {
   }
 
   private play(card: Card) {
-    const i = this.hand.findIndex(c => c.suit === card.suit && c.description === card.description);
+    const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
+    if (i < 0) {
+      console.log('Unable to find card ' + card);
+      return;
+    }
     if (this.hand[i].isSelected) {
       // remove it
       this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
     }
     this.hand[i].play();
-    this.playedCardState = 'out';
     this.playedCard = this.hand.splice(i, 1)[0];
   }
 
   computeLeft(card, i): number {
     card.leftPos = (i * 3.3) + ((26 - this.hand.length) * 1.65) + .1;
     return card.leftPos;
-  }
-
-  onPlayedCardDone() {
-    this.playedCardState = 'in';
   }
 }

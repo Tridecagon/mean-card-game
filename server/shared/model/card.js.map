@@ -1,0 +1,1 @@
+{"version":3,"sources":["../shared/model/card.ts"],"names":[],"mappings":";;AAAoG,CAAC","file":"../shared/model/card.js","sourcesContent":["export interface Card { readonly suit: string, readonly description: string, readonly sort: number };"],"sourceRoot":"C:\\Git\\card-game-engine\\server/src"}

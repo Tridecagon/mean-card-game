@@ -2,7 +2,8 @@
   "compileOnSave": false,
   "files": [
     "src/*.ts",
-    "src/model/*.ts"
+    "src/model/*.ts",
+    "../shared/**/*.ts"
   ],
   "compilerOptions": {
     "noImplicitAny": true,
