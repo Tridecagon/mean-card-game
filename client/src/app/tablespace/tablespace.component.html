@@ -1,31 +1,9 @@
 <div class="tablespace-container">
   <div class="tablespace-felt-bound">
     <div class="tablespace-felt">
-      
+      <button (click)="onDealClick()">Deal me in!</button>
       <div class="player-hand">
-        <div class="hand-wrapper">
-        <button [style.z-index] = 10 (click)="onDealClick()">Deal me in!</button>
-          <div *ngFor="let card of hand; let i = index"
-            class="player-card" 
-            [style.left.%]="computeLeft(card, i)" 
-            [style.top.%]="card.isSelected ? 70 : 80"
-            (click)="onClick(card, i)"
-            [@dealCard]
-            (@dealCard.done)="card.flip()">
-            <img  src="./assets/img/deck/{{card.imageSrc}}" 
-                  style="position:absolute; height: 100%; top: 0; width: 100%; left: 0"
-                  [@flipCard]="card.cardFlipping"
-                  (@flipCard.done)="card.onFlipDone()">
-          </div>
-          <div *ngIf="playedCard" class="player-card"
-              [style.left.%]="42"
-              [style.top.%]="35"
-               [@playCard-bottom]="{value: 'played', params: {leftStart: playedCard.leftPos}}"
-               (click)="playedCard = null">
-               <img  src="./assets/img/deck/{{playedCard.imageSrc}}" 
-                  style="position:absolute; height: 100%; top: 0; width: 100%; left: 0">
-          </div>
-        </div>
+        <tcc-hand></tcc-hand>
       </div>
     </div>
   </div>

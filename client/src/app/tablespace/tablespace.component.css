@@ -32,22 +32,13 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    left: 50%;
+    left: 0;
     top: 0;
-    margin-left: -50%;
-    margin-right: auto;
 }
 
-.hand-wrapper {
-    overflow-y: hidden;
-    overflow-x: visible;
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.player-card {
+button {
+    z-index: 10;
     position: absolute;
-    height: 40%;
-    width: 18%;
+    left: 5px;
+    top: 5px;
 }
