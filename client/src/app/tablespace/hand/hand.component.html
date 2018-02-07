@@ -1,4 +1,4 @@
-<div class="hand-wrapper">
+<div class="hand-wrapper" [style.transform]="getStyle()">
     <div *ngFor="let card of hand; let i = index"
       class="player-card" 
       [style.left.%]="computeLeft(card, i)" 

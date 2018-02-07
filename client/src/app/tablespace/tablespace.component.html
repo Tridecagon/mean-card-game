@@ -3,7 +3,9 @@
     <div class="tablespace-felt">
       <button (click)="onDealClick()">Deal me in!</button>
       <div class="player-hand">
-        <tcc-hand></tcc-hand>
+        <tcc-hand [player]="'opponent'" [location]="'top'"></tcc-hand>
+        <tcc-hand [player]="'opponent2'" [location]="'left'"></tcc-hand>
+        <tcc-hand [player]="user" [location]="'bottom'"></tcc-hand>
       </div>
     </div>
   </div>

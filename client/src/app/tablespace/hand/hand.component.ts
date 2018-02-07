@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UiCard } from 'app/shared/model/uiCard';
 import { Card } from '../../../../../shared/model/card';
+import { User } from 'app/shared/model/user';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { SocketService } from 'app/shared/services/socket.service';
+import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'tcc-hand',
@@ -46,7 +48,11 @@ export class HandComponent implements OnInit {
   hand: UiCard[] = [];
   playedCard: UiCard;
 
-  constructor(private socketService: SocketService) { }
+  @Input() player: User;
+  @Input() location: string;
+
+
+  constructor(private socketService: SocketService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.setupListeners();
@@ -109,5 +115,19 @@ export class HandComponent implements OnInit {
     }
     this.hand[i].play();
     this.playedCard = this.hand.splice(i, 1)[0];
+  }
+
+  private getStyle(): SafeStyle {
+
+    let retVal = '';
+    switch (this.location) {
+      case 'top':
+        retVal = 'rotateZ(180deg)';
+        break;
+      case 'left':
+        retVal = 'rotateZ(90deg)';
+        break;
+    }
+    return this.sanitizer.bypassSecurityTrustStyle(retVal);
   }
 }
