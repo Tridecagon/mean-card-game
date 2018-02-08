@@ -86,7 +86,7 @@ export class HandComponent implements OnInit {
     this.socketService.initSocket();
     this.socketService.onAction<Array<Card>>('dealResponse')
       .subscribe((newHand) => {
-        console.log(newHand);
+        // console.log(newHand);
         this.hand = [];
         this.selectedCards = [];
         for (const card of newHand)

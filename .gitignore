@@ -2,8 +2,9 @@
 
 ## server
 /server/node_modules
-/server/dist
+/server/dist/*
 /server/npm-debug.log
+/server/shared
 
 ## client
 # compiled output

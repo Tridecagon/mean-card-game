@@ -1,1 +1,0 @@
-{"version":3,"sources":["../shared/model/index.ts"],"names":[],"mappings":";;AAAA,mCAAkC;AAAzB,0BAAA,MAAM,CAAA","file":"../shared/model/index.js","sourcesContent":["export { Action } from './action';\r\nexport { Card } from './card';\r\nexport { Message } from './message';\r\nexport { User } from './user';"],"sourceRoot":"C:\\Git\\card-game-engine\\server/src"}
