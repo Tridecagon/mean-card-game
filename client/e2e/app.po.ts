@@ -6,6 +6,6 @@ export class TypescriptChatClientPage {
   }
 
   getParagraphText() {
-    return element(by.css('tcc-root h1')).getText();
+    return element(by.css('mcg-root h1')).getText();
   }
 }

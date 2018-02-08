@@ -9,7 +9,7 @@ import { SocketService } from '../shared/services/socket.service';
 
 
 @Component({
-  selector: 'tcc-chat',
+  selector: 'mcg-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })

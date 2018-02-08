@@ -7,7 +7,7 @@ import { SocketService } from 'app/shared/services/socket.service';
 import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'tcc-hand',
+  selector: 'mcg-hand',
   templateUrl: './hand.component.html',
   styleUrls: ['./hand.component.css'],
   animations: [

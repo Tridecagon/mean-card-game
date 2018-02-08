@@ -9,6 +9,6 @@ describe('typescript-chat-client App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to tcc!!');
+    expect(page.getParagraphText()).toEqual('Welcome to mcg!!');
   });
 });

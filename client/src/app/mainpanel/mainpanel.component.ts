@@ -22,7 +22,7 @@ import { SocketService } from 'app/shared/services/socket.service';
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 
 @Component({
-  selector: 'tcc-mainpanel',
+  selector: 'mcg-mainpanel',
   templateUrl: './mainpanel.component.html',
   styleUrls: ['./mainpanel.component.css']
 })

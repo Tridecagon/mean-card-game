@@ -7,7 +7,7 @@ import { SocketService } from 'app/shared/services/socket.service';
 
 
 @Component({
-  selector: 'tcc-tablespace',
+  selector: 'mcg-tablespace',
   templateUrl: './tablespace.component.html',
   styleUrls: ['./tablespace.component.css']
 })
