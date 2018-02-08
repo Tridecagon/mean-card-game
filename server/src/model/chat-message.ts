@@ -1,7 +1,6 @@
-import { Message, User } from './';
+import { Message, User, Action } from '../../../shared/model';
 
-export class ChatMessage extends Message{
-    constructor(from: User, content: string) {
-        super(from, content);
+export class ChatMessage implements Message{
+    constructor(readonly from: User, readonly content: string, readonly action: Action = null) {
     }
 }

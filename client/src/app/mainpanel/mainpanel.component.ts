@@ -6,10 +6,8 @@ import { SharedModule } from '../shared/shared.module';
 import { TablespaceModule } from '../tablespace/tablespace.module';
 import { TablespaceComponent } from '../tablespace/tablespace.component';
 
-import { Action } from '../shared/model/action';
+import { Action, Message, User } from '../../../../shared/model';
 import { Event } from '../shared/model/event';
-import { Message } from '../shared/model/message';
-import { User } from '../shared/model/user';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AfterViewInit, ViewChild } from '@angular/core';

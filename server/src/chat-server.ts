@@ -1,9 +1,9 @@
+import { Action } from '../../shared/model/action';
 import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-import { Message } from './model';
-import { Card } from '../../shared/model';
+import { Card, Message, User } from '../../shared/model';
 
 export class ChatServer {
     public static readonly PORT:number = 8080;
@@ -15,6 +15,7 @@ export class ChatServer {
     private deck: any;
 
     private hand: Card[] = [];
+    private users: User[] = [];
 
 
     constructor() {
@@ -53,6 +54,17 @@ export class ChatServer {
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: Message) => {
                 console.log('[server](message): %s', JSON.stringify(m));
+                switch (m.action) {
+                    case Action.JOINED:
+                    case Action.RENAME:
+                        this.users[socket.id] = m.from;
+                        break;
+                    case Action.LEFT:
+                        delete this.users[socket.id];
+                        break;
+                    default:
+                        break;
+                }
                 this.io.emit('chatMessage', m);
             });
 
@@ -67,7 +79,7 @@ export class ChatServer {
             });
 
             socket.on('playRequest', (card: Card) => {
-                console.log(socket.id + ' trying to play ' + card.suit + ' ' + card.description);
+                console.log(socket.id + ' request to play ' + card.suit + ' ' + card.description);
                 this.io.emit('playResponse', card);
             });
 

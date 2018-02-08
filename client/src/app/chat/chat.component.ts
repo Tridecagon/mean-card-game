@@ -1,9 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Action } from '../shared/model/action';
+import { Action, Message, User } from '../../../../shared/model';
 import { Event } from '../shared/model/event';
-import { Message } from '../shared/model/message';
-import { User } from '../shared/model/user';
 import { SocketService } from '../shared/services/socket.service';
 
 

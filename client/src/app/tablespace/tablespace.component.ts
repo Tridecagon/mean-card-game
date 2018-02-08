@@ -1,8 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {UiCard } from '../shared/model/uiCard';
-import { User } from '../shared/model/user';
-import { Card } from '../../../../shared/model/card';
-import { Message } from '../shared/model/message';
+import { Card, Message, User } from '../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 
 
