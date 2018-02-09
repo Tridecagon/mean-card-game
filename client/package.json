@@ -1,6 +1,6 @@
 {
-  "name": "typescript-chat-client",
-  "version": "0.0.0",
+  "name": "mean-card-game-client",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

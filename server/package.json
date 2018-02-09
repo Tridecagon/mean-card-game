@@ -1,9 +1,9 @@
 {
-  "name": "socket-io-typescript-example",
+  "name": "mean-card-game-engine",
   "version": "0.0.1",
-  "description": "A socket.io example written in TypeScript",
+  "description": "An engine for playing card games in Angular and Node",
   "main": "index.js",
-  "author": "Luis Aviles",
+  "author": "Dave Carlisle",
   "license": "MIT",
   "scripts": {
     "start": "node dist/src/index.js"
