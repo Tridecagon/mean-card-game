@@ -15,6 +15,7 @@
 
 .nameplate {
     position: relative;
+    overflow-y: visible;
     top: 93%;
     height: 7%;
     min-width: 10%;
@@ -25,6 +26,6 @@
     background-color: lightblue;
     border-color: darkgray;
     text-align: center;
-    line-height: 200%;
     font-family: Verdana, Geneva, sans-serif;
+    font-size: 100%;
 }

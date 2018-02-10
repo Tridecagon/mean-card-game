@@ -1,0 +1,28 @@
+<div class="lobby-container">
+    <mat-table #table [dataSource]="this.lobbyTables">
+
+      <ng-container matColumnDef="north">
+        <mat-header-cell *matHeaderCellDef> North </mat-header-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[2]}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="south">
+        <mat-header-cell *matHeaderCellDef> South </mat-header-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[0]}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="east">
+        <mat-header-cell *matHeaderCellDef> East </mat-header-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[3]}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="west">
+        <mat-header-cell *matHeaderCellDef> West </mat-header-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[1]}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  
+    </mat-table>
+</div>

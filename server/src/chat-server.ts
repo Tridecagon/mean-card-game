@@ -3,7 +3,7 @@ import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-import { Card, Message, User } from '../../shared/model';
+import { Card, Message, User, Table } from '../../shared/model';
 
 export class ChatServer {
     public static readonly PORT:number = 8080;
@@ -16,9 +16,11 @@ export class ChatServer {
 
     private hand: Card[] = [];
     private users: User[] = [];
+    private lobby: Table[] = [];
 
 
     constructor() {
+        this.dummySetup();
         this.createApp();
         this.config();
         this.createServer();
@@ -57,6 +59,7 @@ export class ChatServer {
                 switch (m.action) {
                     case Action.JOINED:
                     case Action.RENAME:
+                        socket.emit('lobbyState', this.lobby);
                         this.users[socket.id] = m.from;
                         break;
                     case Action.LEFT:
@@ -91,5 +94,11 @@ export class ChatServer {
 
     public getApp(): express.Application {
         return this.app;
+    }
+    private dummySetup() {
+        let nullUser: User = {id: null, name: null,  avatar: null}
+        let dummyUser1: User = {id: 123, name: 'dummyBob', avatar: null}
+        let dummyUser2: User = {id: 123, name: 'dummyAmy', avatar: null}
+        this.lobby = [{users: [nullUser, dummyUser1, nullUser, nullUser]}, {users: [dummyUser2, nullUser, nullUser, dummyUser1]}]
     }
 }
