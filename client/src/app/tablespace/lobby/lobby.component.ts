@@ -33,7 +33,6 @@ export class LobbyComponent implements OnInit {
 
 
   private populateLobby(lobbyState: Table[]) {
-    this.dataSource.connect();
     this.lobbyTables = lobbyState;
   }
 }
