@@ -124,10 +124,10 @@ export class HandComponent implements OnInit {
         retVal = 'rotateZ(180deg)';
         break;
       case 'left':
-        retVal = 'translateX(-21.875%) rotateZ(90deg)';
+        retVal = 'translateX(-21.45%) rotateZ(90deg)';
         break;
       case 'right':
-      retVal = 'translateX(21.875%) rotateZ(270deg)';
+      retVal = 'translateX(21.45%) rotateZ(270deg)';
         break;
     }
     return this.sanitizer.bypassSecurityTrustStyle(retVal);

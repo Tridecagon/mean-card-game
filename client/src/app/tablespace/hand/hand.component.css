@@ -12,3 +12,19 @@
     height: 40%;
     width: 18%;
 }
+
+.nameplate {
+    position: relative;
+    top: 93%;
+    height: 7%;
+    min-width: 10%;
+    max-width: 40%;
+    margin: auto;
+    border: 5px;
+    border-radius: 3px;
+    background-color: lightblue;
+    border-color: darkgray;
+    text-align: center;
+    line-height: 200%;
+    font-family: Verdana, Geneva, sans-serif;
+}
