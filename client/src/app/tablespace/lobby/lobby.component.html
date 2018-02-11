@@ -3,22 +3,22 @@
 
       <ng-container matColumnDef="north">
         <mat-header-cell *matHeaderCellDef> North </mat-header-cell>
-        <mat-cell *matCellDef="let table"> {{table.users[2]}} </mat-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[2].name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="south">
         <mat-header-cell *matHeaderCellDef> South </mat-header-cell>
-        <mat-cell *matCellDef="let table"> {{table.users[0]}} </mat-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[0].name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="east">
         <mat-header-cell *matHeaderCellDef> East </mat-header-cell>
-        <mat-cell *matCellDef="let table"> {{table.users[3]}} </mat-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[3].name}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="west">
         <mat-header-cell *matHeaderCellDef> West </mat-header-cell>
-        <mat-cell *matCellDef="let table"> {{table.users[1]}} </mat-cell>
+        <mat-cell *matCellDef="let table"> {{table.users[1].name}} </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

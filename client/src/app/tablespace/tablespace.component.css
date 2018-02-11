@@ -28,16 +28,7 @@
     box-sizing: border-box;
 }
 
-.lobby-container {
-    position: absolute;
-    max-height: 80%;
-    max-width: 80%;
-    top: 10%;
-    left: 10%;
-    overflow-y: auto;
-}
-
-.player-hand {
+.content-container {
     position: absolute;
     height: 100%;
     width: 100%;

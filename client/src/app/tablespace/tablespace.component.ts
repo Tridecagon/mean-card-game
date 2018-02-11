@@ -14,6 +14,8 @@ export class TablespaceComponent implements OnInit {
 
   @Input() user: User;
 
+  inGame = false;
+
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
@@ -22,6 +24,7 @@ export class TablespaceComponent implements OnInit {
   }
 
   onDealClick() {
+      this.inGame = true;
       this.socketService.sendAction('dealRequest', '');
   }
 }

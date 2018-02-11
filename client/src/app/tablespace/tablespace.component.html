@@ -3,10 +3,10 @@
     <div class="tablespace-felt">
       <button (click)="onDealClick()">Deal me in!</button>
       
-      <div class="lobby-container">
+      <div *ngIf="!inGame" class="content-container">
         <mcg-lobby></mcg-lobby>
       </div>
-      <div class="player-hand">
+      <div *ngIf="inGame" class="content-container">
         <mcg-hand [player]="'opponent'" [location]="'top'"></mcg-hand>
         <mcg-hand [player]="'opponent2'" [location]="'left'"></mcg-hand>
         <mcg-hand [player]="'opponent3'" [location]="'right'"></mcg-hand>
