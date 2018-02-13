@@ -18,10 +18,10 @@ export class ChatServer {
     private hand: Card[] = [];
     private users: User[] = [];
     private lobby: Table[] = [];
+    private seatMap: {table: number, seat: number}[] = [];
 
 
     constructor() {
-        //this.dummySetup();
         this.tableSetup();
         this.createApp();
         this.config();
@@ -92,8 +92,12 @@ export class ChatServer {
             });
 
             socket.on('requestSeat', (seatLoc: {table: number, seat: number}) => {
-                console.log(socket.id + ' request to sit at table ' + seatLoc.table + ' seat ' + seatLoc.seat);
+                if (this.seatMap[this.users[socket.id].id]) {
+                    this.lobby[this.seatMap[this.users[socket.id].id].table].users[this.seatMap[this.users[socket.id].id].seat] = {};
+                    delete this.seatMap[this.users[socket.id].id];
+                }
                 this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
+                this.seatMap[this.users[socket.id].id] = seatLoc;
                 this.io.emit('lobbyState', this.lobby);
             });
 
@@ -105,12 +109,6 @@ export class ChatServer {
 
     public getApp(): express.Application {
         return this.app;
-    }
-    private dummySetup() {
-        let nullUser: User = {id: null, name: null,  avatar: null}
-        let dummyUser1: User = {id: 123, name: 'dummyBob', avatar: null}
-        let dummyUser2: User = {id: 123, name: 'dummyAmy', avatar: null}
-        this.lobby = [{users: [nullUser, dummyUser1, nullUser, nullUser]}, {users: [dummyUser2, nullUser, nullUser, dummyUser1]}]
     }
 
     private tableSetup() {
