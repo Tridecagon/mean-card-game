@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "typescript-chat-client"
+    "name": "mean-card-game-engine"
   },
   "apps": [
     {

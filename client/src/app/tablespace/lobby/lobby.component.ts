@@ -35,4 +35,8 @@ export class LobbyComponent implements OnInit {
   private populateLobby(lobbyState: Table[]) {
     this.lobbyTables = lobbyState;
   }
+
+  private onSeatClick(event: any) {
+    console.log(event);
+  }
 }
