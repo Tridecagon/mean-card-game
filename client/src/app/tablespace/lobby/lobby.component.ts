@@ -39,4 +39,9 @@ export class LobbyComponent implements OnInit {
   private onSeatClick(event: any) {
     console.log(event);
   }
+
+  private onSeatClick2(table: number, seat: number) {
+    console.log(`Table ${table} Seat ${seat}`);
+    this.socketService.sendAction('requestSeat', {'table': table, 'seat': seat});
+  }
 }

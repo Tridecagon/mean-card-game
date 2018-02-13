@@ -13,6 +13,7 @@ export class ChatServer {
     private port: string | number;
     private shuffler: any;
     private deck: any;
+    private maxTables = 5;
 
     private hand: Card[] = [];
     private users: User[] = [];
@@ -20,7 +21,8 @@ export class ChatServer {
 
 
     constructor() {
-        this.dummySetup();
+        //this.dummySetup();
+        this.tableSetup();
         this.createApp();
         this.config();
         this.createServer();
@@ -58,9 +60,12 @@ export class ChatServer {
                 console.log('[server](message): %s', JSON.stringify(m));
                 switch (m.action) {
                     case Action.JOINED:
-                    case Action.RENAME:
                         socket.emit('lobbyState', this.lobby);
                         this.users[socket.id] = m.from;
+                        break;
+                    case Action.RENAME:
+                        this.users[socket.id] = m.from;
+                        this.io.emit('lobbyState', this.lobby);
                         break;
                     case Action.LEFT:
                         delete this.users[socket.id];
@@ -86,6 +91,12 @@ export class ChatServer {
                 this.io.emit('playResponse', card);
             });
 
+            socket.on('requestSeat', (seatLoc: {table: number, seat: number}) => {
+                console.log(socket.id + ' request to sit at table ' + seatLoc.table + ' seat ' + seatLoc.seat);
+                this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
+                this.io.emit('lobbyState', this.lobby);
+            });
+
             socket.on('disconnect', () => {
                 console.log('Client disconnected');
             });
@@ -100,5 +111,12 @@ export class ChatServer {
         let dummyUser1: User = {id: 123, name: 'dummyBob', avatar: null}
         let dummyUser2: User = {id: 123, name: 'dummyAmy', avatar: null}
         this.lobby = [{users: [nullUser, dummyUser1, nullUser, nullUser]}, {users: [dummyUser2, nullUser, nullUser, dummyUser1]}]
+    }
+
+    private tableSetup() {
+        for (let i = 0; i < this.maxTables; i++) {
+            let emptyTable: Table = {users: [{}, {}, {}, {}]};
+            this.lobby.push(emptyTable);
+        }
     }
 }
