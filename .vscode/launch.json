@@ -24,9 +24,13 @@
             "request": "launch",
             "name": "Launch Debug Server",
             "program": "${workspaceFolder}/server/src/index.ts",
+            "sourceMaps": true,
             "outFiles": [
-                "${workspaceFolder}/server/**/*.js"
-            ]
+                "${workspaceFolder}/server/dist/src/*.js",
+                "${workspaceFolder}/server/dist/**/*.js",
+                "${workspaceFolder}/server/shared/**/*.js"
+            ],
+            "trace": true
         }
     ]
 }

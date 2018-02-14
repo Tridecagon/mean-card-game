@@ -64,11 +64,15 @@ export class ChatServer {
                         this.users[socket.id] = m.from;
                         break;
                     case Action.RENAME:
+                        let seatLoc = this.seatMap[(this.users[socket.id]).id];
                         this.users[socket.id] = m.from;
+                        this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
                         this.io.emit('lobbyState', this.lobby);
                         break;
                     case Action.LEFT:
+                        this.unseatUser(socket.id);
                         delete this.users[socket.id];
+                        this.io.emit('lobbyState', this.lobby);
                         break;
                     default:
                         break;
@@ -92,10 +96,8 @@ export class ChatServer {
             });
 
             socket.on('requestSeat', (seatLoc: {table: number, seat: number}) => {
-                if (this.seatMap[this.users[socket.id].id]) {
-                    this.lobby[this.seatMap[this.users[socket.id].id].table].users[this.seatMap[this.users[socket.id].id].seat] = {};
-                    delete this.seatMap[this.users[socket.id].id];
-                }
+                this.unseatUser(socket.id);
+
                 this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
                 this.seatMap[this.users[socket.id].id] = seatLoc;
                 this.io.emit('lobbyState', this.lobby);
@@ -115,6 +117,13 @@ export class ChatServer {
         for (let i = 0; i < this.maxTables; i++) {
             let emptyTable: Table = {users: [{}, {}, {}, {}]};
             this.lobby.push(emptyTable);
+        }
+    }
+
+    private unseatUser(socketId: any) {
+        if (this.seatMap[(this.users[socketId]).id]) {
+            this.lobby[this.seatMap[this.users[socketId].id].table].users[this.seatMap[this.users[socketId].id].seat] = {};
+            delete this.seatMap[this.users[socketId].id];
         }
     }
 }
