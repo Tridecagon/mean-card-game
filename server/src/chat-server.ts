@@ -66,8 +66,10 @@ export class ChatServer {
                     case Action.RENAME:
                         let seatLoc = this.seatMap[(this.users[socket.id]).id];
                         this.users[socket.id] = m.from;
-                        this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
-                        this.io.emit('lobbyState', this.lobby);
+                        if (seatLoc) {
+                            this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
+                            this.io.emit('lobbyState', this.lobby);
+                        }
                         break;
                     case Action.LEFT:
                         this.unseatUser(socket.id);
@@ -120,7 +122,7 @@ export class ChatServer {
         }
     }
 
-    private unseatUser(socketId: any) {
+    private unseatUser = (socketId: any) => {
         if (this.seatMap[(this.users[socketId]).id]) {
             this.lobby[this.seatMap[this.users[socketId].id].table].users[this.seatMap[this.users[socketId].id].seat] = {};
             delete this.seatMap[this.users[socketId].id];
