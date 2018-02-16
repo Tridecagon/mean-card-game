@@ -64,7 +64,7 @@ export class ChatServer {
                         this.users[socket.id] = m.from;
                         break;
                     case Action.RENAME:
-                        let seatLoc = this.seatMap[(this.users[socket.id]).id];
+                        let seatLoc = this.seatMap[this.users[socket.id].id];
                         this.users[socket.id].name = m.content.username;
                         if (seatLoc) {
                             this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
@@ -101,12 +101,24 @@ export class ChatServer {
                 this.unseatUser(socket.id);
 
                 this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
+                this.lobby[seatLoc.table].userCount++;
                 this.seatMap[this.users[socket.id].id] = seatLoc;
                 this.io.emit('lobbyState', this.lobby);
             });
 
+            socket.on('requestStartTable', (tableIndex: number) => {
+                if (this.seatMap[this.users[socket.id].id].table == tableIndex && this.lobby[tableIndex].userCount > 1) {
+                    this.lobby[tableIndex].active = true;
+                    this.io.emit('lobbyState', this.lobby);
+                }
+
+            });
+
             socket.on('disconnect', () => {
-                console.log('Client disconnected');
+                this.unseatUser(socket.id);
+                console.log(`Client ${this.users[socket.id] ? this.users[socket.id].name : 'unnamed user'} disconnected`);
+                delete this.users[socket.id];
+                this.io.emit('lobbyState', this.lobby);
             });
         });
     }
@@ -117,14 +129,18 @@ export class ChatServer {
 
     private tableSetup() {
         for (let i = 0; i < this.maxTables; i++) {
-            let emptyTable: Table = {users: [{}, {}, {}, {}]};
+            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}]};
             this.lobby.push(emptyTable);
         }
     }
 
-    private unseatUser = (socketId: any) => {
-        if (this.seatMap[(this.users[socketId]).id]) {
+       private unseatUser = (socketId: any) => {
+    //     console.log(socketId);
+    //     console.log(this.users);
+    //     console.log(this.seatMap);
+        if (this.users[socketId] && this.seatMap[this.users[socketId].id]) {
             this.lobby[this.seatMap[this.users[socketId].id].table].users[this.seatMap[this.users[socketId].id].seat] = {};
+            this.lobby[this.seatMap[this.users[socketId].id].table].userCount--;
             delete this.seatMap[this.users[socketId].id];
         }
     }

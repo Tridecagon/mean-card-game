@@ -11,7 +11,7 @@ import {MatTableDataSource} from '@angular/material';
 export class LobbyComponent implements OnInit {
 
   lobbyTables: Table[];
-  displayedColumns = ['north', 'south', 'east', 'west'];
+  displayedColumns = ['north', 'south', 'east', 'west', 'start'];
   dataSource: MatTableDataSource<Table>;
 
   constructor(private socketService: SocketService) { }
@@ -27,20 +27,15 @@ export class LobbyComponent implements OnInit {
     this.socketService.onAction<Array<Table>>('lobbyState')
       .subscribe((lobbyState) => {
         // bind data to mat table
-        this.populateLobby(lobbyState);
+        this.lobbyTables = lobbyState;
       });
   }
 
-
-  private populateLobby(lobbyState: Table[]) {
-    this.lobbyTables = lobbyState;
+  private onStartClick(table: number) {
+    this.socketService.sendAction('requestStartTable', table)
   }
 
-  private onSeatClick(event: any) {
-    console.log(event);
-  }
-
-  private onSeatClick2(table: number, seat: number) {
+  private onSeatClick(table: number, seat: number) {
     console.log(`Table ${table} Seat ${seat}`);
     this.socketService.sendAction('requestSeat', {'table': table, 'seat': seat});
   }

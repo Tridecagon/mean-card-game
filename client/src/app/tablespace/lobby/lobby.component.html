@@ -4,7 +4,7 @@
       <ng-container matColumnDef="north">
         <mat-header-cell *matHeaderCellDef> North </mat-header-cell>
         <mat-cell *matCellDef="let table; let i = index">
-          <button *ngIf="!table.users[2]?.name" mat-raised-button color="primary" (click)="onSeatClick2(i, 2)">Sit here</button>
+          <button *ngIf="!table.users[2]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 2)">Sit here</button>
           <button *ngIf="table.users[2]?.name" mat-raised-button color="accent">{{table.users[2].name}}</button>
         </mat-cell>
       </ng-container>
@@ -12,7 +12,7 @@
       <ng-container matColumnDef="south">
         <mat-header-cell *matHeaderCellDef> South </mat-header-cell>
         <mat-cell *matCellDef="let table; let i = index">
-            <button *ngIf="!table.users[0]?.name" mat-raised-button color="primary" (click)="onSeatClick2(i, 0)">Sit here</button>
+            <button *ngIf="!table.users[0]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 0)">Sit here</button>
             <button *ngIf="table.users[0]?.name" mat-raised-button color="accent">{{table.users[0].name}}</button>
           </mat-cell>
       </ng-container>
@@ -20,7 +20,7 @@
       <ng-container matColumnDef="east">
         <mat-header-cell *matHeaderCellDef> East </mat-header-cell>
         <mat-cell *matCellDef="let table; let i = index">
-            <button *ngIf="!table.users[3]?.name" mat-raised-button color="primary" (click)="onSeatClick2(i, 3)">Sit here</button>
+            <button *ngIf="!table.users[3]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 3)">Sit here</button>
             <button *ngIf="table.users[3]?.name" mat-raised-button color="accent">{{table.users[3].name}}</button>
           </mat-cell>
       </ng-container>
@@ -28,8 +28,15 @@
       <ng-container matColumnDef="west">
         <mat-header-cell *matHeaderCellDef> West </mat-header-cell>
         <mat-cell *matCellDef="let table; let i = index">
-            <button *ngIf="!table.users[1]?.name" mat-raised-button color="primary" (click)="onSeatClick2(i, 1)">Sit here</button>
+            <button *ngIf="!table.users[1]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 1)">Sit here</button>
             <button *ngIf="table.users[1]?.name" mat-raised-button color="accent">{{table.users[1].name}}</button>
+          </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="start">
+        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+        <mat-cell *matCellDef="let table; let i = index">
+            <button [disabled]="table.active" mat-button (click)="onStartClick(i)">Start game!</button>
           </mat-cell>
       </ng-container>
 
