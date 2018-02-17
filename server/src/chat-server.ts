@@ -19,6 +19,7 @@ export class ChatServer {
     private users: User[] = [];
     private lobby: Table[] = [];
     private seatMap: {table: number, seat: number}[] = [];
+    private socketMap: string[] = [];
 
 
     constructor() {
@@ -62,6 +63,7 @@ export class ChatServer {
                     case Action.JOINED:
                         socket.emit('lobbyState', this.lobby);
                         this.users[socket.id] = m.from;
+                        this.socketMap[m.from.id] = socket.id;
                         break;
                     case Action.RENAME:
                         let seatLoc = this.seatMap[this.users[socket.id].id];
@@ -73,6 +75,7 @@ export class ChatServer {
                         break;
                     case Action.LEFT:
                         this.unseatUser(socket.id);
+                        delete this.socketMap[this.users[socket.id].id];
                         delete this.users[socket.id];
                         this.io.emit('lobbyState', this.lobby);
                         break;
@@ -112,6 +115,8 @@ export class ChatServer {
                     this.io.emit('lobbyState', this.lobby);
                 }
 
+
+
             });
 
             socket.on('disconnect', () => {
@@ -135,9 +140,6 @@ export class ChatServer {
     }
 
        private unseatUser = (socketId: any) => {
-    //     console.log(socketId);
-    //     console.log(this.users);
-    //     console.log(this.seatMap);
         if (this.users[socketId] && this.seatMap[this.users[socketId].id]) {
             this.lobby[this.seatMap[this.users[socketId].id].table].users[this.seatMap[this.users[socketId].id].seat] = {};
             this.lobby[this.seatMap[this.users[socketId].id].table].userCount--;
