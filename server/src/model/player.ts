@@ -1,8 +1,8 @@
 import { Card, User } from '../../../shared/model';
 
 export class Player {
-    constructor(private user: User) {}
+    constructor(public user: User, public socket: SocketIO.Socket) {}
 
-    public socketId: any;
+
     public heldCards?: Card[] = [];
 }

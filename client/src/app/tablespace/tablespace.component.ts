@@ -19,12 +19,16 @@ export class TablespaceComponent implements OnInit {
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
-    this.socketService.initSocket();
+    this.setupListeners();
     // setupListeners instead if any are required
   }
 
-  onDealClick() {
-      this.inGame = true;
-      this.socketService.sendAction('dealRequest', '');
+  private setupListeners(): void {
+    this.socketService.initSocket();
+    this.socketService.onAction<number>('startTable')
+      .subscribe((tableId) => {
+        // bind data to mat table
+        this.inGame = true;
+      });
   }
 }

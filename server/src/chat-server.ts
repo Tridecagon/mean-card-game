@@ -1,9 +1,10 @@
-import { Action } from '../../shared/model/action';
 import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-import { Card, Message, User, Table } from '../../shared/model';
+import { Message, User, Table, Action } from '../../shared/model';
+import { GameTable } from '.';
+import { Player } from './model';
 
 export class ChatServer {
     public static readonly PORT:number = 8080;
@@ -11,15 +12,12 @@ export class ChatServer {
     private server: Server;
     private io: SocketIO.Server;
     private port: string | number;
-    private shuffler: any;
-    private deck: any;
     private maxTables = 5;
 
-    private hand: Card[] = [];
     private users: User[] = [];
     private lobby: Table[] = [];
     private seatMap: {table: number, seat: number}[] = [];
-    private socketMap: string[] = [];
+    private socketMap: any[] = [];
 
 
     constructor() {
@@ -30,8 +28,6 @@ export class ChatServer {
         this.sockets();
         this.listen();
 
-        this.shuffler = require('shuffle');
-        this.deck = this.shuffler.shuffle();
     }
 
     private createApp(): void {
@@ -63,7 +59,7 @@ export class ChatServer {
                     case Action.JOINED:
                         socket.emit('lobbyState', this.lobby);
                         this.users[socket.id] = m.from;
-                        this.socketMap[m.from.id] = socket.id;
+                        this.socketMap[m.from.id] = socket;
                         break;
                     case Action.RENAME:
                         let seatLoc = this.seatMap[this.users[socket.id].id];
@@ -85,21 +81,6 @@ export class ChatServer {
                 this.io.emit('chatMessage', m);
             });
 
-            socket.on('dealRequest', () => {
-                console.log('Dealing hand to socket ' + socket.id);
-                // temporary  reclaim deck
-                this.deck = this.shuffler.shuffle();
-                var newHand = this.deck.draw(10);
-                // console.log(newHand);
-
-                socket.emit('dealResponse', newHand);
-            });
-
-            socket.on('playRequest', (card: Card) => {
-                console.log(socket.id + ' request to play ' + card.suit + ' ' + card.description);
-                this.io.emit('playResponse', card);
-            });
-
             socket.on('requestSeat', (seatLoc: {table: number, seat: number}) => {
                 this.unseatUser(socket.id);
 
@@ -113,9 +94,16 @@ export class ChatServer {
                 if (this.seatMap[this.users[socket.id].id].table == tableIndex && this.lobby[tableIndex].userCount > 1) {
                     this.lobby[tableIndex].active = true;
                     this.io.emit('lobbyState', this.lobby);
+
+                    let tablePlayers = new Array<Player>();
+                    for (let user of this.lobby[tableIndex].users) {
+                        if(user && user.id) {
+                            tablePlayers.push(new Player(user, this.socketMap[user.id]));
+                        }
+                    }
+
+                    var activeTable = new GameTable(tablePlayers, tableIndex, this.io);
                 }
-
-
 
             });
 
