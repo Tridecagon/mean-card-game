@@ -7,7 +7,8 @@ import { SocketService } from 'app/shared/services/socket.service';
 @Component({
   selector: 'mcg-tablespace',
   templateUrl: './tablespace.component.html',
-  styleUrls: ['./tablespace.component.css']
+  styleUrls: ['./tablespace.component.css'],
+  providers: [ SocketService ]
 })
 
 export class TablespaceComponent implements OnInit {
@@ -27,8 +28,9 @@ export class TablespaceComponent implements OnInit {
     this.socketService.initSocket();
     this.socketService.onAction<number>('startTable')
       .subscribe((tableId) => {
-        // bind data to mat table
         this.inGame = true;
+        // TODO: separate sockets (namespace) for each table
+
       });
   }
 }
