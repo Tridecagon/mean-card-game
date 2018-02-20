@@ -13,9 +13,9 @@ export class SocketService {
     private socket;
     public onInit: Event;
 
-    public initSocket(): void {
+    public initSocket(channel: string = null): void {
         if (!this.socket) {
-            this.socket = socketIo(SERVER_URL);
+            this.setNamespace(channel);
         }
     }
 
@@ -43,5 +43,13 @@ export class SocketService {
         return new Observable<Event>(observer => {
             this.socket.on(event, () => observer.next());
         });
+    }
+
+    public setNamespace(channel: string) {
+        if (channel) {
+            this.socket = socketIo(SERVER_URL + channel);
+        } else {
+            this.socket =  socketIo(SERVER_URL);
+        }
     }
 }
