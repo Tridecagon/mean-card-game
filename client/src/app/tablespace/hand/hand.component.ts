@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UiCard } from 'app/shared/model/uiCard';
-import { Card, User } from '../../../../../shared/model';
+import { Card, User } from 'app/../../../shared/model';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { SocketService } from 'app/shared/services/socket.service';
 import { SafeStyle, DomSanitizer } from '@angular/platform-browser';

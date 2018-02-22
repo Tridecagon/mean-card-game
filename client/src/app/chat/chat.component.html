@@ -1,7 +1,7 @@
 <mat-drawer-container class="chat-container">
   <mat-drawer mode="side" opened="true" class="channel-drawer">
     <mat-list class="channel-list">
-      <mat-list-item>
+      <mat-list-item *ngFor = "let channel of channels">
         <p>
           Fake channel #1
         </p>
