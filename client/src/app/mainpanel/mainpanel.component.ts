@@ -22,7 +22,8 @@ const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 @Component({
   selector: 'mcg-mainpanel',
   templateUrl: './mainpanel.component.html',
-  styleUrls: ['./mainpanel.component.css']
+  styleUrls: ['./mainpanel.component.css'],
+  providers: [SocketService]
 })
 
 

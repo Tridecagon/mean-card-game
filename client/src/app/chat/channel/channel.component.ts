@@ -5,14 +5,13 @@ import { SocketService } from 'app/shared/services/socket.service';
 @Component({
   selector: 'mcg-channel',
   templateUrl: './channel.component.html',
-  styleUrls: ['./channel.component.css'],
-  providers: [SocketService]
+  styleUrls: ['./channel.component.css']
 })
 export class ChannelComponent implements OnInit {
 
   @Input() channel: Channel;
 
-  constructor(private socketService: SocketService) { }
+  constructor() { }
 
   ngOnInit() {
   }

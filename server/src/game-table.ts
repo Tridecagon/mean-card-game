@@ -5,9 +5,8 @@ import {Card} from '../../shared/model';
 export class GameTable {
     private deck: any;
     private shuffler: any;
-    private tableChan: SocketIO.Namespace;
     
-    constructor(private players: Player[], private tableId: number, private tablechan: SocketIO.Namespace) {
+    constructor(private players: Player[], private tableId: number, private tableChan: SocketIO.Namespace) {
         this.startGame();
     }
 
@@ -22,6 +21,8 @@ export class GameTable {
             console.log(`Dealing hand to player ${player.user.name} socket ${socket.id}`);
             var newHand = this.deck.draw(10);
             socket.emit('dealHand', newHand);
+            player.heldCards = newHand;
+            this.tableChan.emit('dealCards', {numCards: 10, toUser: player.user.id});
 
 
             socket.on('playRequest', (card: Card) => {

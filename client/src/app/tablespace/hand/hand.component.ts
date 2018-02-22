@@ -95,6 +95,18 @@ export class HandComponent implements OnInit {
         }
       });
 
+      this.socketService.onAction<any>('dealCards')
+      .subscribe((cards) => {
+        // console.log(newHand);
+        if(cards.toUser === this.player.id )
+        {
+          for (let i = 0; i < cards.numCards; i++)
+          {
+            this.hand.push(new UiCard());
+          }
+        }
+      });
+
       this.socketService.onAction<Card>('playResponse')
       .subscribe((playedCard) => {
         console.log(playedCard);

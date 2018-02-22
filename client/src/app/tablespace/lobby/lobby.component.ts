@@ -32,7 +32,7 @@ export class LobbyComponent implements OnInit {
   }
 
   private onStartClick(table: number) {
-    this.socketService.sendAction('requestStartTable', table)
+    this.socketService.sendAction('requestStartTable', table);
   }
 
   private onSeatClick(table: number, seat: number) {

@@ -11,8 +11,11 @@ export class UiCard {
   leftPos: number;
 
 
-public constructor(readonly card: Card) {
-  this.storedImageSrc = this.setImageString(card.suit, card.sort);
+public constructor(public card?: Card) {
+  if(card)
+  {
+    this.storedImageSrc = this.setImageString(card.suit, card.sort);
+  }
   this.imageSrc = this.backImageSrc;
   this.isSelected = false;
 }

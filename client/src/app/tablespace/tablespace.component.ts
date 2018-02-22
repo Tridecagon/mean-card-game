@@ -7,8 +7,7 @@ import { SocketService } from 'app/shared/services/socket.service';
 @Component({
   selector: 'mcg-tablespace',
   templateUrl: './tablespace.component.html',
-  styleUrls: ['./tablespace.component.css'],
-  providers: [ SocketService ]
+  styleUrls: ['./tablespace.component.css']
 })
 
 export class TablespaceComponent implements OnInit {
