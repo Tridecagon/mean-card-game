@@ -99,10 +99,12 @@ export class ChatServer {
                     for (let user of this.lobby[tableIndex].users) {
                         if(user && user.id) {
                             tablePlayers.push(new Player(user, this.socketMap[user.id]));
+                            
+                            socket.emit('startTable', tableIndex);
                         }
                     }
 
-                    var activeTable = new GameTable(tablePlayers, tableIndex, this.io);
+                    var activeTable = new GameTable(tablePlayers, tableIndex, this.io.of(`/table${tableIndex}`));
                 }
 
             });

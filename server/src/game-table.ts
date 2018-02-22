@@ -7,9 +7,8 @@ export class GameTable {
     private shuffler: any;
     private tableChan: SocketIO.Namespace;
     
-    constructor(private players: Player[], private tableId: number, server: SocketIO.Server) {
+    constructor(private players: Player[], private tableId: number, private tablechan: SocketIO.Namespace) {
         this.startGame();
-        this.tableChan = server.of(`/table${tableId}`);
     }
 
     startGame() {
@@ -19,7 +18,6 @@ export class GameTable {
 
         for( let player of this.players ) {
             const socket = player.socket;
-            socket.emit('startTable', this.tableId );
 
             console.log(`Dealing hand to player ${player.user.name} socket ${socket.id}`);
             var newHand = this.deck.draw(10);

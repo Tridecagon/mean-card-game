@@ -37,6 +37,10 @@
     height: 100%;  
     box-sizing: border-box;
 }
+.channel-card {
+    height: 100%;  
+    box-sizing: border-box;
+}
 
 .chat-footer-container {
     position:fixed;
