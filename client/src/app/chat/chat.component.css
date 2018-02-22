@@ -43,7 +43,7 @@
 }
 
 .chat-footer-container {
-    position:fixed;
+    position:absolute;
     bottom:0px;
     left:25px;
     right:25px;
