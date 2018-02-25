@@ -1,4 +1,4 @@
-<div *ngIf="player.name" class="hand-wrapper" [style.transform]="getStyle()">
+<div *ngIf="player" class="hand-wrapper" [style.transform]="getStyle()">
     <div *ngFor="let card of hand; let i = index"
       class="player-card" 
       [style.left.%]="computeLeft(card, i)" 

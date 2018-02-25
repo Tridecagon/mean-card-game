@@ -7,30 +7,60 @@ export class GameTable {
     private shuffler: any;
     
     constructor(private players: Player[], private tableId: number, private tableChan: SocketIO.Namespace) {
-        this.startGame();
+        this.startSession();
     }
 
-    startGame() {
+    startSession() {
         // TODO: move this to Deal class
         this.shuffler = require('shuffle');
         this.deck = this.shuffler.shuffle();
 
-        for( let player of this.players ) {
-            const socket = player.socket;
+        // wait for players to connect
+        this.tableChan.on('connect', (socket: any)=> {
+            //console.log('Connected client to table %s', this.tableId);
+            // find player and assign appropriate socket
+            for(let i = 0; i < this.players.length; i++) {
+                if ( socket.id.indexOf( this.players[i].socket.id) >= 0 ) { // substring search to see if socket ID's are matching
+                    
+                    console.log('Connected %s to table %s', this.players[i].user.name, this.tableId);
+                    this.players[i].socket = socket;
+                    this.players[i].index = i;
 
-            console.log(`Dealing hand to player ${player.user.name} socket ${socket.id}`);
+                    socket.emit('numPlayers', this.players.length);
+
+                    // share connected players
+                    this.tableChan.emit('playerSat', { 'user': this.players[i].user, 'index': i});
+                    for(let sittingPlayer in this.players.filter(p => p.connected))
+                    {
+                        socket.emit('playerSat', { 'user': this.players[sittingPlayer].user, 'index': this.players[sittingPlayer].index});
+                    }
+                    
+                    this.players[i].connected = true;
+
+                    if(this.players.every(p => p.connected)) {
+                        this.beginMatch();
+                    }
+                }
+            }
+        });
+
+
+        // }
+    }
+
+    beginMatch() {
+        for(let player of this.players) {
+            console.log(`Dealing hand to player ${player.user.name} socket ${player.socket.id}`);
             var newHand = this.deck.draw(10);
-            socket.emit('dealHand', newHand);
+            player.socket.emit('dealHand', newHand);
             player.heldCards = newHand;
-            this.tableChan.emit('dealCards', {numCards: 10, toUser: player.user.id});
+            this.tableChan.emit('tableDealCards', {numCards: 10, toUser: player.user.id});
 
 
-            socket.on('playRequest', (card: Card) => {
-                console.log(socket.id + ' request to play ' + card.suit + ' ' + card.description);
+            player.socket.on('playRequest', (card: Card) => {
+                console.log(player.user.name + ' request to play ' + card.suit + ' ' + card.description);
                 this.tableChan.emit('playResponse', card);
             });
         }
     }
-
-    
 }

@@ -95,10 +95,10 @@ export class HandComponent implements OnInit {
         }
       });
 
-      this.socketService.onAction<any>('dealCards')
+      this.socketService.onAction<any>('tableDealCards')
       .subscribe((cards) => {
         // console.log(newHand);
-        if(cards.toUser === this.player.id )
+        if(cards.toUser === this.player.id && this.location != 'south')
         {
           for (let i = 0; i < cards.numCards; i++)
           {

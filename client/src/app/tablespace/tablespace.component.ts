@@ -13,8 +13,13 @@ import { SocketService } from 'app/shared/services/socket.service';
 export class TablespaceComponent implements OnInit {
 
   @Input() user: User;
+  topUser: User;
+  rightUser: User;
+  leftUser: User;
 
   inGame = false;
+  numPlayers = 0;
+  userIndex = -1;
 
   constructor(private socketService: SocketService) { }
 
@@ -28,8 +33,42 @@ export class TablespaceComponent implements OnInit {
     this.socketService.onAction<number>('startTable')
       .subscribe((tableId) => {
         this.inGame = true;
-        // TODO: separate sockets (namespace) for each table
-
+        this.socketService.setNamespace(`/table${tableId}`);
       });
+
+    this.socketService.onAction<number>('numPlayers')
+    .subscribe((numPlayers) => {
+      this.numPlayers = numPlayers;
+    });
+
+    this.socketService.onAction<any>('playerSat')
+    .subscribe((sittingUser) => {
+      if(sittingUser.user.id === this.user.id) { // it's me!
+        this.userIndex = sittingUser.index;
+      }
+      else { // where do I put the new guy?
+        switch(this.numPlayers) {
+          case 2:
+            this.topUser = sittingUser.user;
+            break;
+          case 3:
+            if( (this.userIndex + 1) % 3 === sittingUser.user) {
+              this.leftUser = sittingUser.user;
+            } else {
+              this.rightUser = sittingUser.user;
+            };
+            break;
+          case 4:
+            if( (this.userIndex + 1) % 4 === sittingUser.user) {
+              this.leftUser = sittingUser.user;
+            } else if( (this.userIndex + 2) % 4 === sittingUser.user) {
+              this.topUser = sittingUser.user;
+            } else {
+              this.rightUser = sittingUser.user;
+            };
+            break;
+        }
+      }
+    });
   }
 }
