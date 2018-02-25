@@ -34,8 +34,12 @@ export class TablespaceComponent implements OnInit {
       .subscribe((tableId) => {
         this.inGame = true;
         this.socketService.setNamespace(`/table${tableId}`);
+        this.setupTableListeners();
       });
 
+  }
+
+  private setupTableListeners(): void {
     this.socketService.onAction<number>('numPlayers')
     .subscribe((numPlayers) => {
       this.numPlayers = numPlayers;
