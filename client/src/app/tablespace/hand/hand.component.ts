@@ -64,7 +64,7 @@ export class HandComponent implements OnInit {
 
   onClick(clickedCard: UiCard, index: number) {
     if (clickedCard.isSelected) {
-      console.log('Attempting to play ${card}');
+      console.log(`Attempting to play ${clickedCard.card}`);
       this.socketService.sendAction('playRequest', clickedCard.card);
     } else {
       this.selectCard(clickedCard, index);
@@ -107,25 +107,33 @@ export class HandComponent implements OnInit {
         }
       });
 
-      this.socketService.onAction<Card>('playResponse')
+      this.socketService.onAction<any>('playResponse')
       .subscribe((playedCard) => {
-        console.log(playedCard);
-        this.play(playedCard);
+        if (playedCard.userId === this.player.id) {
+          console.log(playedCard);
+          this.play(playedCard.card);
+        }
       });
   }
 
   private play(card: Card) {
-    const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
-    if (i < 0) {
-      console.log('Unable to find card ' + card);
-      return;
+      if (this.location === 'bottom') {
+      const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
+      if (i < 0) {
+        console.log('Unable to find card ' + card);
+        return;
+      }
+      if (this.hand[i].isSelected) {
+        // remove it
+        this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
+      }
+      this.hand[i].play();
+      this.playedCard = this.hand.splice(i, 1)[0];
+    } else {
+      this.playedCard = new UiCard(card);
+      this.playedCard.play();
+      this.hand.pop();
     }
-    if (this.hand[i].isSelected) {
-      // remove it
-      this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
-    }
-    this.hand[i].play();
-    this.playedCard = this.hand.splice(i, 1)[0];
   }
 
   private getStyle(): SafeStyle {
