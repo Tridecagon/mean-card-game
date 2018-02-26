@@ -35,6 +35,7 @@ export class TablespaceComponent implements OnInit {
         this.inGame = true;
         this.socketService.setNamespace(`/table${tableId}`);
         this.setupTableListeners();
+        this.socketService.sendAction('requestTableInfo', null);
       });
 
   }

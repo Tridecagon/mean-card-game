@@ -26,33 +26,35 @@ export class GameTable {
                 if ( socket.id.indexOf( this.players[i].socket.id) >= 0 ) { // substring search to see if socket ID's are matching
                     
                     // console.log('Connected %s to table %s', this.players[i].user.name, this.tableId);
+                    this.lock.acquire('key', () => {
                     this.players[i].socket = socket;
                     this.players[i].index = i;
 
-                    this.lock.acquire('key', () => {
-                        // console.log(`Entering locked section for ${this.players[i].user.name}`);
-                        socket.emit('numPlayers', this.players.length);
+                    this.tableChan.emit('playerSat', { 'user': this.players[i].user, 'index': i});
 
-                        // share connected players
-                        this.tableChan.emit('playerSat', { 'user': this.players[i].user, 'index': i});
-                        for(let sittingPlayer of this.players.filter(p => p.connected))
-                        {
-                            // console.log(`Sent ${sittingPlayer.user.name} for ${this.players[i].user.name} at index ${sittingPlayer.index}`);
-                            socket.emit('playerSat', { 'user': sittingPlayer.user, 'index': sittingPlayer.index});
-                        }
-                        
-                        this.players[i].connected = true;
-                        
-                        // console.log(`Leaving locked section for ${this.players[i].user.name}`);
+                    this.players[i].connected = true;
                     });
-
-
-
-                    if(this.players.every(p => p.connected)) {
-                        this.beginMatch();
-                    }
                 }
             }
+
+            socket.on('requestTableInfo', () => {
+                this.lock.acquire('key', () => {
+                    // console.log(`Entering locked section for ${this.players[i].user.name}`);
+                    socket.emit('numPlayers', this.players.length);
+
+                    // share connected players
+                    for(let sittingPlayer of this.players.filter(p => p.connected))
+                    {
+                        // console.log(`Sent ${sittingPlayer.user.name} for ${this.players[i].user.name} at index ${sittingPlayer.index}`);
+                        socket.emit('playerSat', { 'user': sittingPlayer.user, 'index': sittingPlayer.index});
+                    }
+                    
+                    // console.log(`Leaving locked section for ${this.players[i].user.name}`);
+                });
+                if(this.players.every(p => p.connected)) {
+                    this.beginMatch();
+                }
+            });
         });
 
 
