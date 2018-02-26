@@ -47,25 +47,24 @@ export class TablespaceComponent implements OnInit {
 
     this.socketService.onAction<any>('playerSat')
     .subscribe((sittingUser) => {
-      if(sittingUser.user.id === this.user.id) { // it's me!
+      if (sittingUser.user.id === this.user.id) { // it's me!
         this.userIndex = sittingUser.index;
-      }
-      else { // where do I put the new guy?
-        switch(this.numPlayers) {
+      } else { // where do I put the new guy?
+        switch (this.numPlayers) {
           case 2:
             this.topUser = sittingUser.user;
             break;
           case 3:
-            if( (this.userIndex + 1) % 3 === sittingUser.user) {
+            if ((this.userIndex + 1) % 3 === sittingUser.index) {
               this.leftUser = sittingUser.user;
             } else {
               this.rightUser = sittingUser.user;
             };
             break;
           case 4:
-            if( (this.userIndex + 1) % 4 === sittingUser.user) {
+            if ((this.userIndex + 1) % 4 === sittingUser.index) {
               this.leftUser = sittingUser.user;
-            } else if( (this.userIndex + 2) % 4 === sittingUser.user) {
+            } else if ((this.userIndex + 2) % 4 === sittingUser.index) {
               this.topUser = sittingUser.user;
             } else {
               this.rightUser = sittingUser.user;

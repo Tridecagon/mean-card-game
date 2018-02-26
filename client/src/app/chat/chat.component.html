@@ -3,14 +3,9 @@
     <mat-list class="channel-list">
       <mat-list-item *ngFor = "let channel of channels">
         <p>
-          Fake channel #1
+         {{channel.name}}
         </p>
       </mat-list-item>
-      <mat-list-item>
-          <p>
-            Fake channel #2
-          </p>
-        </mat-list-item>
     </mat-list>
   </mat-drawer>
   <mat-drawer-content>

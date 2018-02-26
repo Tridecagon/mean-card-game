@@ -12,8 +12,7 @@ export class UiCard {
 
 
 public constructor(public card?: Card) {
-  if(card)
-  {
+  if (card) {
     this.storedImageSrc = this.setImageString(card.suit, card.sort);
   }
   this.imageSrc = this.backImageSrc;
@@ -37,12 +36,14 @@ public play() {
 }
 
 public flip() {
+  if (this.card) {
   this.face = this.face === 'up' ? 'down' : 'up';
   this.cardFlipping = 'out';
+  }
 }
 
 public onFlipDone() {
-  if (this.cardFlipping === 'out' ) {
+  if (this.card && this.cardFlipping === 'out' ) {
       this.imageSrc = this.face === 'up' ? this.storedImageSrc : this.backImageSrc;
       this.cardFlipping = 'in';
   }

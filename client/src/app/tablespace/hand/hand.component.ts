@@ -84,7 +84,7 @@ export class HandComponent implements OnInit {
 
   private setupListeners(): void {
     this.socketService.initSocket();
-    if(this.location = 'south' ) {
+    if (this.location === 'bottom' ) {
       this.socketService.onAction<Array<Card>>('dealHand')
         .subscribe((newHand) => {
           // console.log(newHand);
@@ -100,10 +100,8 @@ export class HandComponent implements OnInit {
       this.socketService.onAction<any>('tableDealCards')
       .subscribe((cards) => {
         // console.log(newHand);
-        if(this.player && cards.toUser === this.player.id && this.location != 'south')
-        {
-          for (let i = 0; i < cards.numCards; i++)
-          {
+        if (this.player && cards.toUser === this.player.id && this.location !== 'bottom') {
+          for (let i = 0; i < cards.numCards; i++) {
             this.hand.push(new UiCard());
           }
         }
