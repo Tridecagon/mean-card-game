@@ -109,7 +109,7 @@ export class HandComponent implements OnInit {
 
       this.socketService.onAction<any>('playResponse')
       .subscribe((playedCard) => {
-        if (playedCard.userId === this.player.id) {
+        if (this.player && playedCard.userId === this.player.id) {
           console.log(playedCard);
           this.play(playedCard.card);
         }
@@ -132,6 +132,9 @@ export class HandComponent implements OnInit {
     } else {
       this.playedCard = new UiCard(card);
       this.playedCard.play();
+      if  (this.playedCard.face === 'down') {
+        this.playedCard.flip();
+      }
       this.hand.pop();
     }
   }
