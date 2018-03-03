@@ -2,20 +2,14 @@ import { Card } from '../../../../../shared/model/card';
 
 export class UiCard {
   isSelected: boolean;
-  state = 'inHand';
-  face = 'down';
-  cardFlipping = 'in';
   imageSrc: string;
-  storedImageSrc: string;
-  backImageSrc = 'back.png';
   leftPos: number;
 
 
-public constructor(public card?: Card) {
+public constructor(public card?: Card, public face = 'down') {
   if (card) {
-    this.storedImageSrc = this.setImageString(card.suit, card.sort);
+    this.imageSrc = this.setImageString(card.suit, card.sort);
   }
-  this.imageSrc = this.backImageSrc;
   this.isSelected = false;
 }
 
@@ -31,21 +25,9 @@ public toggleSelection() {
   this.isSelected = !this.isSelected;
 }
 
-public play() {
-  this.state = 'played';
-}
-
 public flip() {
   if (this.card) {
   this.face = this.face === 'up' ? 'down' : 'up';
-  this.cardFlipping = 'out';
-  }
-}
-
-public onFlipDone() {
-  if (this.card && this.cardFlipping === 'out' ) {
-      this.imageSrc = this.face === 'up' ? this.storedImageSrc : this.backImageSrc;
-      this.cardFlipping = 'in';
   }
 }
 
