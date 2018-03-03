@@ -5,12 +5,14 @@
     width: 100%;
     height: 100%;
     position: absolute;
+    perspective: 800px;
 }
 
 .player-card {
     position: absolute;
     height: 40%;
     width: 18%;
+    transform-style: preserve-3d;
 }
 
 .nameplate {

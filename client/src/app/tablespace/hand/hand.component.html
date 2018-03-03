@@ -1,25 +1,29 @@
-<div *ngIf="player.name" class="hand-wrapper" [style.transform]="getStyle()">
+<div *ngIf="player" class="hand-wrapper" [style.transform]="getHandTransform()">
     <div *ngFor="let card of hand; let i = index"
       class="player-card" 
       [style.left.%]="computeLeft(card, i)" 
       [style.top.%]="card.isSelected ? 70 : 80"
       (click)="onClick(card, i)"
       [@dealCard]
-      (@dealCard.done)="card.flip()">
+      (@dealCard.done)="card.flip()"
+      [@flipCard]="card.face">
       <img  src="./assets/img/deck/{{card.imageSrc}}" 
-            style="position:absolute; height: 100%; top: 0; width: 100%; left: 0"
-            [@flipCard]="card.cardFlipping"
-            (@flipCard.done)="card.onFlipDone()">
+            style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
+      <img  src="./assets/img/deck/back.png" 
+            style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
     </div>
     <div *ngIf="playedCard" class="player-card"
         [style.left.%]="42"
         [style.top.%]="location === 'left' || location === 'right' ? 2 : 35"
-         [@playCard-bottom]="{value: 'played', params: {leftStart: playedCard.leftPos}}"
-         (click)="playedCard = null">
-         <img  src="./assets/img/deck/{{playedCard.imageSrc}}" 
-            style="position:absolute; height: 100%; top: 0; width: 100%; left: 0">
+        [@playCard]="{value: ':enter', params: {leftStart: playedCard.leftPos}}"
+        [@flipCard]="playedCard.face"
+        (click)="playedCard = null">
+        <img  src="./assets/img/deck/{{playedCard.imageSrc}}" 
+          style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
+        <img  src="./assets/img/deck/back.png" 
+          style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
     </div>
-    <div class="nameplate">
+    <div class="nameplate" [style.transform]="getNameplateTransform()">
       {{player.name}}
     </div>
   </div>

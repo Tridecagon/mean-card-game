@@ -17,12 +17,14 @@ export class ChatComponent implements OnInit {
   action = Action;
   messages: Message[] = [];
   messageContent: string;
+  channels: any[] = [];
 
 
   constructor(private socketService: SocketService) { }
 
   ngOnInit(): void {
     this.setupListeners();
+    this.channels.push({'name': 'lobby'});
   }
 
 

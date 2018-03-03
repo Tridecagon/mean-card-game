@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UiCard } from 'app/shared/model/uiCard';
-import { Card, User } from '../../../../../shared/model';
+import { Card, User } from 'app/../../../shared/model';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { SocketService } from 'app/shared/services/socket.service';
 import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
@@ -17,26 +17,16 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
           animate(300, style({top: '*', left: '*'}))
         ])
     ]),
-    trigger('playCard-bottom', [
+    trigger('playCard', [
         transition(
           ':enter', [
          style({ top: '70%', left: '{{leftStart}}%'}),
-         animate(200,  style({top: '*', left: '*'}))
+         animate(300,  style({top: '*', left: '*'}))
           ])
     ]),
     trigger('flipCard', [
-      transition(
-        'in => out', [
-          style({width: '100%', left: '0'}),
-          animate(300, style({width: '0', left: '50%'}))
-        ]
-      ),
-      transition(
-        'out => in', [
-          style({width: '0', left: '50%'}),
-          animate(300, style({width: '100%', left: '0'}))
-        ]
-      )
+      state('down', style({transform: 'rotateY(180deg)'})),
+      transition( 'up <=> down', animate(300))
     ])
   ]
 })
@@ -64,7 +54,7 @@ export class HandComponent implements OnInit {
 
   onClick(clickedCard: UiCard, index: number) {
     if (clickedCard.isSelected) {
-      console.log('Attempting to play ${card}');
+      console.log(`Attempting to play ${clickedCard.card}`);
       this.socketService.sendAction('playRequest', clickedCard.card);
     } else {
       this.selectCard(clickedCard, index);
@@ -84,39 +74,63 @@ export class HandComponent implements OnInit {
 
   private setupListeners(): void {
     this.socketService.initSocket();
-    this.socketService.onAction<Array<Card>>('dealResponse')
-      .subscribe((newHand) => {
+    if (this.location === 'bottom' ) {
+      this.socketService.onAction<Array<Card>>('dealHand')
+        .subscribe((newHand) => {
+          // console.log(newHand);
+          this.hand = [];
+          this.selectedCards = [];
+          for (const card of newHand)
+          {
+            this.hand.push(new UiCard(card));
+          }
+        });
+    }
+
+      this.socketService.onAction<any>('tableDealCards')
+      .subscribe((cards) => {
         // console.log(newHand);
-        this.hand = [];
-        this.selectedCards = [];
-        for (const card of newHand)
-        {
-          this.hand.push(new UiCard(card));
+        if (this.player && cards.toUser === this.player.id && this.location !== 'bottom') {
+          for (let i = 0; i < cards.numCards; i++) {
+            this.hand.push(new UiCard());
+          }
         }
       });
 
-      this.socketService.onAction<Card>('playResponse')
+      this.socketService.onAction<any>('playResponse')
       .subscribe((playedCard) => {
-        console.log(playedCard);
-        this.play(playedCard);
+        if (this.player && playedCard.userId === this.player.id) {
+          console.log(playedCard);
+          this.play(playedCard.card);
+        }
       });
   }
 
   private play(card: Card) {
-    const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
-    if (i < 0) {
-      console.log('Unable to find card ' + card);
-      return;
+      if (this.location === 'bottom') { // TODO: change this condition to if hand cards are visible
+      const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
+      if (i < 0) {
+        console.log('Unable to find card ' + card);
+        return;
+      }
+      if (this.hand[i].isSelected) {
+        // remove it
+        this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
+      }
+      this.hand.splice(i, 1);
+      this.playedCard = new UiCard(card, 'up');
+      this.computeLeft(this.playedCard, i);
+    } else {
+      this.playedCard = new UiCard(card);
+      this.computeLeft(this.playedCard, this.hand.length / 2);
+      if  (this.playedCard.face === 'down') {
+        this.playedCard.flip();
+      }
+      this.hand.pop();
     }
-    if (this.hand[i].isSelected) {
-      // remove it
-      this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
-    }
-    this.hand[i].play();
-    this.playedCard = this.hand.splice(i, 1)[0];
   }
 
-  private getStyle(): SafeStyle {
+  private getHandTransform(): SafeStyle {
 
     let retVal = '';
     switch (this.location) {
@@ -127,7 +141,23 @@ export class HandComponent implements OnInit {
         retVal = 'translateX(-21.45%) rotateZ(90deg)';
         break;
       case 'right':
-      retVal = 'translateX(21.45%) rotateZ(270deg)';
+        retVal = 'translateX(21.45%) rotateZ(270deg)';
+        break;
+      /*
+      case 'bottom':
+        retVal = 'rotateZ(0deg)';
+        break;
+        */
+    }
+    return this.sanitizer.bypassSecurityTrustStyle(retVal);
+  }
+
+  private getNameplateTransform(): SafeStyle {
+
+    let retVal = '';
+    switch (this.location) {
+      case 'top':
+        retVal = 'rotateZ(180deg)';
         break;
     }
     return this.sanitizer.bypassSecurityTrustStyle(retVal);

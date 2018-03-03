@@ -1,15 +1,14 @@
 <div class="tablespace-container">
   <div class="tablespace-felt-bound">
     <div class="tablespace-felt">
-      <button (click)="onDealClick()">Deal me in!</button>
       
       <div *ngIf="!inGame" class="content-container">
         <mcg-lobby></mcg-lobby>
       </div>
       <div *ngIf="inGame" class="content-container">
-        <mcg-hand [player]="'opponent'" [location]="'top'"></mcg-hand>
-        <mcg-hand [player]="'opponent2'" [location]="'left'"></mcg-hand>
-        <mcg-hand [player]="'opponent3'" [location]="'right'"></mcg-hand>
+        <mcg-hand [player]="topUser" [location]="'top'"></mcg-hand>
+        <mcg-hand [player]="leftUser" [location]="'left'"></mcg-hand>
+        <mcg-hand [player]="rightUser" [location]="'right'"></mcg-hand>
         <mcg-hand [player]="user" [location]="'bottom'"></mcg-hand>
       </div>
     </div>
