@@ -1,4 +1,4 @@
-<div *ngIf="player" class="hand-wrapper" [style.transform]="getHandTransform()">
+<div *ngIf="player" class="hand-wrapper" [style.transform]="getHandTransform()" [style.z-index]="zIndex">
     <div *ngFor="let card of hand; let i = index"
       class="player-card" 
       [style.left.%]="computeLeft(card, i)" 

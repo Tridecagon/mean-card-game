@@ -38,6 +38,7 @@ export class HandComponent implements OnInit {
   playedCard: UiCard;
 
   @Input() player: User;
+  @Input() zIndex: number;
   @Input() location: string;
 
 

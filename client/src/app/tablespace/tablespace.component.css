@@ -35,10 +35,3 @@
     left: 0;
     top: 0;
 }
-
-button {
-    z-index: 10;
-    position: absolute;
-    left: 5px;
-    top: 5px;
-}
