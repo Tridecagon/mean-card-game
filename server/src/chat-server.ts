@@ -106,6 +106,7 @@ export class ChatServer {
                     }
 
                     var activeTable = new GameTable(tablePlayers, tableIndex, this.io.of(`/table${tableIndex}`));
+                    activeTable.gameEventEmitter.on('end', () => this.lobby[tableIndex].active = false);
                 }
 
             });

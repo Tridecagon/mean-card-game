@@ -1,16 +1,19 @@
 import * as socketIo from 'socket.io';
 import {Player} from './model';
 import {Card} from '../../shared/model';
+import { EventEmitter } from 'events';
 
 export class GameTable {
     private deck: any;
     private shuffler: any;
     private lock: any;
     private matchActive: boolean;
+    public gameEventEmitter: EventEmitter;
     
     constructor(private players: Player[], private tableId: number, private tableChan: SocketIO.Namespace) {
         var asyncLock = require('async-lock');
         this.lock = new asyncLock();
+        this.gameEventEmitter = new EventEmitter();
         this.startSession();
     }
 
@@ -37,6 +40,19 @@ export class GameTable {
                     });
                 }
             }
+
+            socket.on('disconnect', () => {
+                for(let i = 0; i < this.players.length; i++) {   // TODO: refactor this approach
+                    if ( socket.id.indexOf( this.players[i].socket.id) >= 0 ) { // substring search to see if socket ID's are matching
+                        this.players[i].connected = false;
+                        if(this.players.every(p => !p.connected)) {
+                            // reset table
+                            this.tableChan.removeAllListeners();
+                            this.gameEventEmitter.emit('end');
+                        }
+                    }
+                }
+            });
 
             socket.on('requestTableInfo', () => {
                 this.lock.acquire('key', () => {
