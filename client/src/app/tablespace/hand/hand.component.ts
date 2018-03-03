@@ -14,29 +14,19 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
       transition(
         ':enter', [
           style({top: '35%', left: '42%'}),
-          animate(300, style({top: '*', left: '*'}))
+          animate(800, style({top: '*', left: '*'}))
         ])
     ]),
-    trigger('playCard-bottom', [
+    trigger('playCard', [
         transition(
-          ':enter', [
+          '* => played', [
          style({ top: '70%', left: '{{leftStart}}%'}),
-         animate(200,  style({top: '*', left: '*'}))
+         animate(800,  style({top: '*', left: '*'}))
           ])
     ]),
     trigger('flipCard', [
-      transition(
-        'in => out', [
-          style({width: '100%', left: '0'}),
-          animate(300, style({width: '0', left: '50%'}))
-        ]
-      ),
-      transition(
-        'out => in', [
-          style({width: '0', left: '50%'}),
-          animate(300, style({width: '100%', left: '0'}))
-        ]
-      )
+      state('down', style({transform: 'rotateY(180deg)'})),
+      transition( 'up <=> down', animate(800))
     ])
   ]
 })
@@ -127,8 +117,9 @@ export class HandComponent implements OnInit {
         // remove it
         this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
       }
-      this.hand[i].play();
-      this.playedCard = this.hand.splice(i, 1)[0];
+      this.hand.splice(i, 1);
+      this.playedCard = new UiCard(card, 'up');
+      this.playedCard.play();
     } else {
       this.playedCard = new UiCard(card);
       this.playedCard.play();
@@ -139,7 +130,7 @@ export class HandComponent implements OnInit {
     }
   }
 
-  private getStyle(): SafeStyle {
+  private getHandTransform(): SafeStyle {
 
     let retVal = '';
     switch (this.location) {
@@ -150,7 +141,23 @@ export class HandComponent implements OnInit {
         retVal = 'translateX(-21.45%) rotateZ(90deg)';
         break;
       case 'right':
-      retVal = 'translateX(21.45%) rotateZ(270deg)';
+        retVal = 'translateX(21.45%) rotateZ(270deg)';
+        break;
+      /*
+      case 'bottom':
+        retVal = 'rotateZ(0deg)';
+        break;
+        */
+    }
+    return this.sanitizer.bypassSecurityTrustStyle(retVal);
+  }
+
+  private getNameplateTransform(): SafeStyle {
+
+    let retVal = '';
+    switch (this.location) {
+      case 'top':
+        retVal = 'rotateZ(180deg)';
         break;
     }
     return this.sanitizer.bypassSecurityTrustStyle(retVal);
