@@ -13,8 +13,8 @@
             style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
     </div>
     <div *ngIf="playedCard" class="player-card"
-        [style.left.%]="42"
-        [style.top.%]="location === 'left' || location === 'right' ? 2 : 35"
+        [style.left.%]="location === 'left' || location === 'right' ? 41.5 : 42.5"
+        [style.top.%]="location === 'left' || location === 'right' ? 1 : 37"
         [@playCard]="{value: ':enter', params: {leftStart: playedCard.leftPos}}"
         [@flipCard]="playedCard.face"
         (click)="playedCard = null">
