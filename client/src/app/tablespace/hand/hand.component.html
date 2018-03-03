@@ -15,7 +15,7 @@
     <div *ngIf="playedCard" class="player-card"
         [style.left.%]="42"
         [style.top.%]="location === 'left' || location === 'right' ? 2 : 35"
-        [@playCard]="{value: 'played', params: {leftStart: playedCard.leftPos}}"
+        [@playCard]="{value: ':enter', params: {leftStart: playedCard.leftPos}}"
         [@flipCard]="playedCard.face"
         (click)="playedCard = null">
         <img  src="./assets/img/deck/{{playedCard.imageSrc}}" 

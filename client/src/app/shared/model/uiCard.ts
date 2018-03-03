@@ -2,7 +2,6 @@ import { Card } from '../../../../../shared/model/card';
 
 export class UiCard {
   isSelected: boolean;
-  state = 'inHand';
   imageSrc: string;
   leftPos: number;
 
@@ -24,10 +23,6 @@ public toString = function(){
 
 public toggleSelection() {
   this.isSelected = !this.isSelected;
-}
-
-public play() {
-  this.state = 'played';
 }
 
 public flip() {

@@ -14,19 +14,19 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
       transition(
         ':enter', [
           style({top: '35%', left: '42%'}),
-          animate(800, style({top: '*', left: '*'}))
+          animate(300, style({top: '*', left: '*'}))
         ])
     ]),
     trigger('playCard', [
         transition(
-          '* => played', [
+          ':enter', [
          style({ top: '70%', left: '{{leftStart}}%'}),
-         animate(800,  style({top: '*', left: '*'}))
+         animate(300,  style({top: '*', left: '*'}))
           ])
     ]),
     trigger('flipCard', [
       state('down', style({transform: 'rotateY(180deg)'})),
-      transition( 'up <=> down', animate(800))
+      transition( 'up <=> down', animate(300))
     ])
   ]
 })
@@ -107,7 +107,7 @@ export class HandComponent implements OnInit {
   }
 
   private play(card: Card) {
-      if (this.location === 'bottom') {
+      if (this.location === 'bottom') { // TODO: change this condition to if hand cards are visible
       const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
       if (i < 0) {
         console.log('Unable to find card ' + card);
@@ -119,10 +119,10 @@ export class HandComponent implements OnInit {
       }
       this.hand.splice(i, 1);
       this.playedCard = new UiCard(card, 'up');
-      this.playedCard.play();
+      this.computeLeft(this.playedCard, i);
     } else {
       this.playedCard = new UiCard(card);
-      this.playedCard.play();
+      this.computeLeft(this.playedCard, this.hand.length / 2);
       if  (this.playedCard.face === 'down') {
         this.playedCard.flip();
       }
