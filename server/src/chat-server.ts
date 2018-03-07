@@ -129,7 +129,7 @@ export class ChatServer {
 
     private tableSetup() {
         for (let i = 0; i < this.maxTables; i++) {
-            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}], gameType: GameType.Base};
+            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}], gameType: GameType.Euchre};
             this.lobby.push(emptyTable);
         }
     }

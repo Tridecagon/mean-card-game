@@ -1,5 +1,6 @@
 import { GameType } from '../../shared/model';
-import { Match } from './baseGame/match';
+import { Match } from './game/baseGame/match';
+import { EuchreMatch } from './game/euchre/euchreMatch';
 
 export class Factory {
 
@@ -8,6 +9,8 @@ export class Factory {
             case GameType.OhHeck:
                 //return new OhHeckMatch();
                 break;
+            case GameType.Euchre:
+                return new EuchreMatch();
             default:
                 return new Match();
         }

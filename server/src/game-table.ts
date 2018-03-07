@@ -3,7 +3,7 @@ import { Player } from './model';
 import { Card, GameType } from '../../shared/model';
 import { EventEmitter } from 'events';
 import { Factory } from '.';
-import { Match } from './baseGame/match';
+import { Match } from './game/baseGame/match';
 
 export class GameTable {
     
