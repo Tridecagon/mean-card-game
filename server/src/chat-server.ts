@@ -2,7 +2,7 @@ import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-import { Message, User, Table, Action } from '../../shared/model';
+import { Message, User, Table, Action, GameType } from '../../shared/model';
 import { GameTable } from '.';
 import { Player } from './model';
 
@@ -105,8 +105,8 @@ export class ChatServer {
                         }
                     }
 
-                    var activeTable = new GameTable(tablePlayers, tableIndex, this.io.of(`/table${tableIndex}`));
-                    activeTable.gameEventEmitter.on('end', () => {
+                    var activeTable = new GameTable(tablePlayers, tableIndex, this.lobby[tableIndex].gameType, this.io.of(`/table${tableIndex}`));
+                    activeTable.gameTableEventEmitter.on('end', () => {
                         this.lobby[tableIndex].active = false;
                         this.io.emit('lobbyState', this.lobby);
                     });
@@ -129,7 +129,7 @@ export class ChatServer {
 
     private tableSetup() {
         for (let i = 0; i < this.maxTables; i++) {
-            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}]};
+            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}], gameType: GameType.Base};
             this.lobby.push(emptyTable);
         }
     }
