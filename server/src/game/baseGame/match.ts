@@ -1,39 +1,33 @@
 
 import {Player} from '../../model';
-import { Card, GameType } from '../../../../shared/model';
+import { Card, GameType, Score } from '../../../../shared/model';
+import { Hand } from './hand';
 
 export class Match {
     
     protected deck: any;
     protected shuffler: any;
     protected type: GameType;
-    protected numCards: number;
+    protected dealerIndex: number;
+    protected players: Player[] = [];
+    
+    protected matchResults: Score[] = [];
+    protected hand: Hand;
 
     constructor() {
         this.type = GameType.Base;
-        this.numCards = 13;
     }
 
     beginMatch(players: Player[], tableChan: SocketIO.Namespace) {
+        this.players = players;
         this.deck = this.GetDeck();
-        for(let player of players) {
-            console.log(`Dealing hand to player ${player.user.name} socket ${player.socket.id}`);
-            var newHand = this.deck.draw(this.numCards);
-            for(let card of newHand) {
-                player.heldCards.push({'suit': card.suit, 'description': card.description, 'sort': card.sort});
-            }
-            player.socket.emit('dealHand', player.heldCards);
-            tableChan.emit('tableDealCards', {numCards: this.numCards, toUser: player.user.id});
+        this.hand = this.GetHand(players, tableChan);
+        this.dealerIndex = this.PickRandomPlayer();
 
-
-            player.socket.on('playRequest', (card: Card) => {
-                console.log(player.user.name + ' request to play ' + card.suit + ' ' + card.description);
-                let playCard = player.heldCards.find(c => (c.suit === card.suit && c.description === card.description));
-                if (playCard) { // TODO: check if player's turn
-                    tableChan.emit('playResponse', {'card': card, 'userId': player.user.id});
-                    player.heldCards.splice(player.heldCards.indexOf(playCard), 1);
-                }
-            });
+        while(!this.MatchComplete()) {
+            let gameResults = this.hand.Play(this.dealerIndex);
+            this.KeepScore(gameResults);
+            this.AdvanceDealer();
         }
     }
 
@@ -41,4 +35,27 @@ export class Match {
         this.shuffler = require('shuffle');
         return this.shuffler.shuffle();
     }
+
+    AdvanceDealer() {
+        this.dealerIndex = (this.dealerIndex + 1 ) % this.players.length;
+    }
+
+    PickRandomPlayer() : number {
+        return Math.floor(Math.random() * this.players.length);
+    }
+
+    KeepScore(gameResults: Score[]) {
+        for(let id in gameResults) {
+            this.matchResults[id].points += gameResults[id].points;
+        }
+    }
+
+    MatchComplete() {
+        return false;
+    }
+
+    GetHand(players: Player[], tableChan: SocketIO.Namespace) : Hand {
+        return new Hand(players, this.deck, tableChan);
+    }
+
 }
