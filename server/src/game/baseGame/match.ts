@@ -18,14 +18,14 @@ export class Match {
         this.type = GameType.Base;
     }
 
-    beginMatch(players: Player[], tableChan: SocketIO.Namespace) {
+    async beginMatch(players: Player[], tableChan: SocketIO.Namespace) {
         this.players = players;
         this.deck = this.GetDeck();
         this.hand = this.GetHand(players, tableChan);
         this.dealerIndex = this.PickRandomPlayer();
 
         while(!this.MatchComplete()) {
-            let gameResults = this.hand.Play(this.dealerIndex);
+            let gameResults = await this.hand.Play(this.dealerIndex);
             this.KeepScore(gameResults);
             this.AdvanceDealer();
         }
