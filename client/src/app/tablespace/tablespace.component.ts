@@ -83,10 +83,19 @@ export class TablespaceComponent implements OnInit {
     });
 
     this.socketService.onAction<any>('playResponse')
-    .subscribe((playedCard) => {
+    .subscribe((playInfo) => {
       for (const i in this.users) {
-        if (this.users[i] && this.users[i].id === playedCard.userId) {
+        if (this.users[i] && this.users[i].id === playInfo.userId) {
           this.zIndexes[i] = this.currentZIndex++;
+        }
+      }
+    });
+
+    this.socketService.onAction<any>('trickWon')
+    .subscribe((userId) => {
+      for (const i in this.users) {
+        if (this.users[i] && this.users[i].id === userId) {
+          this.zIndexes[i] = 10;
         }
       }
     });
