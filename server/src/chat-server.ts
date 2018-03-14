@@ -98,7 +98,7 @@ export class ChatServer {
                     let tablePlayers = new Array<Player>();
                     for (let user of this.lobby[tableIndex].users) {
                         if(user && user.id) {
-                            const newPlayer = new Player(user, this.socketMap[user.id])
+                            const newPlayer = new Player(user, this.socketMap[user.id]);
                             tablePlayers.push(newPlayer);
                             
                             newPlayer.socket.emit('startTable', tableIndex);
