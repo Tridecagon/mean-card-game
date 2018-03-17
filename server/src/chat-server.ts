@@ -14,7 +14,7 @@ export class ChatServer {
     private port: string | number;
     private maxTables = 5;
 
-    private users: User[] = [];
+    private users: { [key: string] : User } = {};
     private lobby: Table[] = [];
     private seatMap: {table: number, seat: number}[] = [];
     private socketMap: any[] = [];
@@ -51,7 +51,7 @@ export class ChatServer {
             console.log('Running server on port %s', this.port);
         });
 
-        this.io.on('connect', (socket: any) => {
+        this.io.on('connect', (socket: SocketIO.Socket) => {
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: Message) => {
                 console.log('[server](message): %s', JSON.stringify(m));
@@ -134,7 +134,7 @@ export class ChatServer {
         }
     }
 
-       private unseatUser = (socketId: any) => {
+       private unseatUser = (socketId: string) => {
         if (this.users[socketId] && this.seatMap[this.users[socketId].id]) {
             this.lobby[this.seatMap[this.users[socketId].id].table].users[this.seatMap[this.users[socketId].id].seat] = {};
             this.lobby[this.seatMap[this.users[socketId].id].table].userCount--;

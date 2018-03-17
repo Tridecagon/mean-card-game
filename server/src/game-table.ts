@@ -25,7 +25,7 @@ export class GameTable {
     startSession() {
 
         // wait for players to connect
-        this.tableChan.on('connect', (socket: any)=> {
+        this.tableChan.on('connect', (socket: SocketIO.Socket)=> {
             //console.log('Connected client to table %s', this.tableId);
             // find player and assign appropriate socket
             for(let i = 0; i < this.players.length; i++) {

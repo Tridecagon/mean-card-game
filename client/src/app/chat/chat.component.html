@@ -1,18 +1,17 @@
 <mat-drawer-container class="chat-container">
   <mat-drawer mode="side" opened="true" class="channel-drawer">
     <mat-list class="channel-list">
-      <mat-list-item *ngFor = "let channel of channels">
-        <p>
-         {{channel.name}}
-        </p>
+      <mat-list-item *ngFor = "let activeChannel of channels">
+        <mcg-channel [channel]="activeChannel" (click)="selectChannel(activeChannel.channelName)">
+        </mcg-channel>
       </mat-list-item>
     </mat-list>
   </mat-drawer>
   <mat-drawer-content>
     <mat-card class="main-card">
       <div class="chat-list-wrapper"  #scrollMe [scrollTop]="scrollMe.scrollHeight">
-        <mat-list class="chat-list">
-          <mat-list-item *ngFor="let message of messages" [ngClass]="[message.action === undefined ? (message.from.id === user.id ? 'chat-list-me': 'chat-list-other') : '']">
+        <mat-list *ngIf="selectedChannel" class="chat-list">
+          <mat-list-item *ngFor="let message of selectedChannel.messages" [ngClass]="[message.action === undefined ? (message.from.id === user.id ? 'chat-list-me': 'chat-list-other') : '']">
             <!---<img mat-list-avatar *ngIf="message.action === undefined" [src]="message.from.avatar">-->
             <h4 mat-line *ngIf="message.action === undefined">
               <b>{{message.from.name}}:</b> {{message.content}}
@@ -34,7 +33,7 @@
                 maxlength="140" 
                 placeholder="Type your message" 
                 [(ngModel)]="messageContent" 
-                (keyup.enter)="sendMessage(messageContent)">
+                (keyup.enter)="sendMessage()">
           <mat-hint align="end">{{inputMessage.value.length}}/140</mat-hint>
         </mat-form-field>
       </div>
