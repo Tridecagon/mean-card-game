@@ -16,6 +16,6 @@ export class ChannelComponent implements OnInit {
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
-    this.channel.socket = this.socketService;
+    this.channel.setSocket(this.socketService);
   }
 }

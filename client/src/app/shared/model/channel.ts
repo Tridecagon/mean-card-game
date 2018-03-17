@@ -2,7 +2,7 @@ import { User, Message } from '../../../../../shared/model';
 import { SocketService } from '../services/socket.service';
 
 export class Channel {
-    socket: SocketService;
+    private socket: SocketService;
     messages: Message[] = [];
     selected = false;
 
