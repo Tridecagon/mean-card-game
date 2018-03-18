@@ -13,10 +13,6 @@ export class SocketService {
     private socket: SocketIOClient.Socket;
     public onInit: Event;
 
-    constructor() {
-        console.log('Constructing New Socket Service instance');
-    }
-
     public initSocket(channel: string = null): void {
         if (!this.socket) {
             this.setNamespace(channel);
@@ -55,6 +51,5 @@ export class SocketService {
         } else {
             this.socket =  socketIo(SERVER_URL);
         }
-        console.log('Initialized socket as ' + this.socket.id);
     }
 }
