@@ -1,6 +1,9 @@
 <mat-drawer-container class="chat-container">
   <mat-drawer mode="side" opened="true" class="channel-drawer">
     <mat-list class="channel-list">
+      <mat-list-item>
+        <p [style.font-style]="'italic'">Channel list</p>
+      </mat-list-item>
       <mat-list-item *ngFor = "let channel of channelList.Channels">
         <p [style.font-weight]="channel.selected ? 'bold' : 'normal'" (click)="selectChannel(channel.channelName)">
           {{channel.channelName}}
