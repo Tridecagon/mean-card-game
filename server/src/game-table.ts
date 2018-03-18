@@ -1,6 +1,6 @@
 import * as socketIo from 'socket.io';
 import { Player } from './model';
-import { Card, GameType } from '../../shared/model';
+import { Action, Card, GameType, Message } from '../../shared/model';
 import { EventEmitter } from 'events';
 import { Factory } from '.';
 import { Match } from './game/baseGame/match';
@@ -84,9 +84,11 @@ export class GameTable {
                 });
 
             });
+
+            socket.on('message', (m: Message) => {
+                console.log('[server](message): %s', JSON.stringify(m));
+                this.tableChan.emit('chatMessage', m);
+            });
         });
-
-
-        // }
     }
 }

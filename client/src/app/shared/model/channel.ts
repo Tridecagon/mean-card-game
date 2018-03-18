@@ -2,19 +2,13 @@ import { User, Message } from '../../../../../shared/model';
 import { SocketService } from '../services/socket.service';
 
 export class Channel {
-    private socket: SocketService;
     messages: Message[] = [];
     selected = false;
 
-    constructor(public channelName: string) {}
-
-    setSocket(socket: SocketService): void {
-        this.socket = socket;
-        this.socket.initSocket(this.channelName === 'lobby' ? null : this.channelName);
-
+    constructor(public channelName: string, private socket: SocketService) {
         this.socket.onMessage('chatMessage')
         .subscribe((message: Message) => {
-          this.messages.push(message);
+        this.messages.push(message);
         });
     }
 
