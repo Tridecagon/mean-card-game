@@ -25,7 +25,7 @@ export class Match {
         this.dealerIndex = this.PickRandomPlayer();
 
         while(!this.MatchComplete()) {
-            let gameResults = await this.hand.Play(this.dealerIndex);
+            let gameResults = await this.hand.Play(this.dealerIndex, this.GetHandParams());
             this.KeepScore(gameResults);
             this.AdvanceDealer();
         }
@@ -34,6 +34,10 @@ export class Match {
     GetDeck() : any {
         this.shuffler = require('shuffle');
         return this.shuffler.shuffle();
+    }
+
+    GetHandParams() : any {
+        return {};
     }
 
     AdvanceDealer() {

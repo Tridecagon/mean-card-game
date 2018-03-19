@@ -1,6 +1,6 @@
 import {Player} from '../../model';
-import { Card, GameType } from "../../../../shared/model";
-import { Match } from "../baseGame/match";
+import { Card, GameType } from '../../../../shared/model';
+import { Match } from '../baseGame/match';
 import { Hand } from '../baseGame/hand';
 import { EuchreHand } from './euchreHand';
 

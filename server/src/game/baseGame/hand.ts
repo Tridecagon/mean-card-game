@@ -12,6 +12,8 @@ export class Hand {
     protected currentTrick: Card[] = [];
     protected scores: Score[] = [];
     protected state: State;
+    protected params: any;
+    protected trumpSuit: string;
     protected stateHandlers: (() => void)[] = []; // array of void functions
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
@@ -25,15 +27,16 @@ export class Hand {
         return new Promise(resolve => {setTimeout(resolve, ms)});
     }
 
-    async Play(dealerIndex: number) : Promise<Score[]> {
+    async Play(dealerIndex: number, params: any) : Promise<Score[]> {
         this.dealerIndex = dealerIndex;
+        this.params = params; 
         
         this.CollectCards();
         this.deck.shuffle();
         this.DealHands();
         this.SetInitialState();
 
-        await this.ScoreHand();
+        await this.AwaitResultAync();
         return this.scores;
     }
 
@@ -75,15 +78,18 @@ export class Hand {
         }
     }
 
-    async ScoreHand() {
+    async AwaitResultAync() {
         while(!this.IsHandComplete()) {
             await this.Sleep(1000);
         }
-        let handScores : Score[] = [];
+        this.ScoreHand();
+    }
+
+    ScoreHand() {
+        this.scores = [];
         for(let player of this.players) {
-            handScores[player.user.id] = {points: player.trickPile.length / this.players.length};
+            this.scores[player.user.id] = {points: (player.trickPile.length / this.players.length)};
         }
-        return handScores;
     }
 
     IsHandComplete() : boolean {
@@ -117,7 +123,7 @@ export class Hand {
     }
 
     IsTrump(card: Card) {
-        return false;
+        return this.trumpSuit && (this.trumpSuit === card.suit);
     }
 
     PlayIsLegal(card: Card) : boolean {
@@ -143,7 +149,18 @@ export class Hand {
                 }
             });
 
+            player.socket.on('bidRequest', (bidInfo: any) => {
+                console.log(player.user.name + ' request to bid ' + bidInfo);
+                if (this.state === State.Bid && this.currentPlayer === player.index && this.ProcessBid(player, bidInfo)) { 
+                    this.tableChan.emit('bidResponse', {'bid': bidInfo, 'userId': player.user.id});
+                }
+            });
+
         }
+    }
+
+    ProcessBid(player: Player, bidInfo: any) : boolean {
+        return false; // no bidding in this game
     }
 
     SetupStateHandlers() {

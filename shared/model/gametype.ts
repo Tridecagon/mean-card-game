@@ -1,6 +1,6 @@
 export enum GameType {
     Euchre,
-    OhHeck,
+    OhHell,
     Skat,
     Base
 }
