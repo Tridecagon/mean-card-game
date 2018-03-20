@@ -1,6 +1,15 @@
 export enum GameType {
+    Base,
     Euchre,
     OhHell,
-    Skat,
-    Base
+    Skat
 }
+
+export namespace GameType {
+
+    export function values() {
+      return Object.keys(GameType).filter(
+        (type) => isNaN(<any>type) && type !== 'values'
+      );
+    }
+  }

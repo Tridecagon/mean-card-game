@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '../shared/material/material.module';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 
 import { TablespaceComponent } from './tablespace.component';
 import { SocketService } from '../shared/services/socket.service';
@@ -15,7 +16,8 @@ import { PlayspaceComponent } from './playspace/playspace.component';
   imports: [
     CommonModule,
     MaterialModule,
-    MatTableModule
+    MatTableModule,
+    MatSelectModule
   ],
   exports: [
     TablespaceComponent
