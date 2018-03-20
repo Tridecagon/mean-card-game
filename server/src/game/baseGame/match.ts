@@ -7,7 +7,6 @@ export class Match {
     
     protected deck: any;
     protected shuffler: any;
-    protected type: GameType;
     protected dealerIndex: number;
     protected players: Player[] = [];
     
@@ -15,7 +14,7 @@ export class Match {
     protected hand: Hand;
 
     constructor() {
-        this.type = GameType.Base;
+        // this.type = GameType.Base; // base type no longer instantiable
     }
 
     async beginMatch(players: Player[], tableChan: SocketIO.Namespace) {

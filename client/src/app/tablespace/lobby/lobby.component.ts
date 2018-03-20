@@ -53,4 +53,8 @@ export class LobbyComponent implements OnInit {
     return table.users.some(u => u.id === this.user.id);
   }
 
+  private getGameName(gameType: number) {
+    return GameType[gameType] ? GameType[gameType] : '';
+  }
+
 }

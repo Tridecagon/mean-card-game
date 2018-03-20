@@ -9,7 +9,6 @@ export class OhHellMatch extends Match {
 
     constructor() {
         super();
-        this.type = GameType.OhHell;
     }
 
 

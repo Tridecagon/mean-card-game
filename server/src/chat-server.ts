@@ -91,8 +91,10 @@ export class ChatServer {
             });
 
             socket.on('selectGame', (request: {table: number, gameType: GameType}) => {
+                const testtype: GameType = GameType.OhHell;
+                const test2: GameType = GameType["OhHell"];
                 if(this.seatMap[this.users[socket.id].id].table === request.table) {
-                    this.lobby[request.table].gameType = request.gameType;
+                    this.lobby[request.table].gameType = eval(GameType[request.gameType]);
                     this.io.emit('lobbyState', this.lobby);
                 }
             });
@@ -136,7 +138,7 @@ export class ChatServer {
 
     private tableSetup() {
         for (let i = 0; i < this.maxTables; i++) {
-            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}], gameType: GameType.Base};
+            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}], gameType: null};
             this.lobby.push(emptyTable);
         }
     }
