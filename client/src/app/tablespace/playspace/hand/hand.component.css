@@ -6,6 +6,7 @@
     height: 100%;
     position: absolute;
     perspective: 800px;
+    pointer-events: none;
 }
 
 .player-card {
@@ -13,6 +14,7 @@
     height: 40%;
     width: 18%;
     transform-style: preserve-3d;
+    pointer-events: auto;
 }
 
 .nameplate {

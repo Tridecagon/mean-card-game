@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
 import { Action, Message, User } from '../../../../shared/model';
-import { Event } from '../shared/model/event';
+import { Channel, ChannelCollection, Event } from '../shared/model';
 import { SocketService } from '../shared/services/socket.service';
 
 
@@ -11,42 +11,32 @@ import { SocketService } from '../shared/services/socket.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnChanges {
 
   @Input() user: User;
+  @Input() channelList: ChannelCollection;
   action = Action;
-  messages: Message[] = [];
   messageContent: string;
-  channels: any[] = [];
 
 
-  constructor(private socketService: SocketService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.setupListeners();
-    this.channels.push({'name': 'lobby'});
   }
 
+  ngOnChanges(): void {
+  }
 
+  selectChannel(channelName: string) {
+    this.channelList.SelectChannel(channelName);
+  }
 
-  public sendMessage(message: string): void {
-    if (!message) {
-      return;
+  sendMessage() {
+    if (!this.channelList.selectedChannel) {
+      this.selectChannel('lobby');
     }
-
-    this.socketService.send({
-      from: this.user,
-      content: message
-    });
-    this.messageContent = null;
-  }
-
-  private setupListeners(): void {
-    this.socketService.initSocket();
-    this.socketService.onMessage('chatMessage')
-    .subscribe((message: Message) => {
-      this.messages.push(message);
-    });
+    this.channelList.selectedChannel.sendMessage(this.user, this.messageContent);
+    this.messageContent = '';
   }
 
 }

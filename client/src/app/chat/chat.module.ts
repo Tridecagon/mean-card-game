@@ -6,7 +6,6 @@ import { MaterialModule } from '../shared/material/material.module';
 
 import { ChatComponent } from './chat.component';
  import { SocketService } from '../shared/services/socket.service';
-import { ChannelComponent } from './channel/channel.component';
 
 @NgModule({
   imports: [
@@ -18,7 +17,6 @@ import { ChannelComponent } from './channel/channel.component';
   exports: [
     ChatComponent
   ],
-  declarations: [ChatComponent, ChannelComponent],
-  providers: [SocketService]
+  declarations: [ChatComponent]
 })
 export class ChatModule { }

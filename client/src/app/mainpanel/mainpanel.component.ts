@@ -7,7 +7,7 @@ import { TablespaceModule } from '../tablespace/tablespace.module';
 import { TablespaceComponent } from '../tablespace/tablespace.component';
 
 import { Action, Message, User } from '../../../../shared/model';
-import { Event } from '../shared/model/event';
+import { Channel, ChannelCollection, Event } from '../shared/model';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AfterViewInit, ViewChild } from '@angular/core';
@@ -31,6 +31,7 @@ const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 export class MainpanelComponent implements OnInit {
   action = Action;
   user: User;
+  channelList = new ChannelCollection();
   dialogRef: MatDialogRef<DialogUserComponent> | null;
   defaultDialogUserParams: any = {
     disableClose: true,
@@ -39,6 +40,8 @@ export class MainpanelComponent implements OnInit {
       dialogType: DialogUserType.NEW
     }
   };
+
+  @ViewChild(ChatComponent) chatChild: ChatComponent;
 
   constructor(private socketService: SocketService,
     public dialog: MatDialog) { }
@@ -68,8 +71,13 @@ export class MainpanelComponent implements OnInit {
     });
   }
 
+  private onJoinTable(tableInfo: any) {
+    this.AddChannel(tableInfo.name, tableInfo.conn);
+  }
+
   private initIoConnection(): void {
     this.socketService.initSocket();
+    this.AddChannel('lobby', this.socketService);
 
 
     this.socketService.onEvent(Event.CONNECT)
@@ -81,6 +89,11 @@ export class MainpanelComponent implements OnInit {
       .subscribe(() => {
         console.log('disconnected');
       });
+  }
+
+  private AddChannel(name: string, conn: SocketService) {
+    this.channelList.AddChannel(new Channel(name, conn));
+    this.chatChild.ngOnChanges();
   }
 
   private initModel(): void {

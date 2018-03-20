@@ -6,10 +6,7 @@
         <mcg-lobby></mcg-lobby>
       </div>
       <div *ngIf="inGame" class="content-container">
-        <mcg-hand [player]="topUser" [location]="'top'"></mcg-hand>
-        <mcg-hand [player]="leftUser" [location]="'left'"></mcg-hand>
-        <mcg-hand [player]="rightUser" [location]="'right'"></mcg-hand>
-        <mcg-hand [player]="user" [location]="'bottom'"></mcg-hand>
+        <mcg-playspace [tableId]="tableId" [user]="user" (onJoinTable)="handleJoinTable($event)"></mcg-playspace>
       </div>
     </div>
   </div>

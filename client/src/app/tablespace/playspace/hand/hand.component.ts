@@ -22,6 +22,12 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
           ':enter', [
          style({ top: '70%', left: '{{leftStart}}%'}),
          animate(300,  style({top: '*', left: '*'}))
+          ]),
+        transition(
+          ':leave', [
+            style({top: '*', left: '*'}),
+            animate(500, style({ top: '40%', left: '40%'})),
+            animate(500, style({ top: '100%', left: '40%'}))
           ])
     ]),
     trigger('flipCard', [
@@ -38,6 +44,7 @@ export class HandComponent implements OnInit {
   playedCard: UiCard;
 
   @Input() player: User;
+  @Input() zIndex: number;
   @Input() location: string;
 
 
@@ -103,6 +110,11 @@ export class HandComponent implements OnInit {
           console.log(playedCard);
           this.play(playedCard.card);
         }
+      });
+
+      this.socketService.onAction<any>('trickWon')
+      .subscribe((userId) => {
+        delete this.playedCard;
       });
   }
 

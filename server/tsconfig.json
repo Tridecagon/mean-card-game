@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "files": [
     "src/*.ts",
-    "src/model/*.ts",
+    "src/**/*.ts",
     "../shared/**/*.ts"
   ],
   "compilerOptions": {

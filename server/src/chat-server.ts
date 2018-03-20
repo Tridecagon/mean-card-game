@@ -2,7 +2,7 @@ import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
-import { Message, User, Table, Action } from '../../shared/model';
+import { Message, User, Table, Action, GameType } from '../../shared/model';
 import { GameTable } from '.';
 import { Player } from './model';
 
@@ -14,7 +14,7 @@ export class ChatServer {
     private port: string | number;
     private maxTables = 5;
 
-    private users: User[] = [];
+    private users: { [key: string] : User } = {};
     private lobby: Table[] = [];
     private seatMap: {table: number, seat: number}[] = [];
     private socketMap: any[] = [];
@@ -51,7 +51,7 @@ export class ChatServer {
             console.log('Running server on port %s', this.port);
         });
 
-        this.io.on('connect', (socket: any) => {
+        this.io.on('connect', (socket: SocketIO.Socket) => {
             console.log('Connected client on port %s.', this.port);
             socket.on('message', (m: Message) => {
                 console.log('[server](message): %s', JSON.stringify(m));
@@ -98,14 +98,18 @@ export class ChatServer {
                     let tablePlayers = new Array<Player>();
                     for (let user of this.lobby[tableIndex].users) {
                         if(user && user.id) {
-                            const newPlayer = new Player(user, this.socketMap[user.id])
+                            const newPlayer = new Player(user, this.socketMap[user.id]);
                             tablePlayers.push(newPlayer);
                             
                             newPlayer.socket.emit('startTable', tableIndex);
                         }
                     }
 
-                    var activeTable = new GameTable(tablePlayers, tableIndex, this.io.of(`/table${tableIndex}`));
+                    var activeTable = new GameTable(tablePlayers, tableIndex, this.lobby[tableIndex].gameType, this.io.of(`/table${tableIndex}`));
+                    activeTable.gameTableEventEmitter.on('end', () => {
+                        this.lobby[tableIndex].active = false;
+                        this.io.emit('lobbyState', this.lobby);
+                    });
                 }
 
             });
@@ -125,12 +129,12 @@ export class ChatServer {
 
     private tableSetup() {
         for (let i = 0; i < this.maxTables; i++) {
-            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}]};
+            let emptyTable: Table = {active: false, userCount: 0, users: [{}, {}, {}, {}], gameType: GameType.Euchre};
             this.lobby.push(emptyTable);
         }
     }
 
-       private unseatUser = (socketId: any) => {
+       private unseatUser = (socketId: string) => {
         if (this.users[socketId] && this.seatMap[this.users[socketId].id]) {
             this.lobby[this.seatMap[this.users[socketId].id].table].users[this.seatMap[this.users[socketId].id].seat] = {};
             this.lobby[this.seatMap[this.users[socketId].id].table].userCount--;
