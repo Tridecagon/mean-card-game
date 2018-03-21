@@ -1,5 +1,5 @@
 {
   "projects": {
-    "default": "typescript-chat"
+    "default": "mean-card-game"
   }
 }
