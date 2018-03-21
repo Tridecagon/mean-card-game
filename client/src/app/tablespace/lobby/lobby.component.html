@@ -1,36 +1,12 @@
 <div class="lobby-container">
     <mat-table #table [dataSource]="this.lobbyTables">
 
-      <ng-container matColumnDef="north">
-        <mat-header-cell *matHeaderCellDef> North </mat-header-cell>
+      <ng-container *ngFor="let dir of ['South', 'West', 'North', 'East']; let j = index" [matColumnDef]="dir">
+        <mat-header-cell *matHeaderCellDef> {{dir}} </mat-header-cell>
         <mat-cell *matCellDef="let table; let i = index">
-          <button *ngIf="!table.users[2]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 2)">Sit here</button>
-          <button *ngIf="table.users[2]?.name" mat-raised-button color="accent">{{table.users[2].name}}</button>
+          <button *ngIf="!table.users[j]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, j)">Sit here</button>
+          <button *ngIf="table.users[j]?.name" mat-raised-button color="accent">{{table.users[j].name}}</button>
         </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="south">
-        <mat-header-cell *matHeaderCellDef> South </mat-header-cell>
-        <mat-cell *matCellDef="let table; let i = index">
-            <button *ngIf="!table.users[0]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 0)">Sit here</button>
-            <button *ngIf="table.users[0]?.name" mat-raised-button color="accent">{{table.users[0].name}}</button>
-          </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="east">
-        <mat-header-cell *matHeaderCellDef> East </mat-header-cell>
-        <mat-cell *matCellDef="let table; let i = index">
-            <button *ngIf="!table.users[3]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 3)">Sit here</button>
-            <button *ngIf="table.users[3]?.name" mat-raised-button color="accent">{{table.users[3].name}}</button>
-          </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="west">
-        <mat-header-cell *matHeaderCellDef> West </mat-header-cell>
-        <mat-cell *matCellDef="let table; let i = index">
-            <button *ngIf="!table.users[1]?.name" mat-raised-button color="primary" (click)="onSeatClick(i, 1)">Sit here</button>
-            <button *ngIf="table.users[1]?.name" mat-raised-button color="accent">{{table.users[1].name}}</button>
-          </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="gameType">

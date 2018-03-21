@@ -12,7 +12,7 @@ export class LobbyComponent implements OnInit {
 
   @Input() user: User;
   lobbyTables: Table[];
-  displayedColumns = ['north', 'south', 'east', 'west', 'gameType', 'start'];
+  displayedColumns = ['North', 'South', 'East', 'West', 'gameType', 'start'];
   dataSource: MatTableDataSource<Table>;
   gameTypes: any;
 
