@@ -10,6 +10,7 @@ import { SocketService } from 'app/shared/services/socket.service';
   providers: [SocketService]
 })
 export class PlayspaceComponent implements OnInit {
+  trumpCard: Card;
   _user: User;
   users: User[] = [];
   zIndexes: number[] = [];
@@ -89,6 +90,11 @@ export class PlayspaceComponent implements OnInit {
         }
       }
     });
+
+    this.socketService.onAction<Card>('showTrumpCard')
+    .subscribe((trumpCard) => {
+        this.trumpCard = trumpCard;
+      });
   }
 
 }

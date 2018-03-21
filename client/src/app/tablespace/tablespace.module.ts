@@ -11,6 +11,7 @@ import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 import { HandComponent } from './playspace/hand/hand.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PlayspaceComponent } from './playspace/playspace.component';
+import { BidpanelComponent } from './playspace/bidpanel/bidpanel.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { PlayspaceComponent } from './playspace/playspace.component';
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent],
   providers: [SocketService]
 })
 export class TablespaceModule { }
