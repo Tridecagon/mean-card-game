@@ -9,11 +9,11 @@
   </mat-form-field>
 </mat-dialog-content>
 
-<mat-dialog-actions *ngIf="params?.typeDialog === 'new-user'" [attr.align]="'end'">
+<mat-dialog-actions *ngIf="params?.dialogType === DialogUserType.NEW" [attr.align]="'end'">
   <button mat-raised-button color="primary" mat-dialog-close (click)="onSave()" [disabled]="usernameFormControl.hasError('required')">Chat!</button>
 </mat-dialog-actions>
 
-<mat-dialog-actions *ngIf="params?.typeDialog === 'edit-user'" [attr.align]="'end'">
+<mat-dialog-actions *ngIf="params?.dialogType === DialogUserType.EDIT" [attr.align]="'end'">
   <button mat-button mat-dialog-close color="secondary">Close</button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="onSave()">Save</button>
 </mat-dialog-actions>
