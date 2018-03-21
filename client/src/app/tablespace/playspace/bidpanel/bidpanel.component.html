@@ -1,3 +1,24 @@
-<p>
-  Trump card is {{trumpCard.suit}} {{trumpCard.description}}
-</p>
+<div class="bidpanel-container">
+    <mat-table *ngIf="userStack" #table [dataSource]="userStack">
+
+        <ng-container matColumnDef="col">
+            <mat-header-cell *matHeaderCellDef> Player </mat-header-cell>
+            <mat-cell *matCellDef="let users; let i = index">
+              <button mat-raised-button color="primary">Sit here {{users[0].name}}</button>
+            </mat-cell>
+          </ng-container>
+
+      <!-- <ng-container *ngFor="let user of users; let j = index" [matColumnDef]="j">
+        <mat-header-cell *matHeaderCellDef> {{user.name}} </mat-header-cell>
+        <mat-cell *matCellDef="let users; let i = index">
+          <button mat-raised-button color="primary">Sit here</button>
+        </mat-cell>
+      </ng-container> -->
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  
+    </mat-table>
+    <img  src="./assets/img/deck/{{trumpUiCard.imageSrc}}" 
+    style="position:relative;">
+</div>
