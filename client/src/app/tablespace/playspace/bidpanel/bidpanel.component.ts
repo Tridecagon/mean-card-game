@@ -15,6 +15,14 @@ export class BidpanelComponent implements OnInit, OnChanges {
   private trumpUiCard: UiCard;
   private displayedColumns = ['col'];
   private userStack: User[][] = [];
+
+  private tiles = [
+    {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
+    {text: 'Two', cols: 1, rows: 3, color: 'lightgreen'},
+    {text: 'Three', cols: 1, rows: 2, color: 'lightpink'},
+    {text: 'Four', cols: 2, rows: 2, color: '#DDBDF1'},
+  ];
+
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
@@ -23,6 +31,10 @@ export class BidpanelComponent implements OnInit, OnChanges {
   ngOnChanges() {
     this.trumpUiCard = new UiCard(this.trumpCard);
     this.userStack[0] = this.users;
+  }
+
+  calculateCols(): number {
+    return 4;
   }
 
 }

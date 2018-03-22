@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '../shared/material/material.module';
-import { MatTableModule } from '@angular/material/table';
-import { MatSelectModule } from '@angular/material/select';
 
 import { TablespaceComponent } from './tablespace.component';
 import { SocketService } from '../shared/services/socket.service';
@@ -16,9 +14,7 @@ import { BidpanelComponent } from './playspace/bidpanel/bidpanel.component';
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule,
-    MatTableModule,
-    MatSelectModule
+    MaterialModule
   ],
   exports: [
     TablespaceComponent
