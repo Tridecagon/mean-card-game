@@ -14,27 +14,30 @@ export class BidpanelComponent implements OnInit, OnChanges {
   @Input() users: User[];
   private trumpUiCard: UiCard;
   private displayedColumns = ['col'];
-  private userStack: User[][] = [];
+  private players: User[] = [];
 
-  private tiles = [
-    {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
-    {text: 'Two', cols: 1, rows: 3, color: 'lightgreen'},
-    {text: 'Three', cols: 1, rows: 2, color: 'lightpink'},
-    {text: 'Four', cols: 2, rows: 2, color: '#DDBDF1'},
-  ];
+  private bids: number[] = [];
 
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
+
   }
 
   ngOnChanges() {
     this.trumpUiCard = new UiCard(this.trumpCard);
-    this.userStack[0] = this.users;
+
+    this.players = [];
+    for (const user of this.users) {
+      if (user && user.id) {
+        this.players.push(user);
+      }
+    }
+
   }
 
   calculateCols(): number {
-    return 4;
+    return this.players.length + 1;
   }
 
 }
