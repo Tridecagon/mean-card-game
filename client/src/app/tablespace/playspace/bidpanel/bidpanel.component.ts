@@ -12,6 +12,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   @Input() trumpCard: Card;
   @Input() users: User[];
+  @Input() me: User;
   private trumpUiCard: UiCard;
   private displayedColumns = ['col'];
   private players: User[] = [];
@@ -38,6 +39,10 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   calculateCols(): number {
     return this.players.length + 1;
+  }
+
+  isMe(player: User): boolean {
+    return this.me.id === player.id;
   }
 
 }
