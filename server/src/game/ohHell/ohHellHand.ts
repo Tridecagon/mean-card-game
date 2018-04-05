@@ -24,10 +24,12 @@ export class OhHellHand extends Hand {
     }
 
     ProcessBid(player: Player, bidInfo: any) : boolean {
-        if((!this.bids[player.index]) && bidInfo >= 0 && bidInfo <= this.numCards 
+        if((!this.bids[player.index]) && bidInfo.bid >= 0 && bidInfo.bid <= this.numCards 
         && (player.index != this.dealerIndex 
-            || this.bids.reduce((total, value) => total + value) != this.numCards)) {
-                this.bids[player.index] = bidInfo;
+            || this.bids.reduce((total, value) => total + value) + bidInfo.bid != this.numCards)) {
+                this.bids[player.index] = bidInfo.bid;
+                bidInfo.totalTricks = this.numCards;
+                bidInfo.totalBid = this.bids.reduce((total, value) => total + value);
                 return true;
         }
         return false;

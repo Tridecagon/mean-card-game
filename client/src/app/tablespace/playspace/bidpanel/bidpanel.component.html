@@ -14,7 +14,7 @@
               <mat-card-content>
                   <form>
                     <mat-form-field>
-                      <input matInput placeholder="Bid" type="number" [readonly]="isMe(player)" [value]="bids[player.id]" (keyup.enter)="sendBid()">
+                      <input matInput placeholder="Bid" type="number" [readonly]="!canBid(player)" [value]="bids[player.id]" (keyup.enter)="sendBid($event)">
                     </mat-form-field>
                   </form>
               </mat-card-content>
@@ -28,36 +28,8 @@
         </mat-grid-tile>
       </mat-grid-list>
     </mat-card-content>
+    <mat-card-footer>
+      Total tricks: {{totalTricks}} Total bid: {{totalBid}} 
+    </mat-card-footer>
   </mat-card>
 </div>
-
-<!-- 
-<mat-grid-list [cols]="calculateCols" rowHeight="80px">
-    <mat-grid-tile
-        *ngFor="let tile of tiles"
-        [colspan]="tile.cols"
-        [rowspan]="tile.rows"
-        [style.background]="tile.color">
-      {{tile.text}}
-    </mat-grid-tile>
-  </mat-grid-list> -->
-
-<!-- <div flex="80">
-    <mat-table *ngIf="userStack" #table [dataSource]="userStack">
-
-        <ng-container class="bid-table" matColumnDef="col">
-            <mat-header-cell *matHeaderCellDef> Player </mat-header-cell>
-            <mat-cell *matCellDef="let users; let i = index">
-              <button mat-raised-button color="primary">Sit here {{users[0].name}}</button>
-            </mat-cell>
-          </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  
-    </mat-table>
-  </div>
-  <div flex="20" style="background-color: white">
-    <img src="./assets/img/deck/{{trumpUiCard.imageSrc}}" 
-    style="height: 80%">
-  </div> -->
