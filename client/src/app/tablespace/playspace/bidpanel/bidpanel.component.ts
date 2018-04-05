@@ -18,11 +18,14 @@ export class BidpanelComponent implements OnInit, OnChanges {
   private players: User[] = [];
 
   private bids: number[] = [];
+  private totalTricks: number;
+  private totalBid: number;
+  private hasBid = false;
 
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
-
+    this.setupListeners();
   }
 
   ngOnChanges() {
@@ -36,13 +39,35 @@ export class BidpanelComponent implements OnInit, OnChanges {
     }
 
   }
+  setupListeners() {
+    this.socketService.initSocket();
+
+    this.socketService.onAction<any>('bidResponse')
+        .subscribe((bidData) => {
+          const index = this.players.findIndex(p => p.id === bidData.userId);
+          this.bids[index] = bidData.bidInfo.bid;
+          this.totalTricks = bidData.bidInfo.totalTricks;
+          this.totalBid = bidData.bidInfo.totalBid;
+          if (bidData.userId === this.me.id) {
+            this.hasBid = true;
+          }
+        });
+  }
 
   calculateCols(): number {
     return this.players.length + 1;
   }
 
+  canBid(player: User): boolean {
+    return this.isMe(player) && !this.hasBid;
+  }
+
   isMe(player: User): boolean {
     return this.me.id === player.id;
+  }
+
+  sendBid(event: any) {
+    this.socketService.sendAction('bidRequest', {'bid': event.target.valueAsNumber})
   }
 
 }
