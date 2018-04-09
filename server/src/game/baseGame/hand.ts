@@ -150,7 +150,7 @@ export class Hand {
             });
 
             player.socket.on('bidRequest', (bidInfo: any) => {
-                console.log(player.user.name + ' request to bid ' + bidInfo);
+                console.log(player.user.name + ' request to bid ' + JSON.stringify(bidInfo));
                 if (this.state === State.Bid && this.currentPlayer === player.index && this.ProcessBid(player, bidInfo)) { 
                     this.tableChan.emit('bidResponse', {'bidInfo': bidInfo, 'userId': player.user.id});
                 }

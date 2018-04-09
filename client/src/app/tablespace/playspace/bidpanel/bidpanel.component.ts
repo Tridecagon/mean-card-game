@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import {UiCard } from '../../../shared/model/uiCard';
 import { Card, Message, User } from '../../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
+import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'mcg-bidpanel',
@@ -13,6 +14,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
   @Input() trumpCard: Card;
   @Input() users: User[];
   @Input() me: User;
+  @Input() dealerId: number;
   private trumpUiCard: UiCard;
   private displayedColumns = ['col'];
   private players: User[] = [];
@@ -26,17 +28,25 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.setupListeners();
-  }
 
-  ngOnChanges() {
     this.trumpUiCard = new UiCard(this.trumpCard);
 
     this.players = [];
-    for (const user of this.users) {
-      if (user && user.id) {
-        this.players.push(user);
+    const dealerIndex = this.users.findIndex(u => u && u.id === this.dealerId);
+
+    // iterate through circular array
+    // for (let i = (dealerIndex + 1) % this.users.length; i === dealerIndex; i = (i + 1) % this.users.length) {
+    let i = dealerIndex;
+    do {
+      i = (i + 1) % this.users.length;
+      if (this.users[i] && this.users[i].id) {
+        this.players.push(this.users[i]);
       }
-    }
+    } while (i !== dealerIndex);
+  }
+
+  ngOnChanges() {
+
 
   }
   setupListeners() {
@@ -67,7 +77,9 @@ export class BidpanelComponent implements OnInit, OnChanges {
   }
 
   sendBid(event: any) {
-    this.socketService.sendAction('bidRequest', {'bid': event.target.valueAsNumber})
+    if (this.canBid(this.me)) {
+      this.socketService.sendAction('bidRequest', {'bid': event.target.valueAsNumber});
+    }
   }
 
 }

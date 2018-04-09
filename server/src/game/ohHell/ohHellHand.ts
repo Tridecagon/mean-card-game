@@ -19,7 +19,7 @@ export class OhHellHand extends Hand {
         this.stateHandlers[State.Bid] = () => {
              this.trumpCard = this.deck.draw();
              this.trumpSuit = this.trumpCard.suit;
-             this.tableChan.emit('showTrumpCard', this.trumpCard);
+             this.tableChan.emit('startBidding', {'trumpCard': this.trumpCard, 'dealerId': this.players[this.dealerIndex].user.id});
             };
     }
 
@@ -30,9 +30,19 @@ export class OhHellHand extends Hand {
                 this.bids[player.index] = bidInfo.bid;
                 bidInfo.totalTricks = this.numCards;
                 bidInfo.totalBid = this.bids.reduce((total, value) => total + value);
+                if(player.index === this.dealerIndex)
+                    this.CompleteBidding();
+                this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
                 return true;
         }
         return false;
+    }
+
+    CompleteBidding() {
+        setTimeout(() => {
+            this.SetState(State.Play);
+            this.tableChan.emit('beginPlay');
+        }, 5000);
     }
 
     ScoreHand() {
