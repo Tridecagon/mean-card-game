@@ -4,16 +4,18 @@
     <mat-card-content>
       <mat-grid-list [cols]="calculateCols()" rowHeight="220px">
         <mat-grid-tile
-            *ngFor="let player of players"
+            *ngFor="let player of players; let i = index"
             [colspan]="1"
             [rowspan]="1">
             <mat-card>
-              <mat-card-subtitle>
+              <mat-card-subtitle
+               [style.font-weight]="i === turnIndex ? 'bold' : 'normal'"
+               [style.background-color]="i === turnIndex ? 'forestgreen' : 'white'">
                   {{player.name}}
               </mat-card-subtitle>
               <mat-card-content>
-                  <mat-form-field>
-                    <input matInput placeholder="Bid" type="number" [readonly]="!canBid(player)" (keyup.enter)="sendBid($event)">
+                  <mat-form-field style="width: 70px">
+                    <input matInput placeholder="Bid" type="number" [value]="bids[i]" [readonly]="!canBid(player)" (keyup.enter)="sendBid($event)">
                   </mat-form-field>
               </mat-card-content>
               <mat-card-actions>
