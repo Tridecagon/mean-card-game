@@ -23,6 +23,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
   private totalTricks: number;
   private totalBid: number;
   private hasBid = false;
+  private turnIndex: number;
 
   constructor(private socketService: SocketService) { }
 
@@ -43,6 +44,8 @@ export class BidpanelComponent implements OnInit, OnChanges {
         this.players.push(this.users[i]);
       }
     } while (i !== dealerIndex);
+
+    this.turnIndex = 0;
   }
 
   ngOnChanges() {
@@ -58,6 +61,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
           this.bids[index] = bidData.bidInfo.bid;
           this.totalTricks = bidData.bidInfo.totalTricks;
           this.totalBid = bidData.bidInfo.totalBid;
+          this.turnIndex = index + 1;
           if (bidData.userId === this.me.id) {
             this.hasBid = true;
           }
@@ -78,7 +82,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   sendBid(event: any) {
     if (this.canBid(this.me)) {
-      this.socketService.sendAction('bidRequest', {'bid': event.target.valueAsNumber});
+      this.socketService.sendAction('bidRequest', {'bid': Number(event.target.value)});
     }
   }
 
