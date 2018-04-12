@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import {UiCard } from '../../../shared/model/uiCard';
 import { Card, Message, User } from '../../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
@@ -15,6 +16,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
   @Input() users: User[];
   @Input() me: User;
   @Input() dealerId: number;
+  @Input() maxBid = 10;
   private trumpUiCard: UiCard;
   private displayedColumns = ['col'];
   private players: User[] = [];
@@ -24,6 +26,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
   private totalBid: number;
   private hasBid = false;
   private turnIndex: number;
+  private bidFormControls: FormControl[] = [];
 
   constructor(private socketService: SocketService) { }
 
@@ -42,6 +45,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
       i = (i + 1) % this.users.length;
       if (this.users[i] && this.users[i].id) {
         this.players.push(this.users[i]);
+        this.bidFormControls.push(new FormControl('', [this.validateBid.bind(this)]));
       }
     } while (i !== dealerIndex);
 
@@ -82,8 +86,21 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   sendBid(event: any) {
     if (this.canBid(this.me)) {
-      this.socketService.sendAction('bidRequest', {'bid': Number(event.target.value)});
+      const bidVal = Number(event.target.value);
+      if (!Number.isNaN(bidVal)) {
+        this.socketService.sendAction('bidRequest', {'bid': bidVal});
+      }
+      event.target.value = '';
     }
+  }
+
+  validateBid(c: FormControl) {
+    const bid = Number(c.value);
+    return (Number.isNaN(bid) || bid < 0 || bid > this.maxBid) ?  {
+      validateBid: {
+        valid: false
+      }
+    } : null;
   }
 
 }
