@@ -86,8 +86,8 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   sendBid(event: any) {
     if (this.canBid(this.me)) {
-      const bidVal = Number(event.target.value);
-      if (!Number.isNaN(bidVal)) {
+      const bidVal = this.ParseBid(event.target.value);
+      if (bidVal >= 0) {
         this.socketService.sendAction('bidRequest', {'bid': bidVal});
       }
       event.target.value = '';
@@ -95,12 +95,17 @@ export class BidpanelComponent implements OnInit, OnChanges {
   }
 
   validateBid(c: FormControl) {
-    const bid = Number(c.value);
-    return (Number.isNaN(bid) || bid < 0 || bid > this.maxBid) ?  {
-      validateBid: {
-        valid: false
-      }
-    } : null;
+    return (this.ParseBid(c.value) === -1) ? { validateBid: { valid: false } } : null;
   }
+
+  ParseBid(bidStr: string): number {
+    // returns -1 if error
+
+    const bid = Number(bidStr);
+    const valid = /^\d+$/.test(bidStr) && !Number.isNaN(bid) && bid >= 0 && bid <= this.maxBid;
+    return valid ? bid : -1;
+  }
+
+
 
 }
