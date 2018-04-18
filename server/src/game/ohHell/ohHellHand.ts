@@ -42,7 +42,7 @@ export class OhHellHand extends Hand {
     CompleteBidding() {
         setTimeout(() => {
             this.SetState(State.Play);
-            this.tableChan.emit('beginPlay');
+            this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
         }, 5000);
     }
 
