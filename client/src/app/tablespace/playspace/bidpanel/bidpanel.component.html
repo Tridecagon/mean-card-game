@@ -19,6 +19,9 @@
                     <mat-error *ngIf="bidFormControls[i].hasError('validateBid')">
                       Please enter a bid between 0 and {{this.maxBid}}
                     </mat-error>
+                    <mat-error *ngIf="bidFormControls[i].hasError('totalBid') && !bidFormControls[i].hasError('validateBid')">
+                      Dealer cannot bid {{totalTricks-totalBid}}
+                    </mat-error>
                   </mat-form-field>
               </mat-card-content>
               <mat-card-actions>
