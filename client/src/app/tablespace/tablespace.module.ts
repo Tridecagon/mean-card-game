@@ -10,6 +10,7 @@ import { HandComponent } from './playspace/hand/hand.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PlayspaceComponent } from './playspace/playspace.component';
 import { BidpanelComponent } from './playspace/bidpanel/bidpanel.component';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -21,6 +22,9 @@ import { BidpanelComponent } from './playspace/bidpanel/bidpanel.component';
     TablespaceComponent
   ],
   declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent],
-  providers: [SocketService]
+  providers: [
+    SocketService,
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+  ]
 })
 export class TablespaceModule { }
