@@ -138,10 +138,11 @@ export class Hand {
                 console.log(player.user.name + ' request to play ' + card.suit + ' ' + card.description);
                 console.log('current player ' + this.currentPlayer + ' trick leader' + this.trickLeader + ' player.index '+ player.index)
                 let playCard = player.heldCards.find(c => (c.suit === card.suit && c.description === card.description));
-                if (this.state == State.Play && this.currentPlayer === player.index && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) {  // TODO: validate that play is legal
-                    this.tableChan.emit('playResponse', {'card': card, 'userId': player.user.id});
+                if (this.state == State.Play && this.currentPlayer === player.index && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) { 
                     this.currentTrick[this.currentPlayer] = player.heldCards.splice(player.heldCards.indexOf(playCard), 1)[0];
                     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+                    this.tableChan.emit('playResponse', {'card': card, 'userId': player.user.id, 'activePlayer': 
+                        this.currentPlayer === this.trickLeader ? -1 : this.players[this.currentPlayer].user.id});
                     if(this.currentPlayer === this.trickLeader) { // trick is complete
                         this.currentPlayer = -1; // prevent more plays
                         this.EvaluateTrick();
