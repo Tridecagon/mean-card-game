@@ -45,7 +45,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
       i = (i + 1) % this.users.length;
       if (this.users[i] && this.users[i].id) {
         this.players.push(this.users[i]);
-        this.bidFormControls.push(new FormControl('', [this.validateBid.bind(this)]));
+        this.bidFormControls.push(new FormControl('', [this.validateBid.bind(this), this.checkBidTotal.bind(this)]));
       }
     } while (i !== dealerIndex);
 
@@ -96,6 +96,12 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   validateBid(c: FormControl) {
     return (this.ParseBid(c.value) === -1) ? { validateBid: { valid: false } } : null;
+  }
+
+  checkBidTotal(c: FormControl) {
+    return (this.me.id === this.dealerId
+            && (this.totalBid + this.ParseBid(c.value) === this.totalTricks))
+       ? { totalBid: { valid: false } } : null;
   }
 
   ParseBid(bidStr: string): number {
