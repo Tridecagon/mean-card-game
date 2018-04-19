@@ -24,6 +24,7 @@
           style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
     </div>
     <div class="nameplate" [style.transform]="getNameplateTransform()" [style.background-color]="activeHand ? 'yellow' : 'lightblue'">
-      {{player.name}}
+      <div *ngIf="bid >= 0" style="position: absolute; right: 0;">{{tricksTaken}} / {{bid}} </div>
+      <p style="display: inline-block;">{{player.name}}</p>   
     </div>
   </div>

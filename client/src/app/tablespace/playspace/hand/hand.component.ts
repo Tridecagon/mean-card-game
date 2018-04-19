@@ -43,6 +43,8 @@ export class HandComponent implements OnInit {
   maxSelectedCards = 1;
   hand: UiCard[] = [];
   playedCard: UiCard;
+  tricksTaken: number;
+  bid: number;
 
   @Input() player: User;
   @Input() zIndex: number;
@@ -118,11 +120,22 @@ export class HandComponent implements OnInit {
       .subscribe((userId) => {
         delete this.playedCard;
         this.activeHand = this.player && (userId === this.player.id);
+        if (this.activeHand) {
+          this.tricksTaken++;
+        }
       });
 
       this.socketService.onAction<any>('beginPlay')
       .subscribe((activePlayerId) => {
         this.activeHand = this.player && (activePlayerId === this.player.id);
+      });
+
+      this.socketService.onAction<any>('bidResponse')
+      .subscribe((bidData) => {
+        if (bidData.userId === this.player.id) {
+          this.bid = bidData.bidInfo.bid;
+          this.tricksTaken = 0;
+        }
       });
   }
 
