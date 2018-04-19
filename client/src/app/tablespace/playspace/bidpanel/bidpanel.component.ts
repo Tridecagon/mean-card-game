@@ -14,12 +14,12 @@ export class BidpanelComponent implements OnInit, OnChanges {
 
   @Input() trumpCard: Card;
   @Input() users: User[];
-  @Input() me: User;
   @Input() dealerId: number;
   @Input() maxBid = 10;
   private trumpUiCard: UiCard;
   private displayedColumns = ['col'];
   private players: User[] = [];
+  private me: User;
 
   private bids: number[] = [];
   private totalTricks: number;
@@ -36,6 +36,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
     this.trumpUiCard = new UiCard(this.trumpCard);
 
     this.players = [];
+    this.me = this.users[0];
     const dealerIndex = this.users.findIndex(u => u && u.id === this.dealerId);
 
     // iterate through circular array
