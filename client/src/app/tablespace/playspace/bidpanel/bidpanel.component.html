@@ -38,7 +38,7 @@
       </mat-grid-list>
     </mat-card-content>
     <mat-card-footer>
-      <p> Total bid: {{totalBid}} Total tricks: {{totalTricks}}</p>
+      <span>Total tricks: {{totalTricks}}</span><span [style.font-weight]="bidsComplete ? 'bold' : 'normal'"> Total bid: {{totalBid}} </span>
       
     </mat-card-footer>
   </mat-card>
