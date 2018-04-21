@@ -4,6 +4,7 @@ import { Hand, State } from '../baseGame';
 
 export class OhHellHand extends Hand {
 
+    private trumpsBroken = false;
     private trumpCard : Card;
     private bids: number[] = [];
 
@@ -12,13 +13,22 @@ export class OhHellHand extends Hand {
     }
 
     DealHands() {
+        this.trumpCard = this.deck.draw();
+        this.trumpSuit = this.trumpCard.suit;
         this.numCards = this.params.numCards;
+        this.trumpsBroken = false;
         super.DealHands();
+    }
+
+    CollectCards() {
+        if(this.trumpCard) {
+            this.ReturnToDeck([this.trumpCard]);
+        }
+        super.CollectCards();
     }
     SetupStateHandlers() {
         this.stateHandlers[State.Bid] = () => {
-             this.trumpCard = this.deck.draw();
-             this.trumpSuit = this.trumpCard.suit;
+
              this.tableChan.emit('startBidding', {'trumpCard': this.trumpCard, 'dealerId': this.players[this.dealerIndex].user.id});
             };
     }
@@ -44,6 +54,18 @@ export class OhHellHand extends Hand {
             this.SetState(State.Play);
             this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
         }, 5000);
+    }
+
+    PlayIsLegal(card: Card) : boolean {
+        if(this.currentPlayer === this.trickLeader && card.suit === this.trumpSuit && !this.trumpsBroken)
+            return false;
+        return super.PlayIsLegal(card);
+    }
+    async EvaluateTrick() {
+        if(this.currentTrick.some(c => c.suit === this.trumpSuit)) {
+            this.trumpsBroken = true;
+        }
+        super.EvaluateTrick();
     }
 
     ScoreHand() {
