@@ -73,8 +73,65 @@ export class Hand {
                 player.heldCards.push({'suit': card.suit, 'description': card.description, 'sort': card.sort});
             }
 
+            this.SortCards(player.heldCards);
+
             player.socket.emit('dealHand', player.heldCards);
             this.tableChan.emit('tableDealCards', {numCards: this.numCards, toUser: player.user.id});
+        }
+    }
+
+    SortCards(cards: Card[]) {
+        const suits = Array.from(new Set(cards.map(card => card.suit))); // gets distinct suits
+    
+        // manually sort suits by color
+        // set first suit
+        var firstSuitIndex = 0;
+        if(this.trumpSuit && this.trumpSuit.length > 0) {
+            firstSuitIndex = suits.findIndex( s => s === this.trumpSuit);
+        } else {
+            const blackSuits = suits.filter(s => this.GetSuitColor(s) === 'Black');
+            const redSuits = suits.filter(s => this.GetSuitColor(s) === 'Red');
+
+            if (blackSuits > redSuits) {
+                firstSuitIndex = suits.findIndex(s => this.GetSuitColor(s) === 'Black');
+            }
+            else if (redSuits > blackSuits) {
+                firstSuitIndex = suits.findIndex(s => this.GetSuitColor(s) === 'Red');
+            }
+        }
+        // set first suit
+        if(firstSuitIndex != 0) {
+            [suits[0], suits[firstSuitIndex]] = [suits[firstSuitIndex], suits[0]]; // array destructuring
+        }
+
+        // set remaining suits
+        for(var i = 1; i < suits.length - 1; i++ ) // nothing to do on last suit item
+        {
+            if(this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1]))
+            {
+                var betterSuit = suits.findIndex((s, j) => j > i && this.GetSuitColor(s) !== this.GetSuitColor(suits[i - 1]));
+                if(betterSuit > 0) {
+                    [suits[i], suits[betterSuit]] = [suits[betterSuit], suits[i]];
+                }
+            }
+        }
+        
+        // sort cards by suit, then by sort
+        cards.sort((c1, c2) => c1.suit === c2.suit ? c2.sort - c1.sort : suits.findIndex(s => s === c1.suit) - suits.findIndex(s => s=== c2.suit));
+
+
+    }
+
+    GetSuitColor(suit: string): string {
+        switch(suit) {
+            case 'Spade':
+            case 'Club':
+                return 'Black';
+            case 'Diamond':
+            case 'Heart':
+                return 'Red';
+            default:
+                return '';
         }
     }
 
@@ -116,7 +173,7 @@ export class Hand {
 
     Beats(follow: Card, lead: Card) {
         if(this.IsTrump(follow)) {
-            return this.IsTrump(lead) && follow.sort > lead.sort;
+            return !this.IsTrump(lead) || follow.sort > lead.sort;
         } else {
             return follow.suit === lead.suit && follow.sort > lead.sort;
         }
