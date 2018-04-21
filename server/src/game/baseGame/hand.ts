@@ -36,7 +36,7 @@ export class Hand {
         this.DealHands();
         this.SetInitialState();
 
-        await this.AwaitResultAync();
+        await this.AwaitResultAsync();
         return this.scores;
     }
 
@@ -135,7 +135,14 @@ export class Hand {
         }
     }
 
-    async AwaitResultAync() {
+    CompleteBidding() {
+        setTimeout(() => {
+            this.SetState(State.Play);
+            this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
+        }, 5000);
+    }
+
+    async AwaitResultAsync() {
         while(!this.IsHandComplete()) {
             await this.Sleep(1000);
         }
@@ -145,7 +152,9 @@ export class Hand {
     ScoreHand() {
         this.scores = [];
         for(let player of this.players) {
-            this.scores[player.user.id] = {points: (player.trickPile.length / this.players.length)};
+            this.scores[player.index] = {
+                points: (player.trickPile.length / this.players.length),
+                id: player.user.id};
         }
     }
 

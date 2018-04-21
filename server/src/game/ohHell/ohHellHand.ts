@@ -49,13 +49,6 @@ export class OhHellHand extends Hand {
         return false;
     }
 
-    CompleteBidding() {
-        setTimeout(() => {
-            this.SetState(State.Play);
-            this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
-        }, 5000);
-    }
-
     PlayIsLegal(card: Card) : boolean {
         if(this.currentPlayer === this.trickLeader && card.suit === this.trumpSuit && !this.trumpsBroken)
             return false;
@@ -72,8 +65,9 @@ export class OhHellHand extends Hand {
         this.scores = [];
         for(let player of this.players) {
             const numTricks = player.trickPile.length / this.players.length;
-            this.scores[player.user.id] = {points: (numTricks
-                        + this.bids[player.index] === numTricks ? 10 : 0)};
+            this.scores[player.index] = {
+                points: (numTricks + (this.bids[player.index] === numTricks ? 10 : 0)),
+                id: player.user.id};
         }
     }
 }
