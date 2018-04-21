@@ -25,4 +25,8 @@ export class OhHellMatch extends Match {
         super.AdvanceDealer();
     }
 
+    MatchComplete() {
+        return this.numCards <= 0;
+    }
+
 }
