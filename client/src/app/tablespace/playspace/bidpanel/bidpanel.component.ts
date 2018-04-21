@@ -22,6 +22,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
   private me: User;
 
   private bids: number[] = [];
+  private bidsComplete = false;
   private totalTricks: number;
   private totalBid: number;
   private hasBid = false;
@@ -69,6 +70,9 @@ export class BidpanelComponent implements OnInit, OnChanges {
           this.turnIndex = index + 1;
           if (bidData.userId === this.me.id) {
             this.hasBid = true;
+          }
+          if(this.turnIndex === this.players.length) {
+            this.bidsComplete = true;
           }
         });
   }
