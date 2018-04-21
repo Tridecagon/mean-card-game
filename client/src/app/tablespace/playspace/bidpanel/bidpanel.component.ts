@@ -71,7 +71,7 @@ export class BidpanelComponent implements OnInit, OnChanges {
           if (bidData.userId === this.me.id) {
             this.hasBid = true;
           }
-          if(this.turnIndex === this.players.length) {
+          if (this.turnIndex === this.players.length) {
             this.bidsComplete = true;
           }
         });
