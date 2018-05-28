@@ -3,7 +3,7 @@
     <div class="tablespace-felt">
       
       <div *ngIf="!inGame" class="content-container">
-        <mcg-lobby></mcg-lobby>
+        <mcg-lobby [user]="user"></mcg-lobby>
       </div>
       <div *ngIf="inGame" class="content-container">
         <mcg-playspace [tableId]="tableId" [user]="user" (onJoinTable)="handleJoinTable($event)"></mcg-playspace>

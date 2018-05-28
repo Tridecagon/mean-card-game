@@ -36,7 +36,7 @@ export class Hand {
         this.DealHands();
         this.SetInitialState();
 
-        await this.AwaitResultAync();
+        await this.AwaitResultAsync();
         return this.scores;
     }
 
@@ -73,12 +73,76 @@ export class Hand {
                 player.heldCards.push({'suit': card.suit, 'description': card.description, 'sort': card.sort});
             }
 
+            this.SortCards(player.heldCards);
+
             player.socket.emit('dealHand', player.heldCards);
             this.tableChan.emit('tableDealCards', {numCards: this.numCards, toUser: player.user.id});
         }
     }
 
-    async AwaitResultAync() {
+    SortCards(cards: Card[]) {
+        const suits = Array.from(new Set(cards.map(card => card.suit))); // gets distinct suits
+    
+        // manually sort suits by color
+        // set first suit
+        var firstSuitIndex = 0;
+        if(this.trumpSuit && this.trumpSuit.length > 0) {
+            firstSuitIndex = suits.findIndex( s => s === this.trumpSuit);
+        } else {
+            const blackSuits = suits.filter(s => this.GetSuitColor(s) === 'Black');
+            const redSuits = suits.filter(s => this.GetSuitColor(s) === 'Red');
+
+            if (blackSuits > redSuits) {
+                firstSuitIndex = suits.findIndex(s => this.GetSuitColor(s) === 'Black');
+            }
+            else if (redSuits > blackSuits) {
+                firstSuitIndex = suits.findIndex(s => this.GetSuitColor(s) === 'Red');
+            }
+        }
+        // set first suit
+        if(firstSuitIndex != 0) {
+            [suits[0], suits[firstSuitIndex]] = [suits[firstSuitIndex], suits[0]]; // array destructuring
+        }
+
+        // set remaining suits
+        for(var i = 1; i < suits.length - 1; i++ ) // nothing to do on last suit item
+        {
+            if(this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1]))
+            {
+                var betterSuit = suits.findIndex((s, j) => j > i && this.GetSuitColor(s) !== this.GetSuitColor(suits[i - 1]));
+                if(betterSuit > 0) {
+                    [suits[i], suits[betterSuit]] = [suits[betterSuit], suits[i]];
+                }
+            }
+        }
+        
+        // sort cards by suit, then by sort
+        cards.sort((c1, c2) => c1.suit === c2.suit ? c2.sort - c1.sort : suits.findIndex(s => s === c1.suit) - suits.findIndex(s => s=== c2.suit));
+
+
+    }
+
+    GetSuitColor(suit: string): string {
+        switch(suit) {
+            case 'Spade':
+            case 'Club':
+                return 'Black';
+            case 'Diamond':
+            case 'Heart':
+                return 'Red';
+            default:
+                return '';
+        }
+    }
+
+    CompleteBidding() {
+        setTimeout(() => {
+            this.SetState(State.Play);
+            this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
+        }, 5000);
+    }
+
+    async AwaitResultAsync() {
         while(!this.IsHandComplete()) {
             await this.Sleep(1000);
         }
@@ -88,7 +152,9 @@ export class Hand {
     ScoreHand() {
         this.scores = [];
         for(let player of this.players) {
-            this.scores[player.user.id] = {points: (player.trickPile.length / this.players.length)};
+            this.scores[player.index] = {
+                points: (player.trickPile.length / this.players.length),
+                id: player.user.id};
         }
     }
 
@@ -116,7 +182,7 @@ export class Hand {
 
     Beats(follow: Card, lead: Card) {
         if(this.IsTrump(follow)) {
-            return this.IsTrump(lead) && follow.sort > lead.sort;
+            return !this.IsTrump(lead) || follow.sort > lead.sort;
         } else {
             return follow.suit === lead.suit && follow.sort > lead.sort;
         }
@@ -138,10 +204,11 @@ export class Hand {
                 console.log(player.user.name + ' request to play ' + card.suit + ' ' + card.description);
                 console.log('current player ' + this.currentPlayer + ' trick leader' + this.trickLeader + ' player.index '+ player.index)
                 let playCard = player.heldCards.find(c => (c.suit === card.suit && c.description === card.description));
-                if (this.state == State.Play && this.currentPlayer === player.index && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) {  // TODO: validate that play is legal
-                    this.tableChan.emit('playResponse', {'card': card, 'userId': player.user.id});
+                if (this.state == State.Play && this.currentPlayer === player.index && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) { 
                     this.currentTrick[this.currentPlayer] = player.heldCards.splice(player.heldCards.indexOf(playCard), 1)[0];
                     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+                    this.tableChan.emit('playResponse', {'card': card, 'userId': player.user.id, 'activePlayer': 
+                        this.currentPlayer === this.trickLeader ? -1 : this.players[this.currentPlayer].user.id});
                     if(this.currentPlayer === this.trickLeader) { // trick is complete
                         this.currentPlayer = -1; // prevent more plays
                         this.EvaluateTrick();
@@ -150,9 +217,9 @@ export class Hand {
             });
 
             player.socket.on('bidRequest', (bidInfo: any) => {
-                console.log(player.user.name + ' request to bid ' + bidInfo);
+                console.log(player.user.name + ' request to bid ' + JSON.stringify(bidInfo));
                 if (this.state === State.Bid && this.currentPlayer === player.index && this.ProcessBid(player, bidInfo)) { 
-                    this.tableChan.emit('bidResponse', {'bid': bidInfo, 'userId': player.user.id});
+                    this.tableChan.emit('bidResponse', {'bidInfo': bidInfo, 'userId': player.user.id});
                 }
             });
 

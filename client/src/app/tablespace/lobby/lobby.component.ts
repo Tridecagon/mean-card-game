@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SocketService } from 'app/shared/services/socket.service';
-import { User, Table } from '../../../../../shared/model';
-import {MatTableDataSource} from '@angular/material';
+import { User, Table, GameType } from '../../../../../shared/model';
+import { MatTableDataSource, MatSelect, MatOption, MatFormField } from '@angular/material';
 
 @Component({
   selector: 'mcg-lobby',
@@ -10,11 +10,15 @@ import {MatTableDataSource} from '@angular/material';
 })
 export class LobbyComponent implements OnInit {
 
+  @Input() user: User;
   lobbyTables: Table[];
-  displayedColumns = ['north', 'south', 'east', 'west', 'start'];
+  displayedColumns = ['North', 'South', 'East', 'West', 'gameType', 'start'];
   dataSource: MatTableDataSource<Table>;
+  gameTypes: any;
 
-  constructor(private socketService: SocketService) { }
+  constructor(private socketService: SocketService) {
+    this.gameTypes = GameType.values();
+   }
 
   ngOnInit() {
 
@@ -39,4 +43,18 @@ export class LobbyComponent implements OnInit {
     console.log(`Table ${table} Seat ${seat}`);
     this.socketService.sendAction('requestSeat', {'table': table, 'seat': seat});
   }
+
+  private onGameSelected(tableId: number, value: GameType) {
+    console.log(`Game change event Table ${tableId} Value ${value} `);
+    this.socketService.sendAction('selectGame', {table: tableId, gameType: value});
+  }
+
+  private isMyTable(table: Table): boolean {
+    return table.users.some(u => u.id === this.user.id);
+  }
+
+  private getGameName(gameType: number) {
+    return GameType[gameType] ? GameType[gameType] : '';
+  }
+
 }

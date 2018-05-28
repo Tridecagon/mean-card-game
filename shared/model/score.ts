@@ -1,1 +1,1 @@
-export interface Score { points: number };
+export interface Score { points: number; id: number; };

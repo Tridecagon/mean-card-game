@@ -1,0 +1,45 @@
+<div class="bidpanel-container">
+  <mat-card>
+    <mat-card-title>Oh Hell: Bidding</mat-card-title>
+    <mat-card-content>
+      <mat-grid-list [cols]="calculateCols()" rowHeight="220px">
+        <mat-grid-tile
+            *ngFor="let player of players; let i = index"
+            [colspan]="1"
+            [rowspan]="1">
+            <mat-card>
+              <mat-card-subtitle
+               [style.font-weight]="i === turnIndex ? 'bold' : 'normal'"
+               [style.background-color]="i === turnIndex ? 'forestgreen' : 'white'">
+                  {{player.name}}
+              </mat-card-subtitle>
+              <mat-card-content>
+                  <mat-form-field style="width: 70px">
+                    <input matInput [formControl]="bidFormControls[i]" placeholder="Bid" type="number" min="0" max="10" [value]="bids[i]" [readonly]="!canBid(player)" (keyup.enter)="sendBid($event)">
+                    <mat-error *ngIf="bidFormControls[i].hasError('validateBid')">
+                      Please enter a bid between 0 and {{this.maxBid}}
+                    </mat-error>
+                    <mat-error *ngIf="bidFormControls[i].hasError('totalBid') && !bidFormControls[i].hasError('validateBid')">
+                      Dealer cannot bid {{totalTricks-totalBid}}
+                    </mat-error>
+                  </mat-form-field>
+              </mat-card-content>
+              <mat-card-actions>
+                  <button mat-button type="submit" [disabled]="!canBid(player)">BID</button>
+                </mat-card-actions>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile *ngIf="trumpUiCard">
+              <div style="width: 100%; height: 100%">
+                <H1 style="text-align: center">Trumps:</H1>
+                <img src="./assets/img/deck/{{trumpUiCard.imageSrc}}" style="position:absolute; max-height: 70%; max-width: 100%; left: 0; right: 0; bottom: 0; margin: 0 auto" >
+              </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+    <mat-card-footer>
+      <span>Total tricks: {{totalTricks}}</span><span [style.font-weight]="bidsComplete ? 'bold' : 'normal'"> Total bid: {{totalBid}} </span>
+      
+    </mat-card-footer>
+  </mat-card>
+</div>

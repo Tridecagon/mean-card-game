@@ -38,10 +38,13 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 })
 export class HandComponent implements OnInit {
 
+  activeHand: boolean;
   selectedCards: number[] = [];
   maxSelectedCards = 1;
   hand: UiCard[] = [];
   playedCard: UiCard;
+  tricksTaken: number;
+  bid: number;
 
   @Input() player: User;
   @Input() zIndex: number;
@@ -105,16 +108,34 @@ export class HandComponent implements OnInit {
       });
 
       this.socketService.onAction<any>('playResponse')
-      .subscribe((playedCard) => {
-        if (this.player && playedCard.userId === this.player.id) {
-          console.log(playedCard);
-          this.play(playedCard.card);
+      .subscribe((playInfo) => {
+        if (this.player && playInfo.userId === this.player.id) {
+          console.log(playInfo.card);
+          this.play(playInfo.card);
         }
+        this.activeHand = this.player && (playInfo.activePlayer === this.player.id);
       });
 
       this.socketService.onAction<any>('trickWon')
       .subscribe((userId) => {
         delete this.playedCard;
+        this.activeHand = this.player && (userId === this.player.id);
+        if (this.activeHand) {
+          this.tricksTaken++;
+        }
+      });
+
+      this.socketService.onAction<any>('beginPlay')
+      .subscribe((activePlayerId) => {
+        this.activeHand = this.player && (activePlayerId === this.player.id);
+      });
+
+      this.socketService.onAction<any>('bidResponse')
+      .subscribe((bidData) => {
+        if (bidData.userId === this.player.id) {
+          this.bid = bidData.bidInfo.bid;
+          this.tricksTaken = 0;
+        }
       });
   }
 

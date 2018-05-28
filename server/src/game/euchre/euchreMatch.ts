@@ -7,7 +7,6 @@ import { EuchreHand } from './euchreHand';
 export class EuchreMatch extends Match {
     constructor() {
         super();
-        this.type = GameType.Euchre;
     }
 
     GetDeck() : any {

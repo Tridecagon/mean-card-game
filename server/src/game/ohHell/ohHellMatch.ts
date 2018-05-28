@@ -9,7 +9,6 @@ export class OhHellMatch extends Match {
 
     constructor() {
         super();
-        this.type = GameType.OhHell;
     }
 
 
@@ -24,6 +23,10 @@ export class OhHellMatch extends Match {
     AdvanceDealer() {
         this.numCards--;
         super.AdvanceDealer();
+    }
+
+    MatchComplete() {
+        return this.numCards <= 0;
     }
 
 }

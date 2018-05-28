@@ -10,9 +10,13 @@ import { SocketService } from 'app/shared/services/socket.service';
   providers: [SocketService]
 })
 export class PlayspaceComponent implements OnInit {
+
+  trumpCard: Card;
   _user: User;
   users: User[] = [];
   zIndexes: number[] = [];
+  bidding: boolean;
+  dealerId: number;
 
   numPlayers = 0;
   userIndex = -1;
@@ -89,6 +93,18 @@ export class PlayspaceComponent implements OnInit {
         }
       }
     });
+
+    this.socketService.onAction<any>('startBidding')
+    .subscribe((info) => {
+        this.trumpCard = info.trumpCard;
+        this.dealerId = info.dealerId;
+        this.bidding = true;
+      });
+
+      this.socketService.onAction<any>('beginPlay')
+      .subscribe(() => {
+          this.bidding = false;
+        });
   }
 
 }

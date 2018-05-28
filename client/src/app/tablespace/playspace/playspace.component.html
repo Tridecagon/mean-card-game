@@ -1,4 +1,5 @@
-<mcg-hand [player]="users[1]" [zIndex] = "zIndexes[1]" [location]="'left'"></mcg-hand>
-<mcg-hand [player]="users[2]" [zIndex] = "zIndexes[2]" [location]="'top'"></mcg-hand>
-<mcg-hand [player]="users[3]" [zIndex] = "zIndexes[3]" [location]="'right'"></mcg-hand>
-<mcg-hand [player]="users[0]" [zIndex] = "zIndexes[0]" [location]="'bottom'"></mcg-hand>
+<mcg-hand *ngIf="users[1]" [player]="users[1]" [zIndex] = "zIndexes[1]" [location]="'left'"></mcg-hand>
+<mcg-hand *ngIf="users[2]" [player]="users[2]" [zIndex] = "zIndexes[2]" [location]="'top'"></mcg-hand>
+<mcg-hand *ngIf="users[3]" [player]="users[3]" [zIndex] = "zIndexes[3]" [location]="'right'"></mcg-hand>
+<mcg-hand *ngIf="users[0]" [player]="users[0]" [zIndex] = "zIndexes[0]" [location]="'bottom'"></mcg-hand>
+<mcg-bidpanel *ngIf="bidding" [trumpCard]="trumpCard" [users]="users" [dealerId]="dealerId"></mcg-bidpanel>
