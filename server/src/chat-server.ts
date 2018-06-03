@@ -31,6 +31,7 @@ export class ChatServer {
     }
 
     private createApp(): void {
+        console.log('Creating express app...');
         this.app = express();
     }
 
@@ -40,6 +41,7 @@ export class ChatServer {
 
     private config(): void {
         this.port = process.env.PORT || ChatServer.PORT;
+        console.log('Configuring port ' + this.port + '...');
     }
 
     private sockets(): void {
