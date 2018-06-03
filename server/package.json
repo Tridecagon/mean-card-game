@@ -6,6 +6,7 @@
   "author": "Dave Carlisle",
   "license": "MIT",
   "scripts": {
+    "postinstall": "gulp build",
     "start": "node dist/src/index.js"
   },
   "dependencies": {
@@ -14,11 +15,14 @@
     "async-lock": "^1.1.1",
     "express": "^4.16.2",
     "shuffle": "^0.2.2",
-    "socket.io": "^2.0.4"
-  },
-  "devDependencies": {
+    "socket.io": "^2.0.4",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.3",
     "typescript": "^2.5.3"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "8.9.4",
+    "npm": "5.8.0"
   }
 }
