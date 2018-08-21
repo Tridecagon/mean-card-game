@@ -16,18 +16,18 @@ export class BidpanelComponent implements OnInit, OnChanges {
   @Input() users: User[];
   @Input() dealerId: number;
   @Input() maxBid = 10;
-  private trumpUiCard: UiCard;
-  private displayedColumns = ['col'];
-  private players: User[] = [];
-  private me: User;
+  trumpUiCard: UiCard;
+  displayedColumns = ['col'];
+  players: User[] = [];
+  me: User;
 
-  private bids: number[] = [];
-  private bidsComplete = false;
-  private totalTricks: number;
-  private totalBid: number;
-  private hasBid = false;
-  private turnIndex: number;
-  private bidFormControls: FormControl[] = [];
+  bids: number[] = [];
+  bidsComplete = false;
+  totalTricks: number;
+  totalBid: number;
+  hasBid = false;
+  turnIndex: number;
+  bidFormControls: FormControl[] = [];
 
   constructor(private socketService: SocketService) { }
 
