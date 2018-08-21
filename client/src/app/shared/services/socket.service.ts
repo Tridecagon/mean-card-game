@@ -6,7 +6,7 @@ import { Event } from '../model/event';
 
 import * as socketIo from 'socket.io-client';
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = process.env.SERVER_URL || 'http://localhost:8080';
 
 @Injectable()
 export class SocketService {
@@ -46,6 +46,7 @@ export class SocketService {
     }
 
     public setNamespace(channel: string) {
+        console.log('Opening socket on ' + SERVER_URL);
         if (channel) {
             this.socket = socketIo(SERVER_URL + channel);
         } else {
