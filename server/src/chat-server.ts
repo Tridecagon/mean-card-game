@@ -46,7 +46,7 @@ export class ChatServer {
     }
 
     private sockets(): void {
-        this.io = socketIo(this.server);
+        this.io = socketIo.listen(this.server);
     }
 
     private listen(): void {
