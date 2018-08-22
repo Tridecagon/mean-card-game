@@ -71,7 +71,7 @@ export class MainpanelComponent implements OnInit {
     });
   }
 
-  private onJoinTable(tableInfo: any) {
+  public onJoinTable(tableInfo: any) {
     this.AddChannel(tableInfo.name, tableInfo.conn);
   }
 
