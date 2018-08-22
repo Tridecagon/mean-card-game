@@ -16,6 +16,7 @@
     "express": "^4.16.2",
     "gulp": "^4.0.0",
     "gulp-typescript": "^3.2.3",
+    "minimatch": "^3.0.4",
     "shuffle": "^0.2.2",
     "socket.io": "^2.0.4",
     "typescript": "^2.5.3"
