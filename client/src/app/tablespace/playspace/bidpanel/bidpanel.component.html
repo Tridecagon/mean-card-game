@@ -14,8 +14,8 @@
                   {{player.name}}
               </mat-card-subtitle>
               <mat-card-content>
-                  <mat-form-field style="width: 70px">
-                    <input matInput [formControl]="bidFormControls[i]" placeholder="Bid" type="number" min="0" max="10" [value]="bids[i]" [readonly]="!canBid(player)" (keyup.enter)="sendBid($event)">
+                  <mat-form-field style="width: 70px" >
+                    <input matInput [formControl]="bidFormControls[i]" placeholder="Bid" type="number" min="0" max="10" [value]="bids[i]" [readonly]="!canBid(player)" (keyup.enter)="sendBid(i)">
                     <mat-error *ngIf="bidFormControls[i].hasError('validateBid')">
                       Please enter a bid between 0 and {{this.maxBid}}
                     </mat-error>
@@ -25,7 +25,7 @@
                   </mat-form-field>
               </mat-card-content>
               <mat-card-actions>
-                  <button mat-button type="submit" [disabled]="!canBid(player)">BID</button>
+                  <button mat-button type="button" [disabled]="!canBid(player)" (click)="sendBid(i)">BID</button>
                 </mat-card-actions>
             </mat-card>
         </mat-grid-tile>

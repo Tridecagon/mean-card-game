@@ -10,7 +10,7 @@ import { EventEmitter } from 'protractor';
   templateUrl: './bidpanel.component.html',
   styleUrls: ['./bidpanel.component.css']
 })
-export class BidpanelComponent implements OnInit, OnChanges {
+export class BidpanelComponent implements OnInit {
 
   @Input() trumpCard: Card;
   @Input() users: User[];
@@ -54,10 +54,6 @@ export class BidpanelComponent implements OnInit, OnChanges {
     this.turnIndex = 0;
   }
 
-  ngOnChanges() {
-
-
-  }
   setupListeners() {
     this.socketService.initSocket();
 
@@ -89,13 +85,12 @@ export class BidpanelComponent implements OnInit, OnChanges {
     return this.me.id === player.id;
   }
 
-  sendBid(event: any) {
+  sendBid(i: number) {
     if (this.canBid(this.me)) {
-      const bidVal = this.ParseBid(event.target.value);
+      const bidVal = this.ParseBid(this.bidFormControls[i].value);
       if (bidVal >= 0) {
         this.socketService.sendAction('bidRequest', {'bid': bidVal});
       }
-      event.target.value = '';
     }
   }
 
