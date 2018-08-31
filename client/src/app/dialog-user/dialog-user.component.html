@@ -2,8 +2,7 @@
 
 <mat-dialog-content>
   <mat-form-field>
-    <input matInput name="username" placeholder="Username" 
-           [(ngModel)]="params.username" (keyup.enter)="onSave()" [formControl]="usernameFormControl" required>
+    <input matInput name="username" placeholder="Username" (keyup.enter)="onSave()" [formControl]="usernameFormControl" required>
     <mat-error>This field is required</mat-error>
     <mat-hint>Please type your username</mat-hint>
   </mat-form-field>
