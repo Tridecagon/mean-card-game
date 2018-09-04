@@ -3,3 +3,6 @@
     width: 90%;
     height: 65%;
 }
+.mat-card {
+    z-index: 11;
+}
