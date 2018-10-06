@@ -7,7 +7,8 @@ Many features are functional; more are being added. This app is now being hosted
 [Card-game Client](http://mean-card-game-client.herokuapp.com)
 
 You may have to poke the server and wait a moment, since free heroku dynos tend to fall asleep.
-[Card-game Server(http://mean-card-game-server.herokuapp.com)
+Note there is literally no web front-end, so this call will return an error (cannot GET /), but it will wake the server up.
+[Card-game Server](http://mean-card-game-server.herokuapp.com)
 
 
 
