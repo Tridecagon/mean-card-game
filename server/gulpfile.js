@@ -1,4 +1,3 @@
-// force deploy
 var gulp = require("gulp");
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
@@ -9,5 +8,5 @@ gulp.task("build", function () {
         .pipe(sourcemaps.init())
         .pipe(tsProject()).js
         .pipe(sourcemaps.write({sourceRoot: function(file){ return file.cwd; }}))
-        .pipe(gulp.dest("./dist"));
+        .pipe(gulp.dest("./dist/server"));
 });
