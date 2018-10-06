@@ -22,7 +22,7 @@ export class BidcardComponent implements OnInit {
   ngOnInit() {
   }
 
-  sendBid(i: number) {
+  sendBid() {
     if (this.canBid) {
       const bidVal = this.ParseBid(this.myFormControl.value);
       if (bidVal >= 0) {
