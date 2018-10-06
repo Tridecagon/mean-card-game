@@ -81,7 +81,7 @@ export class Hand {
     }
 
     SortCards(cards: Card[]) {
-        const suits = Array.from(new Set(cards.map(card => card.suit))); // gets distinct suits
+        const suits = Array.from(new Set(cards.map(card => this.GetSuit(card)))); // gets distinct suits
     
         // manually sort suits by color
         // set first suit
@@ -117,7 +117,7 @@ export class Hand {
         }
         
         // sort cards by suit, then by sort
-        cards.sort((c1, c2) => c1.suit === c2.suit ? c2.sort - c1.sort : suits.findIndex(s => s === c1.suit) - suits.findIndex(s => s=== c2.suit));
+        cards.sort((c1, c2) => this.GetSuit(c1) === this.GetSuit(c2) ? c2.sort - c1.sort : suits.findIndex(s => s === this.GetSuit(c1)) - suits.findIndex(s => s=== this.GetSuit(c2)));
 
 
     }
@@ -184,18 +184,22 @@ export class Hand {
         if(this.IsTrump(follow)) {
             return !this.IsTrump(lead) || follow.sort > lead.sort;
         } else {
-            return follow.suit === lead.suit && follow.sort > lead.sort;
+            return this.GetSuit(follow) === this.GetSuit(lead) && follow.sort > lead.sort;
         }
     }
 
     IsTrump(card: Card) {
-        return this.trumpSuit && (this.trumpSuit === card.suit);
+        return this.trumpSuit && (this.trumpSuit === this.GetSuit(card));
     }
 
     PlayIsLegal(card: Card) : boolean {
         if(this.trickLeader === this.currentPlayer) return true;
-        var ledSuit = this.currentTrick[this.trickLeader].suit;
-        return card.suit === ledSuit || !this.players[this.currentPlayer].heldCards.find(c => c.suit === ledSuit);
+        var ledSuit = this.GetSuit(this.currentTrick[this.trickLeader]);
+        return this.GetSuit(card) === ledSuit || !this.players[this.currentPlayer].heldCards.find(c => this.GetSuit(c) === ledSuit);
+    }
+
+    GetSuit(card: Card) : string {
+        return card.suit;
     }
 
     SetupListeners() {

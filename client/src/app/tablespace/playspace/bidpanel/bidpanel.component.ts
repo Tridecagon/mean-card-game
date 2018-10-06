@@ -3,14 +3,13 @@ import { FormControl, Validators } from '@angular/forms';
 import {UiCard } from '../../../shared/model/uiCard';
 import { Card, Message, User } from '../../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
-import { EventEmitter } from 'protractor';
 
 @Component({
   selector: 'mcg-bidpanel',
   templateUrl: './bidpanel.component.html',
   styleUrls: ['./bidpanel.component.css']
 })
-export class BidpanelComponent implements OnInit, OnChanges {
+export class BidpanelComponent implements OnInit {
 
   @Input() trumpCard: Card;
   @Input() users: User[];
@@ -47,17 +46,13 @@ export class BidpanelComponent implements OnInit, OnChanges {
       i = (i + 1) % this.users.length;
       if (this.users[i] && this.users[i].id) {
         this.players.push(this.users[i]);
-        this.bidFormControls.push(new FormControl('', [this.validateBid.bind(this), this.checkBidTotal.bind(this)]));
+        this.bidFormControls.push(new FormControl(this.users[i].name, [this.validateBid.bind(this), this.checkBidTotal.bind(this)]));
       }
     } while (i !== dealerIndex);
 
     this.turnIndex = 0;
   }
 
-  ngOnChanges() {
-
-
-  }
   setupListeners() {
     this.socketService.initSocket();
 
@@ -89,24 +84,15 @@ export class BidpanelComponent implements OnInit, OnChanges {
     return this.me.id === player.id;
   }
 
-  sendBid(event: any) {
-    if (this.canBid(this.me)) {
-      const bidVal = this.ParseBid(event.target.value);
-      if (bidVal >= 0) {
-        this.socketService.sendAction('bidRequest', {'bid': bidVal});
-      }
-      event.target.value = '';
-    }
-  }
-
   validateBid(c: FormControl) {
-    return (this.ParseBid(c.value) === -1) ? { validateBid: { valid: false } } : null;
+    return (this.ParseBid(c.value) === -1) ? { validateBid: { valid: false },
+      errorMsg: `Enter a bid between 0 and ${this.maxBid}` } : null;
   }
 
   checkBidTotal(c: FormControl) {
     return (this.me.id === this.dealerId
             && (this.totalBid + this.ParseBid(c.value) === this.totalTricks))
-       ? { totalBid: { valid: false } } : null;
+       ? { totalBid: { valid: false } , errorMsg: `Dealer cannot bid ${this.totalTricks - this.totalBid}` } : null;
   }
 
   ParseBid(bidStr: string): number {

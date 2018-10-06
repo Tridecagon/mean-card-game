@@ -22,10 +22,12 @@ export class DialogUserComponent implements OnInit {
   }
 
   public onSave(): void {
-    this.dialogRef.close({
-      username: this.params.username,
-      dialogType: this.params.dialogType,
-      previousUsername: this.previousUsername
-    });
+    if (this.usernameFormControl.valid) {
+      this.dialogRef.close({
+        username: this.usernameFormControl.value,
+        dialogType: this.params.dialogType,
+        previousUsername: this.previousUsername
+      });
+    }
   }
 }

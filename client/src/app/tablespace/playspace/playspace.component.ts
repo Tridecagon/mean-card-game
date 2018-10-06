@@ -99,6 +99,13 @@ export class PlayspaceComponent implements OnInit {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
         this.bidding = true;
+
+        this.currentZIndex = 5;
+        this.zIndexes.fill(this.currentZIndex, 0, 3);
+
+        // make sure player's hand is visible
+        this.zIndexes[0] = 20;
+
       });
 
       this.socketService.onAction<any>('beginPlay')

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../shared/material/material.module';
 
@@ -11,17 +12,19 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { PlayspaceComponent } from './playspace/playspace.component';
 import { BidpanelComponent } from './playspace/bidpanel/bidpanel.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { BidcardComponent } from './playspace/bidpanel/bidcard/bidcard.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MaterialModule
   ],
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
