@@ -8,6 +8,7 @@ Many features are functional; more are being added. This app is now being hosted
 
 You may have to poke the server and wait a moment, since free heroku dynos tend to fall asleep.
 Note there is literally no web front-end, so this call will return an error (cannot GET /), but it will wake the server up.
+
 [Card-game Server](http://mean-card-game-server.herokuapp.com)
 
 
@@ -15,12 +16,10 @@ Note there is literally no web front-end, so this call will return an error (can
 
 <p align="center">
     <a href="https://github.com/tridecagon/mean-card-game">
+        <img src="https://img.shields.io/github/stars/tridecagon/mean-card-game.svg?style=social&label=Star" alt="GitHub stars">
     </a>
-    <a href="https://github.com/luixaviles/socket-io-typescript-chat">
-        <img src="https://img.shields.io/github/stars/luixaviles/socket-io-typescript-chat.svg?style=social&label=Star" alt="GitHub stars">
-    </a>
-    <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fluixaviles%2Fsocket-io-typescript-chat&via=luixaviles&text=Take%20a%20look%20this%20%23TypeScript%20chat%20project%20using%20%23Node%20and%20%23Angular%20Material">
-        <img src="https://img.shields.io/twitter/url/https/github.com/luixaviles/socket-io-typescript-chat.svg?style=social" alt="Tweet">
+    <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Ftridecagon%2Fmean-card-game&via=tridecagon&text=Check%20out%20this%20Node.js%20and%20Angular%20Material%20card%20game%20engine">
+        <img src="https://img.shields.io/twitter/url/https/github.com/tridecagon/mean-card-game.svg?style=social" alt="Tweet">
     </a>
 </p>
 
