@@ -1,3 +1,4 @@
+import { SkatMatch } from './game/skat/skatMatch';
 import { GameType } from '../../shared/model';
 import { Match } from './game/baseGame/match';
 import { EuchreMatch } from './game/euchre/euchreMatch';
@@ -11,6 +12,8 @@ export class Factory {
                 return new OhHellMatch();
             case GameType.Euchre:
                 return new EuchreMatch();
+            case GameType.Skat:
+                return new SkatMatch();
             default:
                 return new Match();
         }
