@@ -66,6 +66,9 @@ export class SkatHand extends Hand {
             this.whoseBid = opponent;
         else
             this.whoseBid = this.bids.findIndex((bid) => bid < 0);
+        // support currentPlayer
+        
+        this.currentPlayer = this.players[(this.holdIndex + this.whoseBid) % this.players.length].index;
         // don't know if this will work but let's try
         bidInfo.nextBidder = this.players[(this.holdIndex + this.whoseBid) % this.players.length].index;
         return this.bids.some((b) => b < 0);    

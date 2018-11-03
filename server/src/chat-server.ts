@@ -94,8 +94,6 @@ export class ChatServer {
             });
 
             socket.on('selectGame', (request: {table: number, gameType: GameType}) => {
-                const testtype: GameType = GameType.OhHell;
-                const test2: GameType = GameType["OhHell"];
                 if(this.seatMap[this.users[socket.id].id].table === request.table) {
                     this.lobby[request.table].gameType = eval(GameType[request.gameType]);
                     this.io.emit('lobbyState', this.lobby);

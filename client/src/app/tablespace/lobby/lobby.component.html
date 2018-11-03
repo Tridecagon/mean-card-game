@@ -14,7 +14,7 @@
         <mat-cell *matCellDef="let table; let i = index" >
           <mat-form-field>
             <mat-select [value]="getGameName(table.gameType)" required [disabled]="!isMyTable(table)" (selectionChange)="onGameSelected(i, $event.value)">
-              <mat-option *ngFor="let type of gameTypes" [value]="type" [disabled]="type === 'Skat'">
+              <mat-option *ngFor="let type of gameTypes" [value]="type" [disabled]="false">
                 {{type}}
               </mat-option>
             </mat-select>
