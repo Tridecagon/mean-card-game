@@ -34,6 +34,7 @@ export class SkatHand extends Hand {
             
             this.bids = [-1, -1, -1];
             this.whoseBid = 1;
+            this.holdIndex = (this.dealerIndex + 1) % this.players.length;
              this.tableChan.emit('startBidding', {'dealerId': this.players[this.dealerIndex].user.id});
             };
     }
@@ -45,7 +46,7 @@ export class SkatHand extends Hand {
         const bidVal : number = Number(bidInfo.bid);
         if(this.ValidBid(player, bidVal)) {
             this.bids[this.whoseBid] = bidVal;
-            if(!this.SetNextBidder())
+            if(!this.SetNextBidder(bidInfo))
             // TODO: set state to Choose Game
                 this.CompleteBidding();
             return true;
@@ -54,7 +55,7 @@ export class SkatHand extends Hand {
     }
     // returns true if bidding is still going
     // TODO: unit test this
-    SetNextBidder(): boolean {
+    SetNextBidder(bidInfo: any): boolean {
         if(this.bids === [-1, 0, 0]) { // hold wins by default; ramsch possible
             this.bids[0] = 5;
             return false;
@@ -65,12 +66,14 @@ export class SkatHand extends Hand {
             this.whoseBid = opponent;
         else
             this.whoseBid = this.bids.findIndex((bid) => bid < 0);
+        // don't know if this will work but let's try
+        bidInfo.nextBidder = this.players[(this.holdIndex + this.whoseBid) % this.players.length].index;
         return this.bids.some((b) => b < 0);    
     }
 
     ValidBid(player: Player, bidVal: number) : boolean {
         // check turn
-        if(player.index !== this.holdIndex + this.whoseBid % this.players.length)
+        if(player.index !== (this.holdIndex + this.whoseBid) % this.players.length)
             return false;
 
         // check valid bid
