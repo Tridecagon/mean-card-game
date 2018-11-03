@@ -4,7 +4,7 @@ import { Hand, State } from '../baseGame';
 
 export class SkatHand extends Hand {
 
-    readonly invalidBids: number[] = [11, 13, 17, 19, 23, 26, 29, 31, 34, 37, 39, 41, 43, 46, 47, 51, 52, 53, 57, 58, 59];
+    readonly invalidBids: Number[] = [11, 13, 17, 19, 23, 26, 29, 31, 34, 37, 39, 41, 43, 46, 47, 51, 52, 53, 57, 58, 59];
 
     private skat: Card[] = [];
     private bids: number[] = [];
@@ -86,7 +86,7 @@ export class SkatHand extends Hand {
             return false;
         
         // is the bid number valid?
-        if(this.invalidBids.includes(bidVal) || (bidVal < 10 && bidVal < 0))
+        if(this.invalidBids.filter((b) => b === bidVal) || (bidVal < 10 && bidVal < 0))
             return false;
         return true;
     }
