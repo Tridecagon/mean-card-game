@@ -1,4 +1,5 @@
 export enum State {
     Bid,
-    Play
+    Play,
+    SelectGame
 }
