@@ -17,21 +17,21 @@ public cardBackImage(): string {
     return 'back.png';
 }
 
-public toString = function(){
-    return this.description + ' of ' + this.suit + 's';
+public toString(): string {
+    return this.card.description + ' of ' + this.card.suit + 's';
   }
 
-public toggleSelection() {
+public toggleSelection(): void {
   this.isSelected = !this.isSelected;
 }
 
-public flip() {
+public flip(): void {
   if (this.card) {
   this.face = this.face === 'up' ? 'down' : 'up';
   }
 }
 
-
+// TODO: refactor this to use Description, or pass true Sort along with numeric rank
 private setImageString(suit: string, sort: number): string {
   let value;
   switch (sort) {

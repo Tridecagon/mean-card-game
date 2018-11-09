@@ -1,5 +1,4 @@
 export enum GameType {
-    // Base,  // making base unplayable
     Euchre,
     OhHell,
     Skat

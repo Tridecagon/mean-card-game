@@ -106,7 +106,38 @@ export class SkatHand extends Hand {
         }
     }
 
-    // TODO: this is wrong, fix
+    GetSort(card: Card) : number {
+        switch(this.trumpSuit)
+        {
+            case "Null":
+                return card.sort;
+            default:
+                switch(card.sort)
+                {
+                    case 10:
+                        return 13.5;
+                    // Jacks in order
+                    case 11:
+                        switch(card.suit)
+                        {
+                            case "Diamonds":
+                                return 15;
+                            case "Hearts":
+                                return 16;
+                            case "Spades":
+                                return 17;
+                            case "Clubs":
+                                return 18;
+                            default:
+                                throw Error("Broken ass case statement");
+                        }
+                    default:
+                        return card.sort;
+                }
+        }
+    }
+
+    // TODO: this is from a different game, fix
     ScoreHand() {
         this.scores = [];
         for(let player of this.players) {

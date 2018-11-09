@@ -70,6 +70,8 @@ export class Hand {
             console.log(`Dealing hand to player ${player.user.name} socket ${player.socket.id}`);
             var newHand = this.deck.draw(this.numCards);
             for(let card of newHand) {
+                // TODO: add effective rank from GetSort here. Probably 'rank' is actual card and 'sort' is GetSort
+                // second thought: check if we're using Description for rank, then just pass GetSort in card.sort
                 player.heldCards.push({'suit': card.suit, 'description': card.description, 'sort': card.sort});
             }
 
@@ -117,7 +119,7 @@ export class Hand {
         }
         
         // sort cards by suit, then by sort
-        cards.sort((c1, c2) => this.GetSuit(c1) === this.GetSuit(c2) ? c2.sort - c1.sort : suits.findIndex(s => s === this.GetSuit(c1)) - suits.findIndex(s => s=== this.GetSuit(c2)));
+        cards.sort((c1, c2) => this.GetSuit(c1) === this.GetSuit(c2) ? this.GetSort(c2) - this.GetSort(c1) : suits.findIndex(s => s === this.GetSuit(c1)) - suits.findIndex(s => s=== this.GetSuit(c2)));
 
 
     }
@@ -182,9 +184,9 @@ export class Hand {
 
     Beats(follow: Card, lead: Card) {
         if(this.IsTrump(follow)) {
-            return !this.IsTrump(lead) || follow.sort > lead.sort;
+            return !this.IsTrump(lead) || this.GetSort(follow) > this.GetSort(lead);
         } else {
-            return this.GetSuit(follow) === this.GetSuit(lead) && follow.sort > lead.sort;
+            return this.GetSuit(follow) === this.GetSuit(lead) && this.GetSort(follow) > this.GetSort(lead);
         }
     }
 
@@ -200,6 +202,10 @@ export class Hand {
 
     GetSuit(card: Card) : string {
         return card.suit;
+    }
+
+    GetSort(card: Card) : number {
+        return card.sort;
     }
 
     SetupListeners() {
