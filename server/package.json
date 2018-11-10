@@ -6,6 +6,7 @@
   "author": "Dave Carlisle",
   "license": "MIT",
   "scripts": {
+    "build": "gulp build",
     "postinstall": "gulp build",
     "start": "node dist/server/src/index.js",
     "start-heroku": "node dist/server/server/src/index.js"

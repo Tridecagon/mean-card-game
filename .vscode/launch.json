@@ -24,6 +24,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Debug Server",
+            "preLaunchTask": "server-build",
             "program": "${workspaceFolder}/server/src/index.ts",
             "protocol": "inspector",
             "sourceMaps": true,
