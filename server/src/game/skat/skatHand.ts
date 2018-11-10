@@ -84,6 +84,11 @@ export class SkatHand extends Hand {
             return false;
 
         // check valid bid
+        // is this a pass?
+        if(bidVal === 0) {
+            return true;
+        }
+
         // is there a higher bid?
         if(this.bids.some((b) => b > bidVal))
             return false;
@@ -93,7 +98,7 @@ export class SkatHand extends Hand {
             return false;
         
         // is the bid number valid?
-        if(this.invalidBids.filter((b) => b === bidVal) || (bidVal < 10 && bidVal < 0))
+        if(this.invalidBids.some((b) => b === bidVal) || bidVal < 10)
             return false;
         return true;
     }
