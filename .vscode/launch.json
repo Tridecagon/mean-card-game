@@ -4,12 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:4200/",
-            "webRoot": "${workspaceFolder}/client/src"
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/client"
         },
         {
             "name": "Attach",
@@ -17,18 +18,19 @@
             "request": "attach",
             "port": 9222,
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}/client/src"
+            "webRoot": "${workspaceFolder}/client"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Debug Server",
             "program": "${workspaceFolder}/server/src/index.ts",
+            "protocol": "inspector",
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceFolder}/server/dist/src/*.js",
-                "${workspaceFolder}/server/dist/**/*.js",
-                "${workspaceFolder}/server/shared/**/*.js"
+                "${workspaceFolder}/server/dist/server/src/*.js",
+                "${workspaceFolder}/server/dist/server/**/*.js",
+                "${workspaceFolder}/server/dist/**/*.js"
             ],
             "trace": true
         }
