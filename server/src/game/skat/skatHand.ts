@@ -31,12 +31,12 @@ export class SkatHand extends Hand {
     }
     SetupStateHandlers() {
         this.stateHandlers[State.Bid] = () => {
-            
             this.bids = [-1, -1, -1];
             this.whoseBid = 1;
             this.holdIndex = (this.dealerIndex + 1) % this.players.length;
-             this.tableChan.emit('startBidding', {'dealerId': this.players[this.dealerIndex].user.id});
-            };
+            this.currentPlayer = (this.holdIndex + 1) % this.players.length;
+            this.tableChan.emit('startBidding', {'firstBidder': this.whoseBid, 'dealerId': this.players[this.dealerIndex].user.id});
+        };
     }
 
     // TODO: this is wrong, fix
@@ -47,8 +47,9 @@ export class SkatHand extends Hand {
         if(this.ValidBid(player, bidVal)) {
             this.bids[this.whoseBid] = bidVal;
             if(!this.SetNextBidder(bidInfo))
-            // TODO: set state to Choose Game
+                // TODO: set state to Choose Game
                 this.CompleteBidding();
+            bidInfo.currentPlayer = this.currentPlayer;
             return true;
         }
         return false;
@@ -60,17 +61,20 @@ export class SkatHand extends Hand {
             this.bids[0] = 5;
             return false;
         }
-        let pass = this.bids[this.whoseBid] > 0;
+
+        var newBidder: number; // 0 is hold
         let opponent = this.bids.findIndex((bid, index) => bid > 0 && index != this.whoseBid);
         if(opponent >= 0)
-            this.whoseBid = opponent;
+            newBidder = opponent;
         else
-            this.whoseBid = this.bids.findIndex((bid) => bid < 0);
-        // support currentPlayer
+            newBidder = this.bids.findIndex((bid) => bid < 0);
         
+        bidInfo.mode = (newBidder > this.whoseBid) ? "bid" : "respond";
+        this.whoseBid = newBidder;
+
         this.currentPlayer = this.players[(this.holdIndex + this.whoseBid) % this.players.length].index;
         // don't know if this will work but let's try
-        bidInfo.nextBidder = this.players[(this.holdIndex + this.whoseBid) % this.players.length].index;
+        bidInfo.nextBidder = this.currentPlayer;
         return this.bids.some((b) => b < 0);    
     }
 
@@ -120,13 +124,13 @@ export class SkatHand extends Hand {
                     case 11:
                         switch(card.suit)
                         {
-                            case "Diamonds":
+                            case "Diamond":
                                 return 15;
-                            case "Hearts":
+                            case "Heart":
                                 return 16;
-                            case "Spades":
+                            case "Spade":
                                 return 17;
-                            case "Clubs":
+                            case "Club":
                                 return 18;
                             default:
                                 throw Error("Broken ass case statement");

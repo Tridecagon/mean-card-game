@@ -42,7 +42,6 @@ export class Hand {
 
     SetInitialState() {
         this.SetState(State.Bid);
-        this.trickLeader = this.currentPlayer = (this.dealerIndex + 1) % this.players.length;
     }
 
     SetState(state: State) {
@@ -242,6 +241,7 @@ export class Hand {
 
     SetupStateHandlers() {
         this.stateHandlers[State.Bid] = () => { this.SetState(State.Play)}; // no bidding function for base game (yet)
+        this.stateHandlers[State.Play] = () => {  this.trickLeader = this.currentPlayer = (this.dealerIndex + 1) % this.players.length; }
     }
 
 
