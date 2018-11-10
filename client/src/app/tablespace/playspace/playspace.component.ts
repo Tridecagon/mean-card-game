@@ -16,7 +16,9 @@ export class PlayspaceComponent implements OnInit {
   users: User[] = [];
   zIndexes: number[] = [];
   bidding: boolean;
+  firstBidder: number;
   dealerId: number;
+  gameType: string;
 
   numPlayers = 0;
   userIndex = -1;
@@ -27,7 +29,7 @@ export class PlayspaceComponent implements OnInit {
   set user(user: User) {
     this.users[0] = user;
     this._user = user;
-  };
+  }
 
   @Output() onJoinTable = new EventEmitter<{name: string, conn: SocketService}>();
 
@@ -61,7 +63,7 @@ export class PlayspaceComponent implements OnInit {
               this.users[1] = sittingUser.user;
             } else {
               this.users[3] = sittingUser.user;
-            };
+            }
             break;
           case 4:
             if ((this.userIndex + 1) % 4 === sittingUser.index) {
@@ -70,7 +72,7 @@ export class PlayspaceComponent implements OnInit {
               this.users[2] = sittingUser.user;
             } else {
               this.users[3] = sittingUser.user;
-            };
+            }
             break;
         }
       }
@@ -98,6 +100,8 @@ export class PlayspaceComponent implements OnInit {
     .subscribe((info) => {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
+        this.firstBidder = info.firstBidder === undefined ? 0 : info.firstBidder;
+        this.gameType = this.firstBidder === 1 ? 'Skat' : 'Oh Hell';
         this.bidding = true;
 
         this.currentZIndex = 5;

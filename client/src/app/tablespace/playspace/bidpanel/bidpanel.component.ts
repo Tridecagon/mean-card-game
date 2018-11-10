@@ -11,10 +11,12 @@ import { SocketService } from 'app/shared/services/socket.service';
 })
 export class BidpanelComponent implements OnInit {
 
+  @Input() gameType: string;
   @Input() trumpCard: Card;
   @Input() users: User[];
   @Input() dealerId: number;
-  @Input() maxBid = 10;
+  @Input() maxBid: number;
+  @Input() firstBidder: number;
   trumpUiCard: UiCard;
   displayedColumns = ['col'];
   players: User[] = [];
@@ -26,6 +28,7 @@ export class BidpanelComponent implements OnInit {
   totalBid: number;
   hasBid = false;
   turnIndex: number;
+  minBid = -1;
   bidFormControls: FormControl[] = [];
 
   constructor(private socketService: SocketService) { }
@@ -50,7 +53,7 @@ export class BidpanelComponent implements OnInit {
       }
     } while (i !== dealerIndex);
 
-    this.turnIndex = 0;
+    this.turnIndex = this.firstBidder;
   }
 
   setupListeners() {
@@ -62,10 +65,17 @@ export class BidpanelComponent implements OnInit {
           this.bids[index] = bidData.bidInfo.bid;
           this.totalTricks = bidData.bidInfo.totalTricks;
           this.totalBid = bidData.bidInfo.totalBid;
-          this.turnIndex = index + 1;
+          this.turnIndex = (bidData.bidInfo.currentPlayer === undefined) ? index + 1 : bidData.bidInfo.currentPlayer;
+          if (bidData.bidInfo.maxBid !== undefined) {
+            this.maxBid = bidData.bidInfo.maxBid;
+          }
+          if (bidData.bidInfo.minBid !== undefined) {
+            this.minBid = bidData.bidInfo.minBid;
+          }
           if (bidData.userId === this.me.id) {
             this.hasBid = true;
           }
+          // TODO: this breaks skat
           if (this.turnIndex === this.players.length) {
             this.bidsComplete = true;
           }
@@ -99,7 +109,13 @@ export class BidpanelComponent implements OnInit {
     // returns -1 if error
 
     const bid = Number(bidStr);
-    const valid = /^\d+$/.test(bidStr) && !Number.isNaN(bid) && bid >= 0 && bid <= this.maxBid;
+    let valid = /^\d+$/.test(bidStr) && !Number.isNaN(bid) && bid >= 0;
+    if (this.maxBid >= 0 && bid > this.maxBid) {
+      valid = false;
+    }
+    if (this.minBid >= 0 && bid < this.minBid) {
+      valid = false;
+    }
     return valid ? bid : -1;
   }
 

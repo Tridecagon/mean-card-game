@@ -15,6 +15,7 @@ export class BidcardComponent implements OnInit {
   @Input() player: User;
   @Input() myValue: number;
   @Input() myFormControl: FormControl;
+  @Input() minBid: number;
   @Input() maxBid: number;
 
   constructor(private socketService: SocketService) { }
@@ -35,7 +36,13 @@ export class BidcardComponent implements OnInit {
     // returns -1 if error
 
     const bid = Number(bidStr);
-    const valid = /^\d+$/.test(bidStr) && !Number.isNaN(bid) && bid >= 0 && bid <= this.maxBid;
+    let valid = /^\d+$/.test(bidStr) && !Number.isNaN(bid) && bid >= 0;
+    if (this.maxBid >= 0 && bid > this.maxBid) {
+      valid = false;
+    }
+    if (this.minBid >= 0 && bid < this.minBid) {
+      valid = false;
+    }
     return valid ? bid : -1;
   }
 

@@ -1,12 +1,12 @@
 <mat-card>
   <mat-card-subtitle
    [style.font-weight]="activeTurn ? 'bold' : 'normal'"
-   [style.background-color]="activeTurn ? 'forestgreen' : 'white'">
+   [style.background-color]="activeTurn ? 'yellow' : 'white'">
       {{player.name}}
   </mat-card-subtitle>
   <mat-card-content *ngIf="myFormControl">
       <mat-form-field style="width: 70px" >
-        <input matInput [formControl]="myFormControl" placeholder="Bid" type="number" min="0" max="10" [value]="myValue" [readonly]="!canBid" (keyup.enter)="sendBid()">
+        <input matInput [formControl]="myFormControl" placeholder="Bid" type="number" [min]="minBid" [max]="maxBid" [value]="myValue" [readonly]="!canBid" (keyup.enter)="sendBid()">
         <mat-error *ngIf="myFormControl.errors">
           {{myFormControl.errors?.errorMsg}}
         </mat-error>
