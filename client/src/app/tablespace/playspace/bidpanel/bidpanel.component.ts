@@ -26,7 +26,7 @@ export class BidpanelComponent implements OnInit {
   totalTricks: number;
   totalBid: number;
   turnIndex: number;
-  minBid = -1;
+  minBid = 0;
   bidFormControls: FormControl[] = [];
 
   constructor(private socketService: SocketService) { }
@@ -97,8 +97,11 @@ export class BidpanelComponent implements OnInit {
   }
 
   validateBid(c: FormControl) {
+    const errorText = this.maxBid >= 0
+    ? `Enter a bid between ${this.minBid} and ${this.maxBid}`
+    : `Enter a bid of at least ${this.minBid}`;
     return (this.ParseBid(c.value) === -1) ? { validateBid: { valid: false },
-      errorMsg: `Enter a bid between 0 and ${this.maxBid}` } : null;
+      errorMsg: errorText} : null;
   }
 
   checkBidTotal(c: FormControl) {
@@ -115,7 +118,7 @@ export class BidpanelComponent implements OnInit {
     if (this.maxBid >= 0 && bid > this.maxBid) {
       valid = false;
     }
-    if (this.minBid >= 0 && bid < this.minBid) {
+    if (this.minBid >= 0 && bid < this.minBid && bid !== 0) {
       valid = false;
     }
     return valid ? bid : -1;
