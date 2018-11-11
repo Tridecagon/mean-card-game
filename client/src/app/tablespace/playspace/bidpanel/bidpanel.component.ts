@@ -11,12 +11,11 @@ import { SocketService } from 'app/shared/services/socket.service';
 })
 export class BidpanelComponent implements OnInit {
 
-  @Input() gameType: string;
   @Input() trumpCard: Card;
   @Input() users: User[];
   @Input() dealerId: number;
   @Input() maxBid: number;
-  @Input() firstBidder: number;
+  @Input() gameType: string;
   trumpUiCard: UiCard;
   displayedColumns = ['col'];
   players: User[] = [];
@@ -26,7 +25,6 @@ export class BidpanelComponent implements OnInit {
   bidsComplete = false;
   totalTricks: number;
   totalBid: number;
-  hasBid = false;
   turnIndex: number;
   minBid = -1;
   bidFormControls: FormControl[] = [];
@@ -36,7 +34,9 @@ export class BidpanelComponent implements OnInit {
   ngOnInit() {
     this.setupListeners();
 
-    this.trumpUiCard = new UiCard(this.trumpCard);
+    if (this.trumpCard) {
+      this.trumpUiCard = new UiCard(this.trumpCard);
+    }
 
     this.players = [];
     this.me = this.users[0];
@@ -53,33 +53,35 @@ export class BidpanelComponent implements OnInit {
       }
     } while (i !== dealerIndex);
 
-    this.turnIndex = this.firstBidder;
+    this.turnIndex = 0;
+    if (this.gameType === 'Skat') {
+      this.turnIndex = 1;
+      this.maxBid = -1;
+      this.minBid = 10;
+    }
   }
 
   setupListeners() {
     this.socketService.initSocket();
 
     this.socketService.onAction<any>('bidResponse')
-        .subscribe((bidData) => {
-          const index = this.players.findIndex(p => p.id === bidData.userId);
-          this.bids[index] = bidData.bidInfo.bid;
-          this.totalTricks = bidData.bidInfo.totalTricks;
-          this.totalBid = bidData.bidInfo.totalBid;
-          this.turnIndex = (bidData.bidInfo.currentPlayer === undefined) ? index + 1 : bidData.bidInfo.currentPlayer;
-          if (bidData.bidInfo.maxBid !== undefined) {
-            this.maxBid = bidData.bidInfo.maxBid;
-          }
-          if (bidData.bidInfo.minBid !== undefined) {
-            this.minBid = bidData.bidInfo.minBid;
-          }
-          if (bidData.userId === this.me.id) {
-            this.hasBid = true;
-          }
-          // TODO: this breaks skat
-          if (this.turnIndex === this.players.length) {
-            this.bidsComplete = true;
-          }
-        });
+      .subscribe((bidData) => {
+        const index = this.players.findIndex(p => p.id === bidData.userId);
+        this.bids[index] = bidData.bidInfo.bid;
+        this.totalTricks = bidData.bidInfo.totalTricks;
+        this.totalBid = bidData.bidInfo.totalBid;
+        this.turnIndex = bidData.bidInfo.currentPlayer;
+        if (bidData.bidInfo.maxBid !== undefined) {
+          this.maxBid = bidData.bidInfo.maxBid;
+        }
+        if (bidData.bidInfo.minBid !== undefined) {
+          this.minBid = bidData.bidInfo.minBid;
+        }
+        // TODO: this breaks skat - implement a listener
+        if (this.turnIndex === this.players.length) {
+          this.bidsComplete = true;
+        }
+      });
   }
 
   calculateCols(): number {
@@ -87,7 +89,7 @@ export class BidpanelComponent implements OnInit {
   }
 
   canBid(player: User): boolean {
-    return this.isMe(player) && !this.hasBid;
+    return this.isMe(player) && this.turnIndex === this.players.findIndex((p) => p.id === this.me.id);
   }
 
   isMe(player: User): boolean {

@@ -35,7 +35,7 @@ export class SkatHand extends Hand {
             this.whoseBid = 1;
             this.holdIndex = (this.dealerIndex + 1) % this.players.length;
             this.currentPlayer = (this.holdIndex + 1) % this.players.length;
-            this.tableChan.emit('startBidding', {'firstBidder': this.whoseBid, 'dealerId': this.players[this.dealerIndex].user.id});
+            this.tableChan.emit('startBidding', {'gameType': 'Skat', 'dealerId': this.players[this.dealerIndex].user.id});
         };
     }
 
@@ -72,9 +72,9 @@ export class SkatHand extends Hand {
         bidInfo.mode = (newBidder > this.whoseBid) ? "bid" : "respond";
         this.whoseBid = newBidder;
 
-        this.currentPlayer = this.players[(this.holdIndex + this.whoseBid) % this.players.length].index;
-        // don't know if this will work but let's try
-        bidInfo.nextBidder = this.currentPlayer;
+        this.currentPlayer = (this.holdIndex + this.whoseBid) % this.players.length;
+        
+        bidInfo.nextBidder = this.whoseBid;
         return this.bids.some((b) => b < 0);    
     }
 

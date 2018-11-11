@@ -29,7 +29,7 @@ export class OhHellHand extends Hand {
     SetupStateHandlers() {
         this.stateHandlers[State.Bid] = () => {
 
-             this.tableChan.emit('startBidding', {'trumpCard': this.trumpCard, 'dealerId': this.players[this.dealerIndex].user.id});
+             this.tableChan.emit('startBidding', {'gameType': 'Oh Hell', 'trumpCard': this.trumpCard, 'dealerId': this.players[this.dealerIndex].user.id});
             };
     }
 

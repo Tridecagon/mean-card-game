@@ -27,6 +27,7 @@
             "preLaunchTask": "server-build",
             "program": "${workspaceFolder}/server/src/index.ts",
             "protocol": "inspector",
+            "smartStep": true,
             "sourceMaps": true,
             "outFiles": [
                 "${workspaceFolder}/server/dist/server/src/*.js",

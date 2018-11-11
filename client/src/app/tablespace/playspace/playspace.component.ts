@@ -16,7 +16,6 @@ export class PlayspaceComponent implements OnInit {
   users: User[] = [];
   zIndexes: number[] = [];
   bidding: boolean;
-  firstBidder: number;
   dealerId: number;
   gameType: string;
 
@@ -100,8 +99,8 @@ export class PlayspaceComponent implements OnInit {
     .subscribe((info) => {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
-        this.firstBidder = info.firstBidder === undefined ? 0 : info.firstBidder;
-        this.gameType = this.firstBidder === 1 ? 'Skat' : 'Oh Hell';
+
+        this.gameType = info.gameType;
         this.bidding = true;
 
         this.currentZIndex = 5;

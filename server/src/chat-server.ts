@@ -2,11 +2,15 @@ import { createServer, Server } from 'http';
 import * as express from 'express';
 import * as socketIo from 'socket.io';
 
+// global
+declare var v8debug: any;
+
 import { Message, User, Table, Action, GameType } from '../../shared/model';
 import { GameTable } from '.';
 import { Player } from './model';
 
 export class ChatServer {
+    
     public static readonly PORT:number = 8080;
     private app: express.Application;
     private server: Server;
@@ -18,6 +22,8 @@ export class ChatServer {
     private lobby: Table[] = [];
     private seatMap: {table: number, seat: number}[] = [];
     private socketMap: any[] = [];
+
+    public debug = typeof v8debug === 'object' || /--debug|--inspect/.test(process.execArgv.join(' '));
 
 
     constructor() {
@@ -46,7 +52,11 @@ export class ChatServer {
     }
 
     private sockets(): void {
-        this.io = socketIo.listen(this.server);
+        var socketOpts: socketIo.ServerOptions = {};
+        if(this.debug) {
+            socketOpts.pingTimeout = 300000;
+        }
+        this.io = socketIo.listen(this.server, socketOpts);
     }
 
     private listen(): void {
