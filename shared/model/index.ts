@@ -5,3 +5,4 @@ export { Message } from './message';
 export { User } from './user';
 export { Score } from './score';
 export { Table } from './table';
+export { SkatUtil } from './skatUtil';

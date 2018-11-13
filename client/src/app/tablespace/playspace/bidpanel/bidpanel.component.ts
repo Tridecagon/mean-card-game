@@ -28,6 +28,7 @@ export class BidpanelComponent implements OnInit {
   turnIndex: number;
   minBid = 0;
   bidFormControls: FormControl[] = [];
+  bidModes: string[] = [];
 
   constructor(private socketService: SocketService) { }
 
@@ -58,6 +59,9 @@ export class BidpanelComponent implements OnInit {
       this.turnIndex = 1;
       this.maxBid = -1;
       this.minBid = 10;
+
+      // TODO: see if this works on the second hand
+      this.bidModes = ['respond', 'bid', 'bid'];
     }
   }
 
@@ -76,6 +80,9 @@ export class BidpanelComponent implements OnInit {
         }
         if (bidData.bidInfo.minBid !== undefined) {
           this.minBid = bidData.bidInfo.minBid;
+        }
+        if (bidData.bidInfo.nextBidder !== undefined) {
+          this.bidModes[bidData.bidInfo.nextBidder] = bidData.bidInfo.mode;
         }
         // TODO: this breaks skat - implement a listener
         if (this.turnIndex === this.players.length) {

@@ -7,7 +7,7 @@
             *ngFor="let player of players; let i = index"
             [colspan]="1"
             [rowspan]="1">
-            <mcg-bidcard [player]="player" [activeTurn]="i === turnIndex" [canBid]="canBid(player)" [myValue]="bids[i]" [myFormControl]="bidFormControls[i]" [minBid]="minBid" [maxBid]="maxBid"></mcg-bidcard>
+            <mcg-bidcard [player]="player" [activeTurn]="i === turnIndex" [canBid]="canBid(player)" [myValue]="bids[i]" [myFormControl]="bidFormControls[i]" [minBid]="minBid" [maxBid]="maxBid" [bidMode]="bidModes[i]"></mcg-bidcard>
         </mat-grid-tile>
         <mat-grid-tile *ngIf="trumpUiCard">
               <div style="width: 100%; height: 100%">
@@ -19,7 +19,6 @@
     </mat-card-content>
     <mat-card-footer>
       <span>Total tricks: {{totalTricks}}</span><span [style.font-weight]="bidsComplete ? 'bold' : 'normal'"> Total bid: {{totalBid}} </span>
-      
     </mat-card-footer>
   </mat-card>
 </div>

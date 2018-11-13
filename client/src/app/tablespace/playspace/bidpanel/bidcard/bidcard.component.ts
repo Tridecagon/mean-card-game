@@ -17,6 +17,7 @@ export class BidcardComponent implements OnInit {
   @Input() myFormControl: FormControl;
   @Input() minBid: number;
   @Input() maxBid: number;
+  @Input() bidMode: string;
 
   constructor(private socketService: SocketService) { }
 
@@ -30,6 +31,16 @@ export class BidcardComponent implements OnInit {
         this.socketService.sendAction('bidRequest', {'bid': bidVal});
       }
     }
+  }
+
+  sendPass() {
+     if (this.canBid) {
+        this.socketService.sendAction('bidRequest', {'bid': 0});
+     }
+  }
+
+  get bidButtonText() {
+    return this.bidMode === 'respond' ? 'YES' : 'BID';
   }
 
   ParseBid(bidStr: string): number {
