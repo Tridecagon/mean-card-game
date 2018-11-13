@@ -40,7 +40,7 @@ export class BidcardComponent implements OnInit {
     if (this.maxBid >= 0 && bid > this.maxBid) {
       valid = false;
     }
-    if (this.minBid >= 0 && bid < this.minBid) {
+    if (this.minBid >= 0 && bid < this.minBid && bid !== 0) {
       valid = false;
     }
     return valid ? bid : -1;

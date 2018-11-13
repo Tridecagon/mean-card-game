@@ -228,7 +228,11 @@ export class Hand {
             player.socket.on('bidRequest', (bidInfo: any) => {
                 console.log(player.user.name + ' request to bid ' + JSON.stringify(bidInfo));
                 if (this.state === State.Bid && this.currentPlayer === player.index && this.ProcessBid(player, bidInfo)) { 
+                    console.log(`Bid accepted: ${JSON.stringify(bidInfo)}` );
                     this.tableChan.emit('bidResponse', {'bidInfo': bidInfo, 'userId': player.user.id});
+                }
+                else if (this.currentPlayer !== player.index) {
+                    console.log(`Bid rejected: it's ${this.players[this.currentPlayer].user.name}'s turn.`)
                 }
             });
 

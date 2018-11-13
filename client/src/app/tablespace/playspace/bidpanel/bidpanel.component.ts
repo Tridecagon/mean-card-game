@@ -70,7 +70,7 @@ export class BidpanelComponent implements OnInit {
         this.bids[index] = bidData.bidInfo.bid;
         this.totalTricks = bidData.bidInfo.totalTricks;
         this.totalBid = bidData.bidInfo.totalBid;
-        this.turnIndex = bidData.bidInfo.currentPlayer;
+        this.turnIndex = bidData.bidInfo.nextBidder;
         if (bidData.bidInfo.maxBid !== undefined) {
           this.maxBid = bidData.bidInfo.maxBid;
         }

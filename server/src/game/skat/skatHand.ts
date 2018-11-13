@@ -62,20 +62,21 @@ export class SkatHand extends Hand {
             return false;
         }
 
+        if(this.bids.filter((b) => b === 0).length === 2) // two people have passed, bidding is over
+            return false;
+
         var newBidder: number; // 0 is hold
-        let opponent = this.bids.findIndex((bid, index) => bid > 0 && index != this.whoseBid);
-        if(opponent >= 0)
-            newBidder = opponent;
-        else
-            newBidder = this.bids.findIndex((bid) => bid < 0);
+        if(bidInfo.bid === 0) // current bid is the first pass, bring 3rd player into bidding
+            newBidder = 2;
+        else { // first person who hasn't passed and isn't the current bidder
+            newBidder = this.bids.findIndex((b, i) => b !== 0 && i !== this.whoseBid);
+        }
         
         bidInfo.mode = (newBidder > this.whoseBid) ? "bid" : "respond";
         this.whoseBid = newBidder;
-
         this.currentPlayer = (this.holdIndex + this.whoseBid) % this.players.length;
-        
         bidInfo.nextBidder = this.whoseBid;
-        return this.bids.some((b) => b < 0);    
+        return true;  
     }
 
     ValidBid(player: Player, bidVal: number) : boolean {
