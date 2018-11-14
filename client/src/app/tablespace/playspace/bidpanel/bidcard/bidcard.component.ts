@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { User } from '../../../../../../../shared/model';
+import { User, SkatUtil } from '../../../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 
 @Component({
@@ -43,6 +43,10 @@ export class BidcardComponent implements OnInit {
     return this.bidMode === 'respond' ? 'YES' : 'BID';
   }
 
+  get canEditBid() {
+    return this.canBid && this.bidMode !== 'respond';
+  }
+
   ParseBid(bidStr: string): number {
     // returns -1 if error
 
@@ -52,6 +56,9 @@ export class BidcardComponent implements OnInit {
       valid = false;
     }
     if (this.minBid >= 0 && bid < this.minBid && bid !== 0) {
+      valid = false;
+    }
+    if (this.bidMode === 'Skat' && SkatUtil.invalidBids.some((b) => b === bid)) {
       valid = false;
     }
     return valid ? bid : -1;

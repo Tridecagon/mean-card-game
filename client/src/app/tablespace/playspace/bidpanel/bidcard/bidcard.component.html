@@ -6,7 +6,7 @@
   </mat-card-subtitle>
   <mat-card-content *ngIf="myFormControl">
       <mat-form-field style="width: 70px" >
-        <input matInput [formControl]="myFormControl" placeholder="Bid" type="number" [min]="minBid" [max]="maxBid" [value]="myValue" [readonly]="!canBid" (keyup.enter)="sendBid()">
+        <input matInput [formControl]="myFormControl" placeholder="Bid" type="number" [min]="minBid >= 0 ? minBid : undefined" [max]="maxBid > 0 ? maxBid : undefined" [value]="myValue" [readonly]="!canEditBid" (keyup.enter)="sendBid()">
         <mat-error *ngIf="myFormControl.errors">
           {{myFormControl.errors?.errorMsg}}
         </mat-error>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import {UiCard } from '../../../shared/model/uiCard';
-import { Card, Message, User } from '../../../../../../shared/model';
+import { Card, Message, User, SkatUtil } from '../../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 
 @Component({
@@ -59,6 +59,7 @@ export class BidpanelComponent implements OnInit {
       this.turnIndex = 1;
       this.maxBid = -1;
       this.minBid = 10;
+      this.bidFormControls[1].setValue(10);
 
       // TODO: see if this works on the second hand
       this.bidModes = ['respond', 'bid', 'bid'];
@@ -82,9 +83,20 @@ export class BidpanelComponent implements OnInit {
           this.minBid = bidData.bidInfo.minBid;
         }
         if (bidData.bidInfo.nextBidder !== undefined) {
-          this.bidModes[bidData.bidInfo.nextBidder] = bidData.bidInfo.mode;
+          this.bidModes[this.turnIndex] = bidData.bidInfo.mode;
         }
-        // TODO: this breaks skat - implement a listener
+        if (this.gameType === 'Skat') {
+          if (bidData.bidInfo.mode === 'respond') {
+            this.bidFormControls[this.turnIndex].setValue(bidData.bidInfo.bid);
+          } else {
+            let nextBid = Math.max(...this.bids) + 1;
+            while (SkatUtil.invalidBids.some((b) => b === nextBid)) {
+              nextBid++;
+            }
+            this.bidFormControls[this.turnIndex].setValue(nextBid);
+          }
+        }
+        // TODO: this might break skat - implement a listener
         if (this.turnIndex === this.players.length) {
           this.bidsComplete = true;
         }
@@ -106,14 +118,15 @@ export class BidpanelComponent implements OnInit {
   validateBid(c: FormControl) {
     const errorText = this.maxBid >= 0
     ? `Enter a bid between ${this.minBid} and ${this.maxBid}`
-    : `Enter a bid of at least ${this.minBid}`;
+    : `Enter a valid bid of at least ${this.minBid}`;
     return (this.ParseBid(c.value) === -1) ? { validateBid: { valid: false },
       errorMsg: errorText} : null;
   }
 
   checkBidTotal(c: FormControl) {
-    return (this.me.id === this.dealerId
-            && (this.totalBid + this.ParseBid(c.value) === this.totalTricks))
+    return ( this.gameType === 'Oh Hell'
+            && this.me.id === this.dealerId
+            && this.totalBid + this.ParseBid(c.value) === this.totalTricks)
        ? { totalBid: { valid: false } , errorMsg: `Dealer cannot bid ${this.totalTricks - this.totalBid}` } : null;
   }
 
