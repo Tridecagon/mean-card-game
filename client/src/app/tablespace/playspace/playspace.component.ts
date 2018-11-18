@@ -118,8 +118,8 @@ export class PlayspaceComponent implements OnInit {
         .subscribe((bidData) => {
           if (this.userIndex === bidData.winner) {
             this.bidding = false;
-            this.selectingGame = true;
             this.winningBid = bidData.bid;
+            this.selectingGame = true;
           }
         });
 

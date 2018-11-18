@@ -9,6 +9,7 @@ export class SkatHand extends Hand {
     private whoseBid: number; // 0 is hold, 1 is middle, 2 is rear
     private holdIndex: number;
     private selectedGame: SkatGameSelection;
+    private winningBid: number;
 
     constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
         super(players, deck, tableChan);
@@ -56,13 +57,15 @@ export class SkatHand extends Hand {
     // TODO: unit test this
     SetNextBidder(bidInfo: any): boolean {
         if(this.bids[0] === -1 && this.bids[1] === 0 && this.bids[2] === 0) { // hold wins by default; ramsch possible
-            this.bids[0] = 5;
+            this.winningBid = this.bids[0] = 5;
             this.currentPlayer = this.holdIndex;
             return false;
         }
 
         if(this.bids.filter((b) => b === 0).length === 2) {// two people have passed, bidding is over
-            this.currentPlayer = (this.holdIndex + this.bids.findIndex((b) => b > 0)) % this.players.length;
+            let winnerIndex = this.bids.findIndex((b) => b > 0);
+            this.currentPlayer = (this.holdIndex + winnerIndex) % this.players.length;
+            this.winningBid = this.bids[winnerIndex];
             return false;
         }
 
@@ -149,14 +152,14 @@ export class SkatHand extends Hand {
     }
 
     CompleteBidding() {
-        console.log(`Bidding complete. Winning bidder: ${this.players[this.currentPlayer].user.name}, bid: ${this.bids[this.whoseBid]}`);
+        console.log(`Bidding complete. Winning bidder: ${this.players[this.currentPlayer].user.name}, bid: ${this.winningBid}`);
         this.tableChan.emit('biddingComplete', 
         { winner: this.currentPlayer,
-            bid: this.bids[this.whoseBid]
+            bid: this.winningBid
         });
         this.players[this.currentPlayer].socket.on('selectGame', (selectedGame: SkatGameSelection) =>
         {
-            if(this.bids[this.whoseBid] === 5 || selectedGame.selection !== SkatGameType.Ramsch) {
+            if(this.winningBid === 5 || selectedGame.selection !== SkatGameType.Ramsch) {
                 this.selectedGame = selectedGame;
                 // TODO: add turn
                 this.tableChan.emit('gameSelected', selectedGame );

@@ -10,20 +10,21 @@ import { SocketService } from 'app/shared/services/socket.service';
 export class SelectpanelComponent implements OnInit {
 
   myGame: SkatGameSelection;
-  canRamsch: boolean;
   @Input() gameType: string;
   @Input() winningBid: number;
   constructor(private socketService: SocketService) { }
 
   ngOnInit() {
-    this.canRamsch = this.winningBid === 5;
     this.myGame = {
-      selection: undefined,
+      selection: SkatGameType.None,
       declarations: {
         schneider: false,
         schwarz: false
       }
     };
+  }
+  canRamsch(): boolean {
+    return this.winningBid === 5;
   }
 
   selectGame(choice: string) {
@@ -31,7 +32,7 @@ export class SelectpanelComponent implements OnInit {
     if (!this.canDeclare()) {
       this.myGame.declarations.schneider = this.myGame.declarations.schwarz = false;
     }
-    if (choice === 'Grand Overt') {
+    if (this.myGame.selection === SkatGameType.GrandOvert) {
       this.myGame.declarations.schneider = this.myGame.declarations.schwarz = true;
     }
   }
@@ -41,21 +42,30 @@ export class SelectpanelComponent implements OnInit {
   }
 
   getColor(buttonName: string): string {
-    return (buttonName === (this.myGame && this.myGame.selection && this.myGame.selection.toString())) ? 'accent' : 'primary';
+    return (this.myGame && (buttonName === SkatGameType[this.myGame.selection])) ? 'accent' : 'primary';
   }
 
   canDeclare(): boolean {
-    return ['Clubs', 'Spades', 'Hearts', 'Diamonds', 'Grand', '']
+    return ['Clubs', 'Spades', 'Hearts', 'Diamonds', 'Grand', 'None']
     .some(t => t === SkatGameType[this.myGame.selection]);
   }
 
-  validateSchneider() {
+  getSchneider() {
+    return this.myGame.declarations.schneider;
+  }
+
+  setSchneider(event: any) {
+    this.myGame.declarations.schneider = !this.myGame.declarations.schneider;
     if (!this.myGame.declarations.schneider) {
       this.myGame.declarations.schwarz = false;
     }
   }
 
-  validateSchwarz() {
+  getSchwarz() {
+    return this.myGame.declarations.schwarz;
+  }
+  setSchwarz(event: any) {
+    this.myGame.declarations.schwarz = !this.myGame.declarations.schwarz;
     if (this.myGame.declarations.schwarz) {
       this.myGame.declarations.schneider = true;
     }

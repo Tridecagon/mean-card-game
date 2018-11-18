@@ -45,11 +45,11 @@
           <button mat-raised-button type="button" [color]="getColor('NullOvert')" (click)="selectGame('NullOvert')">Null Overt</button>
         </mat-grid-tile>
         <mat-grid-tile colspan="2" rowspan="1">
-          <button mat-raised-button type="button" [color]="getColor('Ramsch')" (click)="selectGame('Ramsch')" [disabled]="canRamsch">Ramsch</button>
+          <button mat-raised-button type="button" [color]="getColor('Ramsch')" (click)="selectGame('Ramsch')" [disabled]="!canRamsch()">Ramsch</button>
         </mat-grid-tile>
         <mat-grid-tile colspan="2" rowspan="1">
           <div style='width: 100%'>
-              <mat-checkbox [disabled]="!canDeclare()" [(checked)]="myGame.declarations.schneider" (change)="validateSchneider()">Declared Schneider</mat-checkbox>
+              <mat-checkbox [disabled]="!canDeclare()" [checked]="getSchneider()" (change)="setSchneider()">Declared Schneider</mat-checkbox>
           </div>
         </mat-grid-tile>
         <mat-grid-tile colspan="6" rowspan="1">
@@ -57,7 +57,7 @@
         </mat-grid-tile>
         <mat-grid-tile colspan="2" rowspan="1">
           <div style='width: 100%'>
-            <mat-checkbox [disabled]="!canDeclare()" [(checked)]="myGame.declarations.schwarz" (change)="validateSchwarz()">Declared Schwarz</mat-checkbox>
+            <mat-checkbox [disabled]="!canDeclare()" [checked]="getSchwarz()" (change)="setSchwarz()">Declared Schwarz</mat-checkbox>
           </div>
         </mat-grid-tile>
         <mat-grid-tile colspan="5" rowspan="1">

@@ -88,7 +88,7 @@ export class BidpanelComponent implements OnInit {
           if (bidData.bidInfo.mode === 'respond') {
             this.bidFormControls[this.turnIndex].setValue(bidData.bidInfo.bid);
           } else if (bidData.bidInfo.mode === 'bid') {
-            let nextBid = Math.max(...this.bids.map(v => v === undefined ? -1 : v)) + 1;
+            let nextBid = Math.max(...this.bids.filter(v => v !== undefined)) + 1;
             while (nextBid < 10 || SkatUtil.invalidBids.some((b) => b === nextBid)) {
               nextBid++;
             }
