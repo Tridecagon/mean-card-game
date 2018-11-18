@@ -16,6 +16,7 @@ export class PlayspaceComponent implements OnInit {
   users: User[] = [];
   zIndexes: number[] = [];
   bidding: boolean;
+  selectingGame: boolean;
   dealerId: number;
   gameType: string;
 
@@ -37,6 +38,7 @@ export class PlayspaceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.selectingGame = false;
     this.socketService.initSocket(`/table${this.tableId}`);
     this.onJoinTable.emit({name: 'Table', conn: this.socketService});
     this.setupTableListeners();
@@ -110,6 +112,14 @@ export class PlayspaceComponent implements OnInit {
         this.zIndexes[0] = 20;
 
       });
+
+      this.socketService.onAction<any>('biddingComplete')
+        .subscribe((bidData) => {
+          if (this.userIndex === bidData.winner) {
+            this.bidding = false;
+            this.selectingGame = true;
+          }
+        });
 
       this.socketService.onAction<any>('beginPlay')
       .subscribe(() => {

@@ -61,7 +61,6 @@ export class BidpanelComponent implements OnInit {
       this.minBid = 10;
       this.bidFormControls[1].setValue(10);
 
-      // TODO: see if this works on the second hand
       this.bidModes = ['respond', 'bid', 'bid'];
     }
   }
@@ -88,9 +87,9 @@ export class BidpanelComponent implements OnInit {
         if (this.gameType === 'Skat') {
           if (bidData.bidInfo.mode === 'respond') {
             this.bidFormControls[this.turnIndex].setValue(bidData.bidInfo.bid);
-          } else {
-            let nextBid = Math.max(...this.bids) + 1;
-            while (SkatUtil.invalidBids.some((b) => b === nextBid)) {
+          } else if (bidData.bidInfo.mode === 'bid') {
+            let nextBid = Math.max(...this.bids.map(v => v === undefined ? -1 : v)) + 1;
+            while (nextBid < 10 || SkatUtil.invalidBids.some((b) => b === nextBid)) {
               nextBid++;
             }
             this.bidFormControls[this.turnIndex].setValue(nextBid);
@@ -101,6 +100,11 @@ export class BidpanelComponent implements OnInit {
           this.bidsComplete = true;
         }
       });
+
+      this.socketService.onAction<any>('biddingComplete')
+        .subscribe((bidData) => {
+          this.bidsComplete = true;
+        });
   }
 
   calculateCols(): number {

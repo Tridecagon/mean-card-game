@@ -1,0 +1,72 @@
+<div class="selectpanel-container">
+  <mat-card>
+    <mat-card-title>{{gameType}}: Select Game</mat-card-title>
+    <mat-card-content>
+      <mat-grid-list cols="8" rowHeight="50px">
+        <mat-grid-tile colspan="2" rowspan="1">
+            Turn:
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4" rowspan="1">
+            <button mat-raised-button type="button" (click)="selectGame('Turn')">Turn</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <button mat-raised-button type="button" (click)="selectGame('Grand')">Guetz</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          Solo:
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="2">
+          <button mat-raised-button type="button" (click)="selectGame('Clubs')">C</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="2">
+          <button mat-raised-button type="button" (click)="selectGame('Spades')">S</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="2">
+          <button mat-raised-button type="button" (click)="selectGame('Hearts')">H</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="2">
+          <button mat-raised-button type="button" (click)="selectGame('Diamonds')">D</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <button mat-raised-button type="button" (click)="selectGame('Grand')">Grand</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+            <button mat-raised-button type="button" (click)="selectGame('Grand Overt')">Grand Overt</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <button mat-raised-button type="button" (click)="selectGame('Null')">Null</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <button mat-raised-button type="button" (click)="selectGame('Null Overt')">Null Overt</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <button mat-raised-button type="button" (click)="selectGame('Ramsch')">Ramsch</button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <div style='width: 100%'>
+              <mat-checkbox>Declared schneider</mat-checkbox>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="6" rowspan="1">
+
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2" rowspan="1">
+          <div style='width: 100%'>
+            <mat-checkbox>Declared schwarz</mat-checkbox>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="5" rowspan="1">
+
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1" rowspan="1">
+          <button mat-raised-button type="button" (click)="confirmSelection()">Confirm</button>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+</div>

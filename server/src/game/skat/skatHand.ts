@@ -6,7 +6,6 @@ export class SkatHand extends Hand {
 
     private skat: Card[] = [];
     private bids: number[] = [];
-    private winningBidder: number;
     private whoseBid: number; // 0 is hold, 1 is middle, 2 is rear
     private holdIndex: number;
 
@@ -55,13 +54,16 @@ export class SkatHand extends Hand {
     // returns true if bidding is still going
     // TODO: unit test this
     SetNextBidder(bidInfo: any): boolean {
-        if(this.bids === [-1, 0, 0]) { // hold wins by default; ramsch possible
+        if(this.bids[0] === -1 && this.bids[1] === 0 && this.bids[2] === 0) { // hold wins by default; ramsch possible
             this.bids[0] = 5;
+            this.currentPlayer = this.holdIndex;
             return false;
         }
 
-        if(this.bids.filter((b) => b === 0).length === 2) // two people have passed, bidding is over
+        if(this.bids.filter((b) => b === 0).length === 2) {// two people have passed, bidding is over
+            this.currentPlayer = (this.holdIndex + this.bids.findIndex((b) => b > 0)) % this.players.length;
             return false;
+        }
 
         var newBidder: number; // 0 is hold
         if(bidInfo.bid === 0) // current bid is the first pass, bring 3rd player into bidding
@@ -143,6 +145,20 @@ export class SkatHand extends Hand {
                         return card.sort;
                 }
         }
+    }
+
+    CompleteBidding() {
+        console.log(`Bidding complete. Winning bidder: ${this.players[this.currentPlayer].user.name}, bid: ${this.bids[this.whoseBid]}`);
+        this.tableChan.emit('biddingComplete', 
+        { winner: this.currentPlayer,
+            bid: this.bids[this.whoseBid]
+        });
+        /*
+        setTimeout(() => {
+            this.SetState(State.Play);
+            this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
+        }, 5000);
+        */
     }
 
     // TODO: this is from a different game, fix
