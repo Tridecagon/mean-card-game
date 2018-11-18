@@ -6,3 +6,5 @@ export { User } from './user';
 export { Score } from './score';
 export { Table } from './table';
 export { SkatUtil } from './skatUtil';
+export { SkatGameType } from './skatgametype';
+export { SkatGameSelection } from './skatgameselection';
