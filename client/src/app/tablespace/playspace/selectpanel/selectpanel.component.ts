@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SkatGameSelection, SkatGameType } from '../../../../../../shared/model';
+import { SocketService } from 'app/shared/services/socket.service';
 
 @Component({
   selector: 'mcg-selectpanel',
@@ -9,12 +10,20 @@ import { SkatGameSelection, SkatGameType } from '../../../../../../shared/model'
 export class SelectpanelComponent implements OnInit {
 
   myGame: SkatGameSelection;
+  canRamsch: boolean;
   @Input() gameType: string;
-  constructor() { }
+  @Input() winningBid: number;
+  constructor(private socketService: SocketService) { }
 
   ngOnInit() {
-    this.myGame.selection = undefined;
-    this.myGame.declarations.schneider = this.myGame.declarations.schwarz = false;
+    this.canRamsch = this.winningBid === 5;
+    this.myGame = {
+      selection: undefined,
+      declarations: {
+        schneider: false,
+        schwarz: false
+      }
+    };
   }
 
   selectGame(choice: string) {
@@ -27,13 +36,29 @@ export class SelectpanelComponent implements OnInit {
     }
   }
 
+  confirmSelection() {
+    this.socketService.sendAction('selectGame', this.myGame);
+  }
+
   getColor(buttonName: string): string {
-    return buttonName === this.myGame.selection.toString() ? 'accent' : 'primary';
+    return (buttonName === (this.myGame && this.myGame.selection && this.myGame.selection.toString())) ? 'accent' : 'primary';
   }
 
   canDeclare(): boolean {
     return ['Clubs', 'Spades', 'Hearts', 'Diamonds', 'Grand', '']
     .some(t => t === SkatGameType[this.myGame.selection]);
+  }
+
+  validateSchneider() {
+    if (!this.myGame.declarations.schneider) {
+      this.myGame.declarations.schwarz = false;
+    }
+  }
+
+  validateSchwarz() {
+    if (this.myGame.declarations.schwarz) {
+      this.myGame.declarations.schneider = true;
+    }
   }
 
 }

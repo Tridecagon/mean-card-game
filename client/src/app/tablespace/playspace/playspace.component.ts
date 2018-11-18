@@ -17,6 +17,7 @@ export class PlayspaceComponent implements OnInit {
   zIndexes: number[] = [];
   bidding: boolean;
   selectingGame: boolean;
+  winningBid: number;
   dealerId: number;
   gameType: string;
 
@@ -118,6 +119,7 @@ export class PlayspaceComponent implements OnInit {
           if (this.userIndex === bidData.winner) {
             this.bidding = false;
             this.selectingGame = true;
+            this.winningBid = bidData.bid;
           }
         });
 

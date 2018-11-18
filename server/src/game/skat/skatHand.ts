@@ -1,5 +1,5 @@
 import { Player } from '../../model';
-import { Card, GameType, Score, SkatUtil} from '../../../../shared/model';
+import { Card, GameType, Score, SkatUtil, SkatGameSelection, SkatGameType } from '../../../../shared/model';
 import { Hand, State } from '../baseGame';
 
 export class SkatHand extends Hand {
@@ -8,6 +8,7 @@ export class SkatHand extends Hand {
     private bids: number[] = [];
     private whoseBid: number; // 0 is hold, 1 is middle, 2 is rear
     private holdIndex: number;
+    private selectedGame: SkatGameSelection;
 
     constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
         super(players, deck, tableChan);
@@ -153,12 +154,14 @@ export class SkatHand extends Hand {
         { winner: this.currentPlayer,
             bid: this.bids[this.whoseBid]
         });
-        /*
-        setTimeout(() => {
-            this.SetState(State.Play);
-            this.tableChan.emit('beginPlay', this.players[this.currentPlayer].user.id);
-        }, 5000);
-        */
+        this.players[this.currentPlayer].socket.on('selectGame', (selectedGame: SkatGameSelection) =>
+        {
+            if(this.bids[this.whoseBid] === 5 || selectedGame.selection !== SkatGameType.Ramsch) {
+                this.selectedGame = selectedGame;
+                // TODO: add turn
+                this.tableChan.emit('gameSelected', selectedGame );
+            }
+        });
     }
 
     // TODO: this is from a different game, fix

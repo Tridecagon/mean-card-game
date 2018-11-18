@@ -49,7 +49,7 @@
         </mat-grid-tile>
         <mat-grid-tile colspan="2" rowspan="1">
           <div style='width: 100%'>
-              <mat-checkbox [disabled]="!canDeclare()" [(checked)]="myGame.declarations.schneider">Declared Schneider</mat-checkbox>
+              <mat-checkbox [disabled]="!canDeclare()" [(checked)]="myGame.declarations.schneider" (change)="validateSchneider()">Declared Schneider</mat-checkbox>
           </div>
         </mat-grid-tile>
         <mat-grid-tile colspan="6" rowspan="1">
@@ -57,7 +57,7 @@
         </mat-grid-tile>
         <mat-grid-tile colspan="2" rowspan="1">
           <div style='width: 100%'>
-            <mat-checkbox [disabled]="!canDeclare()" [(checked)]="myGame.declarations.schwarz">Declared Schwarz</mat-checkbox>
+            <mat-checkbox [disabled]="!canDeclare()" [(checked)]="myGame.declarations.schwarz" (change)="validateSchwarz()">Declared Schwarz</mat-checkbox>
           </div>
         </mat-grid-tile>
         <mat-grid-tile colspan="5" rowspan="1">
@@ -68,5 +68,8 @@
         </mat-grid-tile>
       </mat-grid-list>
     </mat-card-content>
+    <mat-card-footer>
+      <span [style.font-weight]="bold"> Total bid: {{winningBid === 5 ? '-' : winningBid}} </span>
+    </mat-card-footer>
   </mat-card>
 </div>
