@@ -1,2 +1,2 @@
-export { ChatMessage } from './chat-message';
-export { Player } from './player';
+export { ChatMessage } from "./chat-message";
+export { Player } from "./player";

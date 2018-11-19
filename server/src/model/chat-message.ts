@@ -1,6 +1,6 @@
-import { Message, User, Action } from '../../../shared/model';
+import { Action, Message, User } from "../../../shared/model";
 
-export class ChatMessage implements Message{
+export class ChatMessage implements Message {
     constructor(readonly from: User, readonly content: string, readonly action: Action = null) {
     }
 }

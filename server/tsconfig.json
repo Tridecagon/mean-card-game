@@ -1,6 +1,6 @@
 {
   "compileOnSave": false,
-  "files": [
+  "paths": [
     "src/*.ts",
     "src/**/*.ts",
     "../shared/**/*.ts"

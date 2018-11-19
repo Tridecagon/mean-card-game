@@ -1,4 +1,4 @@
-import { Card, User } from '../../../shared/model';
+import { Card, User } from "../../../shared/model";
 
 export class Player {
     public heldCards?: Card[] = [];
@@ -8,6 +8,5 @@ export class Player {
     public index: number;
 
     constructor(public user: User, public socket: SocketIO.Socket) {}
-
 
 }
