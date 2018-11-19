@@ -1,5 +1,5 @@
 import { Player } from '../../model';
-import { Card, GameType, Score, SkatUtil, SkatGameSelection, SkatGameType } from '../../../../shared/model';
+import { Card, SkatUtil, SkatGameSelection, SkatGameType } from '../../../../shared/model';
 import { Hand, State } from '../baseGame';
 
 export class SkatHand extends Hand {
@@ -14,6 +14,37 @@ export class SkatHand extends Hand {
     constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
         super(players, deck, tableChan);
         
+    }
+
+    SetupListeners() {
+        super.SetupListeners();
+
+        
+        for(let player of this.players) {
+            player.socket.on('selectGame', (selectedGame: SkatGameSelection) =>
+            {
+                if (player.index === this.currentPlayer
+                    && selectedGame.selection !== SkatGameType.None
+                    && ( this.winningBid === 5 || selectedGame.selection !== SkatGameType.Ramsch)) {
+                    this.selectedGame = selectedGame;
+                    // TODO: add turn
+                    if(selectedGame.selection === SkatGameType.Turn)
+                        this.ExecuteTurn();
+                    else if (selectedGame.selection === SkatGameType.Guetz)
+                        this.ExecuteGuetz();
+                    else
+                        this.tableChan.emit('gameSelected', selectedGame );
+                }
+            });
+        }
+    }
+
+    ExecuteTurn() : void {
+        
+    }
+    
+    ExecuteGuetz() : void {
+
     }
 
     DealHands() {
@@ -156,14 +187,6 @@ export class SkatHand extends Hand {
         this.tableChan.emit('biddingComplete', 
         { winner: this.currentPlayer,
             bid: this.winningBid
-        });
-        this.players[this.currentPlayer].socket.on('selectGame', (selectedGame: SkatGameSelection) =>
-        {
-            if(this.winningBid === 5 || selectedGame.selection !== SkatGameType.Ramsch) {
-                this.selectedGame = selectedGame;
-                // TODO: add turn
-                this.tableChan.emit('gameSelected', selectedGame );
-            }
         });
     }
 
