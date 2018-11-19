@@ -24,7 +24,10 @@
     "socket.io": "^2.0.4",
     "typescript": "^2.5.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tslint": "^5.11.0",
+    "codelyzer": "^4.5.0"
+  },
   "engines": {
     "node": "10.9.0",
     "npm": "6.4.0"
