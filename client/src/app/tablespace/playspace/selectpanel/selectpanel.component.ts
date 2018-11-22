@@ -38,7 +38,7 @@ export class SelectpanelComponent implements OnInit {
   }
 
   confirmSelection() {
-    this.socketService.sendAction('selectGame', this.myGame);
+    this.socketService.sendAction('selectSkatGame', this.myGame);
   }
 
   getColor(buttonName: string): string {

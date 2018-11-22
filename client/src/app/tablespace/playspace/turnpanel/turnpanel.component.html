@@ -1,3 +1,29 @@
-<p>
-  turnpanel works!
-</p>
+<div class="turnpanel-container">
+  <mat-card>
+    <mat-card-content>
+      <mat-grid-list cols="2" rowHeight="220px">
+        <mat-grid-tile>
+              <div style="width: 100%; height: 100%" class="player-card" [@flipCard]="firstUiCard ? firstUiCard.face : down">
+                <!--<img src="./assets/img/deck/{{trumpUiCard.imageSrc}}" style="position:absolute; max-height: 70%; max-width: 100%; left: 0; right: 0; bottom: 0; margin: 0 auto" > -->
+                <img [src]="./assets/img/deck/{{firstUiCard ? firstUiCard.imageSrc : back.png}}" 
+                  style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
+                <img  src="./assets/img/deck/back.png" 
+                  style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
+              </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <div style="width: 100%; height: 100%" class="player-card" [@flipCard]="secondUiCard ? secondUiCard.face : down">
+            <!--<img src="./assets/img/deck/{{trumpUiCard.imageSrc}}" style="position:absolute; max-height: 70%; max-width: 100%; left: 0; right: 0; bottom: 0; margin: 0 auto" > -->
+            <img [src]="./assets/img/deck/{{secondUiCard ? secondUiCard.imageSrc : back.png}}" 
+              style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
+            <img  src="./assets/img/deck/back.png" 
+              style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
+          </div>
+    </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+    <mat-card-footer>
+      <!--<span>Total tricks: {{totalTricks}}</span><span [style.font-weight]="bidsComplete ? 'bold' : 'normal'"> Total bid: {{totalBid}} </span> -->
+    </mat-card-footer>
+  </mat-card>
+</div>

@@ -20,30 +20,59 @@ export class SkatHand extends Hand {
         super.SetupListeners();
 
         for (const player of this.players) {
-            player.socket.on("selectGame", (selectedGame: SkatGameSelection) => {
+            player.socket.on("selectSkatGame", (selectedGame: SkatGameSelection) => {
                 if (player.index === this.currentPlayer
+                    && this.state === State.SelectSkatGame
                     && selectedGame.selection !== SkatGameType.None
                     && ( this.winningBid === 5 || selectedGame.selection !== SkatGameType.Ramsch)) {
                     this.selectedGame = selectedGame;
-                    // TODO: add turn
                     if (selectedGame.selection === SkatGameType.Turn) {
-                        this.ExecuteTurn();
+                        this.SetState(State.SingleTurn);
+                        player.socket.emit("sendTurnCard", this.skat[0]);
                     } else if (selectedGame.selection === SkatGameType.Guetz) {
-                        this.ExecuteGuetz();
-                         } else {
+                        this.SetState(State.Discard);
+                        player.socket.emit("sendGuetzCards", this.skat);
                         this.tableChan.emit("gameSelected", selectedGame );
-                         }
+                    } else {
+                        this.SetState(State.Play);
+                        this.tableChan.emit("gameSelected", selectedGame );
+                    }
+                }
+            });
+
+            player.socket.on("chooseTurn", (turnChoice: string) => {
+                if (player.index === this.currentPlayer
+                    && this.state in [State.SingleTurn, State.DoubleTurn]) {
+                    switch (turnChoice) {
+                        case "doubleTurn":
+                            if (this.state === State.SingleTurn) {
+                                player.socket.emit("sendTurnCard", this.skat[1]);
+                            } else {
+                                console.log("Invalid state for Double Turn!");
+                            }
+                        case "Jacks":
+                            if ((this.state === State.SingleTurn && this.skat[0].description === "Jack")
+                             || (this.state === State.DoubleTurn && this.skat[1].description === "Jack")) {
+                                  if (this.state === State.SingleTurn) {
+                                    player.socket.emit("sendTurnCard", this.skat[1]);
+                                  }
+                                  this.SetState(State.Discard);
+                                  // TODO: set actual trump suit
+                              }
+                        default:
+                              if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
+                               || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
+                                    if (this.state === State.SingleTurn) {
+                                        player.socket.emit("sendTurnCard", this.skat[1]);
+                                    }
+                                    this.SetState(State.Discard);
+                                    // TODO: set actual trump suit
+                              }
+                    }
+
                 }
             });
         }
-    }
-
-    public ExecuteTurn(): void {
-        return null;
-    }
-
-    public ExecuteGuetz(): void {
-        return null;
     }
 
     public DealHands() {

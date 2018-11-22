@@ -1,0 +1,4 @@
+.player-card {
+    position: absolute;
+    transform-style: preserve-3d;
+}
