@@ -14,6 +14,7 @@ import { BidpanelComponent } from './playspace/bidpanel/bidpanel.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { BidcardComponent } from './playspace/bidpanel/bidcard/bidcard.component';
 import { SelectpanelComponent } from './playspace/selectpanel/selectpanel.component';
+import { TurnpanelComponent } from './playspace/turnpanel/turnpanel.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { SelectpanelComponent } from './playspace/selectpanel/selectpanel.compon
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

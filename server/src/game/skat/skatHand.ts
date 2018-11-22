@@ -174,7 +174,7 @@ export class SkatHand extends Hand {
                             case "Club":
                                 return 18;
                             default:
-                                throw Error("Broken ass case statement");
+                                throw Error(`card ${card} has unexpected suit!`);
                         }
                     default:
                         return card.sort;
