@@ -59,13 +59,12 @@ $ cd socket-io-typescript-chat
 
 ## Run Server
 
-To run server locally, just install dependencies and run `gulp` task to create a build:
+To run server locally, just install dependencies and run tsc to create a build:
 
 ```bash
 $ cd server
-$ npm install -g gulp-cli
 $ npm install
-$ gulp build
+$ npm run build
 $ npm start
 ```
 

@@ -6,8 +6,8 @@
   "author": "Dave Carlisle",
   "license": "MIT",
   "scripts": {
-    "build": "gulp build",
-    "postinstall": "gulp build",
+    "build": "tsc -p .",
+    "postinstall": "tsc -p .",
     "start": "node dist/server/src/index.js",
     "debug-start": "node --inspect dist/server/src/index.js"
   },
@@ -16,9 +16,6 @@
     "@types/socket.io": "^1.4.31",
     "async-lock": "^1.1.1",
     "express": "^4.16.2",
-    "gulp": "^4.0.0",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-typescript": "^3.2.3",
     "minimatch": "^3.0.4",
     "shuffle": "^0.2.2",
     "socket.io": "^2.0.4",

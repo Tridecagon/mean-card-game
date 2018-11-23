@@ -8,8 +8,10 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "target": "es6",
-    "sourceMap": true,
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "inlineSourceMap": true,
+    "rootDir": "..",
+    "outDir": "dist"
   }
 }
