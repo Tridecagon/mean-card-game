@@ -8,12 +8,16 @@ export class UiCard {
 
 public constructor(public card?: Card, public face = 'down') {
   if (card) {
-    this.imageSrc = this.setImageString(card.suit, card.sort);
+    this.imageSrc = this.getImageString();
   }
   this.isSelected = false;
 }
 
-public cardBackImage(): string {
+public static fullCardBackImage(): string {
+  return './assets/img/deck/back.png';
+}
+
+public static cardBackImage(): string {
     return 'back.png';
 }
 
@@ -31,10 +35,14 @@ public flip(): void {
   }
 }
 
+public getFullImageString(): string {
+  return './assets/img/deck/' + this.getImageString();
+}
+
 // TODO: refactor this to use Description, or pass true Sort along with numeric rank
-private setImageString(suit: string, sort: number): string {
+private getImageString(): string {
   let value;
-  switch (sort) {
+  switch (this.card.sort) {
       case 11:
         value = 'J';
         break;
@@ -48,8 +56,8 @@ private setImageString(suit: string, sort: number): string {
         value = 'A';
         break;
       default:
-        value = sort;
+        value = this.card.sort;
     }
-    return suit.toLowerCase() + '-' + value + '.png';
+    return this.card.suit.toLowerCase() + '-' + value + '.png';
   }
 }

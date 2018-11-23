@@ -31,7 +31,8 @@ export class SkatHand extends Hand {
                         player.socket.emit("sendTurnCard", this.skat[0]);
                     } else if (selectedGame.selection === SkatGameType.Guetz) {
                         this.SetState(State.Discard);
-                        player.socket.emit("sendGuetzCards", this.skat);
+                        player.socket.emit("sendTurnCard", this.skat[0]);
+                        player.socket.emit("sendTurnCard", this.skat[1]);
                         this.tableChan.emit("gameSelected", selectedGame );
                     } else {
                         this.SetState(State.Play);
