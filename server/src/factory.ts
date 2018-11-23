@@ -7,7 +7,7 @@ import { SkatMatch } from "./game/skat/skatMatch";
 export class Factory {
 
     public static buildMatch(gameType: GameType): Match {
-        switch (gameType) {
+        switch (GameType[gameType]) {
             case GameType.OhHell:
                 return new OhHellMatch();
             case GameType.Euchre:
