@@ -27,7 +27,7 @@ export class SelectpanelComponent implements OnInit {
     return this.winningBid === 5;
   }
 
-  selectGame(choice: string) {
+  selectSkatGame(choice: string) {
     this.myGame.selection = SkatGameType[choice];
     if (!this.canDeclare()) {
       this.myGame.declarations.schneider = this.myGame.declarations.schwarz = false;

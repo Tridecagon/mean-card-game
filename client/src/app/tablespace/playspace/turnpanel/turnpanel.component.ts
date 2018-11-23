@@ -21,17 +21,34 @@ export class TurnpanelComponent implements OnInit {
   @Input() set firstCard(card: Card) {
     if (card) {
       this.firstUiCard = new UiCard(card);
+      this.firstUiCard.flip();
     }
   }
   @Input() set secondCard(card: Card) {
     if (card) {
-      this.firstUiCard = new UiCard(card);
+      this.secondUiCard = new UiCard(card);
+      this.secondUiCard.flip();
     }
   }
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  getCardFace(index: number): string {
+    const card = index === 0 ? this.firstUiCard : this.secondUiCard;
+    return card ? card.getFullImageString() : UiCard.fullCardBackImage();
+  }
+
+  currentTurnCardIsJack(): boolean {
+    if (this.secondUiCard) {
+      return this.secondUiCard.card.description === 'Jack';
+    } else if (this.firstCard) {
+      return this.firstUiCard.card.description === 'Jack';
+    } else {
+      return false;
+    }
   }
 
 }

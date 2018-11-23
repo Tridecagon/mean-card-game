@@ -1,4 +1,19 @@
+mat-card {
+    margin: 5% auto;
+    width: 60%;
+    height: 65%;
+}
+
 .player-card {
+    width: 150px;
+    height: 187.5px;
     position: absolute;
     transform-style: preserve-3d;
+}
+img {
+    position:absolute;
+    top: 0; 
+    left: 0;
+    height: 100%;
+    backface-visibility: hidden;
 }

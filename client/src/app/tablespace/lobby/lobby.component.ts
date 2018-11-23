@@ -46,11 +46,18 @@ export class LobbyComponent implements OnInit {
 
   private onGameSelected(tableId: number, value: GameType) {
     console.log(`Game change event Table ${tableId} Value ${value} `);
-    this.socketService.sendAction('selectGame', {table: tableId, gameType: value});
+    this.socketService.sendAction('selectGame', {table: tableId, gameType: GameType[value]});
   }
 
   private isMyTable(table: Table): boolean {
     return table.users.some(u => u.id === this.user.id);
+  }
+
+  private getGameType(table: Table): string {
+    if (table && table.gameType) {
+      return GameType[table.gameType];
+    }
+    return '';
   }
 
 }

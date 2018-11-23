@@ -215,6 +215,7 @@ export class SkatHand extends Hand {
     public CompleteBidding() {
         console.log
           (`Bidding complete. Winning bidder: ${this.players[this.currentPlayer].user.name}, bid: ${this.winningBid}`);
+        this.SetState(State.SelectSkatGame);
         this.tableChan.emit("biddingComplete",
         {
             bid: this.winningBid,
