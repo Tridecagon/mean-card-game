@@ -41,6 +41,10 @@ export class SelectpanelComponent implements OnInit {
     this.socketService.sendAction('selectSkatGame', this.myGame);
   }
 
+  canConfirm(): boolean {
+    return this.myGame && this.myGame.selection !== SkatGameType.None;
+  }
+
   getColor(buttonName: string): string {
     return (this.myGame && (buttonName === SkatGameType[this.myGame.selection])) ? 'accent' : 'primary';
   }

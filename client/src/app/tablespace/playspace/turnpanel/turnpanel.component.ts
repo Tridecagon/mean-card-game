@@ -1,3 +1,4 @@
+import { SocketService } from 'app/shared/services/socket.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { trigger, style, state, transition, animate } from '@angular/animations';
 import { Card, User } from 'app/../../../shared/model';
@@ -17,6 +18,7 @@ import { UiCard } from 'app/shared/model';
 export class TurnpanelComponent implements OnInit {
   firstUiCard: UiCard;
   secondUiCard: UiCard;
+  selectedTurn = '';
 
   @Input() set firstCard(card: Card) {
     if (card) {
@@ -31,9 +33,10 @@ export class TurnpanelComponent implements OnInit {
     }
   }
 
-  constructor() { }
+  constructor(private socketService: SocketService) { }
 
   ngOnInit() {
+    this.selectedTurn = '';
   }
 
   getCardFace(index: number): string {
@@ -48,6 +51,30 @@ export class TurnpanelComponent implements OnInit {
       return this.firstUiCard.card.description === 'Jack';
     } else {
       return false;
+    }
+  }
+
+  selectTrump() {
+    this.selectedTurn = this.secondCard ? this.secondCard.suit : this.firstCard.suit;
+  }
+
+  selectJacks() {
+    this.selectedTurn = 'Jacks';
+  }
+
+  selectDoubleTurn() {
+    this.selectedTurn = 'DoubleTurn';
+  }
+
+  private confirmChoice() {
+    this.socketService.sendAction('chooseTurn', this.selectedTurn);
+  }
+
+  private getColor(button: string): string {
+    if (button === 'Suit') {
+      return (this.selectedTurn in ['Club', 'Spade', 'Heart', 'Diamond']) ? 'accent' : 'primary';
+    } else {
+      return (this.selectedTurn === button) ? 'accent' : 'primary';
     }
   }
 
