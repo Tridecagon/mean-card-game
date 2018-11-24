@@ -58,7 +58,7 @@ export class SelectpanelComponent implements OnInit {
     return this.myGame.declarations.schneider;
   }
 
-  setSchneider(event: any) {
+  setSchneider() {
     this.myGame.declarations.schneider = !this.myGame.declarations.schneider;
     if (!this.myGame.declarations.schneider) {
       this.myGame.declarations.schwarz = false;
@@ -68,7 +68,7 @@ export class SelectpanelComponent implements OnInit {
   getSchwarz() {
     return this.myGame.declarations.schwarz;
   }
-  setSchwarz(event: any) {
+  setSchwarz() {
     this.myGame.declarations.schwarz = !this.myGame.declarations.schwarz;
     if (this.myGame.declarations.schwarz) {
       this.myGame.declarations.schneider = true;

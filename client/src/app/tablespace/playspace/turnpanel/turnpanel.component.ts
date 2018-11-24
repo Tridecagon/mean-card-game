@@ -71,15 +71,15 @@ export class TurnpanelComponent implements OnInit {
     this.selectedTurn = 'DoubleTurn';
   }
 
-  private candidateSuit(): string {
+  candidateSuit(): string {
     return this._secondCard ? this._secondCard.suit : this._firstCard.suit;
   }
 
-  private confirmChoice() {
+  confirmChoice() {
     this.socketService.sendAction('chooseTurn', this.selectedTurn);
   }
 
-  private getColor(button: string): string {
+  getColor(button: string): string {
     if (button === 'Suit') {
       return ( ['Club', 'Spade', 'Heart', 'Diamond'].includes(this.selectedTurn)) ? 'accent' : 'primary';
     } else {
