@@ -43,10 +43,11 @@ export class SkatHand extends Hand {
 
             player.socket.on("chooseTurn", (turnChoice: string) => {
                 if (player.index === this.currentPlayer
-                    && this.state in [State.SingleTurn, State.DoubleTurn]) {
+                    && (this.state === State.SingleTurn || this.state === State.DoubleTurn)) {
                     switch (turnChoice) {
-                        case "doubleTurn":
+                        case "DoubleTurn":
                             if (this.state === State.SingleTurn) {
+                                this.state = State.DoubleTurn;
                                 player.socket.emit("sendTurnCard", this.skat[1]);
                             } else {
                                 console.log("Invalid state for Double Turn!");

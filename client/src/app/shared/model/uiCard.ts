@@ -4,13 +4,23 @@ export class UiCard {
   isSelected: boolean;
   imageSrc: string;
   leftPos: number;
+  private _card: Card;
 
 
-public constructor(public card?: Card, public face = 'down') {
-  if (card) {
+public constructor(card?: Card, public face = 'down') {
+  this.card = card;
+  this.isSelected = false;
+}
+
+set card(val: Card) {
+  this._card = val;
+  if (this._card) {
     this.imageSrc = this.getImageString();
   }
-  this.isSelected = false;
+}
+
+get card(): Card {
+  return this._card;
 }
 
 public static fullCardBackImage(): string {
@@ -22,7 +32,7 @@ public static cardBackImage(): string {
 }
 
 public toString(): string {
-    return this.card.description + ' of ' + this.card.suit + 's';
+    return this._card.description + ' of ' + this._card.suit + 's';
   }
 
 public toggleSelection(): void {
@@ -30,7 +40,7 @@ public toggleSelection(): void {
 }
 
 public flip(): void {
-  if (this.card) {
+  if (this._card) {
   this.face = this.face === 'up' ? 'down' : 'up';
   }
 }
@@ -41,8 +51,11 @@ public getFullImageString(): string {
 
 // TODO: refactor this to use Description, or pass true Sort along with numeric rank
 private getImageString(): string {
+  if (!this._card) {
+    return '';
+  }
   let value;
-  switch (this.card.sort) {
+  switch (this._card.sort) {
       case 11:
         value = 'J';
         break;
@@ -56,8 +69,8 @@ private getImageString(): string {
         value = 'A';
         break;
       default:
-        value = this.card.sort;
+        value = this._card.sort;
     }
-    return this.card.suit.toLowerCase() + '-' + value + '.png';
+    return this._card.suit.toLowerCase() + '-' + value + '.png';
   }
 }

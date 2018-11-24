@@ -1,29 +1,31 @@
 <mat-card>
   <mat-card-title>Bidder</mat-card-title>
-  <mat-card-content>
-    <mat-grid-list cols="2" rowHeight="187.5px">
-      <mat-grid-tile>
-            <div class="player-card" [@flipCard]="firstUiCard ? firstUiCard.face : down">
-              <!--<img src="./assets/img/deck/{{trumpUiCard.imageSrc}}" style="position:absolute; max-height: 70%; max-width: 100%; left: 0; right: 0; bottom: 0; margin: 0 auto" > -->
-              <img [src]="getCardFace(0)">
-              <img  src="./assets/img/deck/back.png" style.transform="rotateY(180deg)">
-            </div>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <div class="player-card" [@flipCard]="secondUiCard ? secondUiCard.face : down">
-          <img [src]="getCardFace(1)">
-          <img  src="./assets/img/deck/back.png" style.transform="rotateY(180deg)">
-        </div>
-  </mat-grid-tile>
-    </mat-grid-list>
-  </mat-card-content>
-  <mat-card-actions>
-      <button mat-raised-button type="button" [color]="getColor('Suit')" (click)="selectTrump()">Suit</button>
-      <button mat-raised-button type="button" *ngIf="currentTurnCardIsJack()" [color]="getColor('Jacks')" (click)="selectJacks()">Jacks</button>
-      <button mat-raised-button type="button" *ngIf="!secondUiCard" [color]="getColor('DoubleTurn')" (click)="selectDoubleTurn()">Double Turn</button>
-      <button mat-raised-button type="button" [disabled]="selectedTurn === ''" [color]="accent" (click)="confirmChoice()">Confirm</button>
+    <mat-card-content>
+      <mat-grid-list cols="2" rowHeight="187.5px">
+        <mat-grid-tile style="perspective: 800px">
+              <div class="player-card" [@flipCard]="firstUiCard.face">
+                <!--<img src="./assets/img/deck/{{trumpUiCard.imageSrc}}" style="position:absolute; max-height: 70%; max-width: 100%; left: 0; right: 0; bottom: 0; margin: 0 auto" > -->
+                <img [src]="getCardFace(0)">
+                <img  src="./assets/img/deck/back.png" [style.transform]="'rotateY(180deg)'">
+              </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <div class="player-card" [@flipCard]="secondUiCard.face">
+            <img [src]="getCardFace(1)">
+            <img src="./assets/img/deck/back.png" [style.transform]="'rotateY(180deg)'">
+          </div>
+          </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+    <mat-card-actions>
+      <div fxLayout="row">
+        <button mat-raised-button type="button" [color]="getColor('Suit')" (click)="selectTrump()">{{candidateSuit()}}s</button>
+        <button mat-raised-button type="button" [disabled]="!currentTurnCardIsJack()" [color]="getColor('Jacks')" (click)="selectJacks()">Jacks</button>
+        <button mat-raised-button type="button" [disabled]="_secondCard" [color]="getColor('DoubleTurn')" (click)="selectDoubleTurn()">Double Turn</button>
+        <button mat-raised-button type="button" [disabled]="selectedTurn === ''" color="accent" (click)="confirmChoice()" style="float: right">Confirm</button>
+      </div>
     </mat-card-actions>
   <mat-card-footer>
-    <!--<span>Total tricks: {{totalTricks}}</span><span [style.font-weight]="bidsComplete ? 'bold' : 'normal'"> Total bid: {{totalBid}} </span> -->
+      <!--<span>Total tricks: {{totalTricks}}</span><span [style.font-weight]="bidsComplete ? 'bold' : 'normal'"> Total bid: {{totalBid}} </span> -->
   </mat-card-footer>
 </mat-card>

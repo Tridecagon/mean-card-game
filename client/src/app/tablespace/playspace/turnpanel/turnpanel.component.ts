@@ -16,24 +16,29 @@ import { UiCard } from 'app/shared/model';
   ]
 })
 export class TurnpanelComponent implements OnInit {
+  _firstCard: Card;
+  _secondCard: Card;
   firstUiCard: UiCard;
   secondUiCard: UiCard;
   selectedTurn = '';
 
   @Input() set firstCard(card: Card) {
-    if (card) {
-      this.firstUiCard = new UiCard(card);
-      this.firstUiCard.flip();
-    }
+    this._firstCard = card;
+    this.firstUiCard.card = card;
+    setTimeout(() => this.firstUiCard.flip(), 0);
+    // this.firstUiCard.flip();
   }
   @Input() set secondCard(card: Card) {
-    if (card) {
-      this.secondUiCard = new UiCard(card);
-      this.secondUiCard.flip();
-    }
+    this._secondCard = card;
+    this.secondUiCard.card = card;
+    setTimeout(() => this.secondUiCard.flip(), 0);
+    // this.secondUiCard.flip();
   }
 
-  constructor(private socketService: SocketService) { }
+  constructor(private socketService: SocketService) {
+    this.firstUiCard = new UiCard();
+    this.secondUiCard = new UiCard();
+   }
 
   ngOnInit() {
     this.selectedTurn = '';
@@ -41,21 +46,21 @@ export class TurnpanelComponent implements OnInit {
 
   getCardFace(index: number): string {
     const card = index === 0 ? this.firstUiCard : this.secondUiCard;
-    return card ? card.getFullImageString() : UiCard.fullCardBackImage();
+    return card ? card.getFullImageString() : '';
   }
 
   currentTurnCardIsJack(): boolean {
-    if (this.secondUiCard) {
-      return this.secondUiCard.card.description === 'Jack';
-    } else if (this.firstCard) {
-      return this.firstUiCard.card.description === 'Jack';
+    if (this._secondCard) {
+      return this._secondCard.description === 'Jack';
+    } else if (this._firstCard) {
+      return this._firstCard.description === 'Jack';
     } else {
       return false;
     }
   }
 
   selectTrump() {
-    this.selectedTurn = this.secondCard ? this.secondCard.suit : this.firstCard.suit;
+    this.selectedTurn = this._secondCard ? this._secondCard.suit : this._firstCard.suit;
   }
 
   selectJacks() {
@@ -66,13 +71,17 @@ export class TurnpanelComponent implements OnInit {
     this.selectedTurn = 'DoubleTurn';
   }
 
+  private candidateSuit(): string {
+    return this._secondCard ? this._secondCard.suit : this._firstCard.suit;
+  }
+
   private confirmChoice() {
     this.socketService.sendAction('chooseTurn', this.selectedTurn);
   }
 
   private getColor(button: string): string {
     if (button === 'Suit') {
-      return (this.selectedTurn in ['Club', 'Spade', 'Heart', 'Diamond']) ? 'accent' : 'primary';
+      return ( ['Club', 'Spade', 'Heart', 'Diamond'].includes(this.selectedTurn)) ? 'accent' : 'primary';
     } else {
       return (this.selectedTurn === button) ? 'accent' : 'primary';
     }
