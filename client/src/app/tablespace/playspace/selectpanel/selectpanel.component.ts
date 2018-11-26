@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { SkatGameSelection, SkatGameType } from '../../../../../../shared/model';
+import { SkatGameSelection, SkatGameType } from '../../../../../../shared/model/skat';
 import { SocketService } from 'app/shared/services/socket.service';
 
 @Component({

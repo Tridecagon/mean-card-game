@@ -95,6 +95,13 @@ export class HandComponent implements OnInit {
             this.hand.push(new UiCard(card));
           }
         });
+
+        this.socketService.onAction<any>('insertCard')
+        .subscribe((cardInfo) => {
+            const newCard = new UiCard(cardInfo.card);
+            newCard.toggleSelection();
+            this.hand.splice(cardInfo.index, 0, newCard);
+        });
     }
 
       this.socketService.onAction<any>('tableDealCards')

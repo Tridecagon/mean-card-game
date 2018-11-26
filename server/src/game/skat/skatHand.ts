@@ -1,9 +1,10 @@
-import { Card, SkatGameSelection, SkatGameType, SkatUtil } from "../../../../shared/model";
+
+import { Card, SkatUtil, Suit } from "../../../../shared/model";
+import {SkatGameSelection, SkatGameType } from "../../../../shared/model/skat";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";
 
 export class SkatHand extends Hand {
-
     private skat: Card[] = [];
     private bids: number[] = [];
     private whoseBid: number; // 0 is hold, 1 is middle, 2 is rear
@@ -97,17 +98,24 @@ export class SkatHand extends Hand {
             this.currentPlayer = (this.holdIndex + 1) % this.players.length;
             this.tableChan.emit("startBidding", {gameType: "Skat", dealerId: this.players[this.dealerIndex].user.id});
         };
+
+        this.stateHandlers[State.Discard] = () => {
+            // add skat cards into player's hand, sorted
+            // send them to player
+            // okay
+        };
+
+        this.stateHandlers[State.Play] = () => {
+            this.currentPlayer = this.holdIndex;
+        };
     }
 
-    // TODO: this is wrong, fix
-    // note: Pass is a bid of 0
     public ProcessBid(player: Player, bidInfo: any): boolean {
 
         const bidVal: number = Number(bidInfo.bid);
         if (this.ValidBid(player, bidVal)) {
             this.bids[this.whoseBid] = bidVal;
             if (!this.SetNextBidder(bidInfo)) {
-                // TODO: set state to Choose Game
                 this.CompleteBidding();
             }
             bidInfo.currentPlayer = this.currentPlayer;
@@ -116,7 +124,6 @@ export class SkatHand extends Hand {
         return false;
     }
     // returns true if bidding is still going
-    // TODO: unit test this
     public SetNextBidder(bidInfo: any): boolean {
         if (this.bids[0] === -1 && this.bids[1] === 0 && this.bids[2] === 0) { // hold wins by default; ramsch possible
             this.winningBid = this.bids[0] = 5;
@@ -174,27 +181,28 @@ export class SkatHand extends Hand {
         return true;
     }
 
-    public GetSuit(card: Card): string {
-        switch (this.trumpSuit) {
-            case "Null":
-                return card.suit;
-            case "Jacks":
-                return card.description === "Jack" ? "Jacks" : card.suit;
+    public GetSuit(card: Card, sortType: Suit = this.trumpSuit): Suit {
+        const naturalSuit = Suit[card.suit as keyof typeof Suit];
+        switch (sortType) {
+            case Suit.Null:
+                return naturalSuit;
+            case Suit.Jack:
+                return card.description === "Jack" ? Suit.Jack : naturalSuit;
             default:
-                return card.description === "Jack" ? this.trumpSuit : card.suit;
+                return card.description === "Jack" ? this.trumpSuit : naturalSuit;
         }
     }
 
-    public GetSort(card: Card): number {
-        switch (this.trumpSuit) {
-            case "Null":
+    public GetSort(card: Card, sortType: Suit = this.trumpSuit): number {
+        switch (sortType) {
+            case Suit.Null:
                 return card.sort;
             default:
-                switch (card.sort) {
-                    case 10:
+                switch (card.description) {
+                    case "Ten":
                         return 13.5;
                     // Jacks in order
-                    case 11:
+                    case "Jack":
                         switch (card.suit) {
                             case "Diamond":
                                 return 15;

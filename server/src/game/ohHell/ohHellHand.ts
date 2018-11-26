@@ -1,4 +1,4 @@
-import { Card, GameType, Score } from "../../../../shared/model";
+import { Card, GameType, Score, Suit } from "../../../../shared/model";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";
 
@@ -14,7 +14,7 @@ export class OhHellHand extends Hand {
 
     public DealHands() {
         this.trumpCard = this.deck.draw();
-        this.trumpSuit = this.trumpCard.suit;
+        this.trumpSuit = Suit[this.trumpCard.suit as keyof typeof Suit];
         this.numCards = this.params.numCards;
         this.trumpsBroken = false;
         super.DealHands();
@@ -57,13 +57,14 @@ export class OhHellHand extends Hand {
     }
 
     public PlayIsLegal(card: Card): boolean {
-        if (this.currentPlayer === this.trickLeader && card.suit === this.trumpSuit && !this.trumpsBroken) {
-            return this.players[this.currentPlayer].heldCards.every((c) => c.suit === this.trumpSuit);
+        if (this.currentPlayer === this.trickLeader && this.GetSuit(card) === this.trumpSuit && !this.trumpsBroken) {
+            return this.players[this.currentPlayer].heldCards.every((c) => this.GetSuit(card) === this.trumpSuit);
         } // legal to lead trump if it's all you have
         return super.PlayIsLegal(card);
     }
+
     public async EvaluateTrick() {
-        if (this.currentTrick.some((c) => c.suit === this.trumpSuit)) {
+        if (this.currentTrick.some((c) => this.GetSuit(c) === this.trumpSuit)) {
             this.trumpsBroken = true;
         }
         super.EvaluateTrick();

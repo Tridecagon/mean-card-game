@@ -1,5 +1,6 @@
+
 import * as socketIo from "socket.io";
-import { Card, GameType, Score } from "../../../../shared/model";
+import { Card, GameType, Score, Suit } from "../../../../shared/model";
 import {Player} from "../../model";
 import {State} from "./state";
 
@@ -13,7 +14,7 @@ export class Hand {
     protected scores: Score[] = [];
     protected state: State;
     protected params: any;
-    protected trumpSuit: string;
+    protected trumpSuit: Suit;
     protected stateHandlers: Array<() => void> = []; // array of void functions
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
@@ -81,14 +82,14 @@ export class Hand {
         }
     }
 
-    public SortCards(cards: Card[]) {
+    public SortCards(cards: Card[], sortType = Suit.Jack) {
         const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card)))); // gets distinct suits
 
         // manually sort suits by color
         // set first suit
         let firstSuitIndex = 0;
-        if (this.trumpSuit && this.trumpSuit.length > 0) {
-            firstSuitIndex = suits.findIndex( (s) => s === this.trumpSuit);
+        if (sortType !== Suit.None && sortType !== Suit.Null && suits.some((s) => s === sortType)) {
+            firstSuitIndex = suits.findIndex( (s) => s === this.trumpSuit); // if no trumps, first suit is arbitrary
         } else {
             const blackSuits = suits.filter((s) => this.GetSuitColor(s) === "Black");
             const redSuits = suits.filter((s) => this.GetSuitColor(s) === "Red");
@@ -101,7 +102,7 @@ export class Hand {
         }
         // set first suit
         if (firstSuitIndex !== 0) {
-            [suits[0], suits[firstSuitIndex]] = [suits[firstSuitIndex], suits[0]]; // array destructuring
+            [suits[0], suits[firstSuitIndex]] = [suits[firstSuitIndex], suits[0]]; // array destructuring swap
         }
 
         // set remaining suits
@@ -122,13 +123,13 @@ export class Hand {
 
     }
 
-    public GetSuitColor(suit: string): string {
+    public GetSuitColor(suit: Suit): string {
         switch (suit) {
-            case "Spade":
-            case "Club":
+            case Suit.Spade:
+            case Suit.Club:
                 return "Black";
-            case "Diamond":
-            case "Heart":
+            case Suit.Diamond:
+            case Suit.Heart:
                 return "Red";
             default:
                 return "";
@@ -201,8 +202,9 @@ export class Hand {
         || !this.players[this.currentPlayer].heldCards.find((c) => this.GetSuit(c) === ledSuit);
     }
 
-    public GetSuit(card: Card): string {
-        return card.suit;
+    public GetSuit(card: Card): Suit {
+        const suit: Suit = Suit[card.suit as keyof typeof Suit];
+        return suit;
     }
 
     public GetSort(card: Card): number {
