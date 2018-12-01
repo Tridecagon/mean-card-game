@@ -43,8 +43,6 @@ export class BidpanelComponent implements OnInit {
     this.me = this.users[0];
     const dealerIndex = this.users.findIndex(u => u && u.id === this.dealerId);
 
-    // iterate through circular array
-    // for (let i = (dealerIndex + 1) % this.users.length; i === dealerIndex; i = (i + 1) % this.users.length) {
     let i = dealerIndex;
     do {
       i = (i + 1) % this.users.length;

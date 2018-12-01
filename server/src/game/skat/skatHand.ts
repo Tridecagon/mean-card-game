@@ -103,6 +103,14 @@ export class SkatHand extends Hand {
             // add skat cards into player's hand, sorted
             // send them to player
             // okay
+            const activePlayer = this.players[this.currentPlayer];
+            while (this.skat.length) {
+                const skatCard = this.skat.splice(0, 1)[0];
+                const position = this.InsertCard(skatCard, activePlayer.heldCards);
+                activePlayer.socket.emit("insertCard", {card: skatCard, index: position});
+                console.log(`Added ${skatCard} to ${activePlayer.user.name}'s hand`);
+
+            }
         };
 
         this.stateHandlers[State.Play] = () => {

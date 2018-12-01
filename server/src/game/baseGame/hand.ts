@@ -87,13 +87,13 @@ export class Hand {
 
         // manually sort suits by color
         // set first suit
+        const blackSuits = suits.filter((s) => this.GetSuitColor(s) === "Black");
+        const redSuits = suits.filter((s) => this.GetSuitColor(s) === "Red");
+
         let firstSuitIndex = 0;
         if (sortType !== Suit.None && sortType !== Suit.Null && suits.some((s) => s === sortType)) {
             firstSuitIndex = suits.findIndex( (s) => s === this.trumpSuit); // if no trumps, first suit is arbitrary
         } else {
-            const blackSuits = suits.filter((s) => this.GetSuitColor(s) === "Black");
-            const redSuits = suits.filter((s) => this.GetSuitColor(s) === "Red");
-
             if (blackSuits > redSuits) {
                 firstSuitIndex = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
             } else if (redSuits > blackSuits) {
@@ -107,7 +107,16 @@ export class Hand {
 
         // set remaining suits
         for (let i = 1; i < suits.length - 1; i++ ) {
-            if (this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1])) {
+
+            if (i === 1 && sortType === Suit.Jack
+                                && blackSuits > redSuits && this.GetSuitColor(suits[1]) === "Red") {
+                const firstBlackSuit = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
+                [suits[1], suits[firstBlackSuit]] = [suits[firstBlackSuit], suits[1]];
+            } else if (i === 1 && sortType === Suit.Jack
+                                && redSuits > blackSuits && this.GetSuitColor(suits[1]) === "Black") {
+                const firstRedSuit = suits.findIndex((s) => this.GetSuitColor(s) === "Red");
+                [suits[1], suits[firstRedSuit]] = [suits[firstRedSuit], suits[1]];
+            } else if (this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1])) {
                 const betterSuit = suits.findIndex((s, j) => j > i
                     && this.GetSuitColor(s) !== this.GetSuitColor(suits[i - 1]));
                 if (betterSuit > 0) {
@@ -121,6 +130,33 @@ export class Hand {
         ? this.GetSort(c2) - this.GetSort(c1)
         : suits.findIndex((s) => s === this.GetSuit(c1)) - suits.findIndex((s) => s === this.GetSuit(c2)));
 
+    }
+
+    public InsertCard(card: Card, hand: Card[]): number {
+        // if hand is not sorted, this obviously will not work
+        const cardSuit = this.GetSuit(card);
+
+        // is there a matching suit with lower rank?
+        let insertPoint = hand.findIndex(
+            (c) => cardSuit === this.GetSuit(c) && this.GetSort(c) < this.GetSort(card));
+        // is there a matching suit at all?
+        if (insertPoint === -1 && hand.some((c) => this.GetSuit(c) === cardSuit)) {
+            insertPoint = hand.findIndex((c) => this.GetSuit(c) === cardSuit)
+                + hand.filter((c) => this.GetSuit(c) === cardSuit).length;
+        }
+        if (insertPoint === -1) {
+            // no matching suit; are there two adjacent suits of same color?
+            insertPoint = hand.findIndex(
+                (c, i) => i > 0
+                    && this.GetSuit(c) !== this.GetSuit(hand[i - 1])
+                    && this.GetSuitColor(this.GetSuit(c)) === this.GetSuitColor(this.GetSuit(hand[i - 1])));
+        }
+        if (insertPoint === -1) {
+            insertPoint = hand.length;
+        }
+
+        hand.splice(insertPoint, 0, card);
+        return insertPoint;
     }
 
     public GetSuitColor(suit: Suit): string {

@@ -96,7 +96,7 @@ export class HandComponent implements OnInit {
           }
         });
 
-        this.socketService.onAction<any>('insertCard')
+      this.socketService.onAction<any>('insertCard')
         .subscribe((cardInfo) => {
             const newCard = new UiCard(cardInfo.card);
             newCard.toggleSelection();
