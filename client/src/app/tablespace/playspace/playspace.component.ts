@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { HandComponent } from './hand/hand.component';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren } from '@angular/core';
 import { UiCard } from '../../shared/model/uiCard';
 import { Card, Message, User } from '../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'mcg-playspace',
@@ -17,7 +19,8 @@ export class PlayspaceComponent implements OnInit {
   zIndexes: number[] = [];
   bidding: boolean;
   selectingGame: boolean;
-  showingGame: boolean;
+  doingTurn: boolean;
+  discarding: boolean;
   winningBid: number;
   dealerId: number;
   gameType: string;
@@ -35,6 +38,8 @@ export class PlayspaceComponent implements OnInit {
   }
 
   @Output() onJoinTable = new EventEmitter<{ name: string, conn: SocketService }>();
+
+  @ViewChildren(HandComponent) hands: HandComponent[];
 
   constructor(private socketService: SocketService) {
     this.zIndexes.fill(this.currentZIndex, 0, 3);
@@ -133,13 +138,25 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.onAction<Card>('sendTurnCard')
       .subscribe((card) => {
         this.selectingGame = false;
-        this.showingGame = true;
+        this.doingTurn = true;
         if (this.turnCards[0]) {
           this.turnCards[1] = card;
         } else {
           this.turnCards[0] = card;
         }
       });
+
+    this.socketService.onAction<any>('insertCard')
+      .subscribe(() => {
+        this.doingTurn = false;
+        this.discarding = true;
+      });
+  }
+  sendDiscards() {
+    const handComponent = this.hands.find((h) => h.location === 'bottom');
+    if (handComponent.selectedCards.length === 2) {
+      this.socketService.sendAction('discardSkat', handComponent.selectedCards.map((c) => c.card));
+    }
   }
 
 }

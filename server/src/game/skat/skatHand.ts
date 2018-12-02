@@ -1,4 +1,3 @@
-
 import { Card, SkatUtil, Suit } from "../../../../shared/model";
 import {SkatGameSelection, SkatGameType } from "../../../../shared/model/skat";
 import { Player } from "../../model";
@@ -74,6 +73,21 @@ export class SkatHand extends Hand {
                     }
 
                 }
+            });
+
+            player.socket.on("discardSkat", (cards: Card[]) => {
+                if (player.index === this.currentPlayer
+                    && this.state === State.Discard
+                    && cards.length === 2
+                    && (cards[0].sort !== cards[1].sort || cards[0].suit !== cards[1].suit)
+                    && cards.every((c) => player.heldCards.some((h) => h.sort === c.sort && h.suit === c.suit))) {
+                        for (const discard of cards) {
+                            this.skat.push(player.heldCards.splice(
+                                player.heldCards.findIndex(
+                                    (c) => c.sort === discard.sort && c.suit === discard.suit))[0]);
+                        }
+                        this.SetState(State.Play);
+                    }
             });
         }
     }
