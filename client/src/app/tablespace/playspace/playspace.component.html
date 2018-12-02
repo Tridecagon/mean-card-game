@@ -5,4 +5,4 @@
 <mcg-bidpanel *ngIf="bidding" [gameType] = "gameType" [trumpCard]="trumpCard" [users]="users" [dealerId]="dealerId"></mcg-bidpanel>
 <mcg-selectpanel *ngIf="selectingGame" [gameType]="gameType" [winningBid]="winningBid"></mcg-selectpanel>
 <mcg-turnpanel *ngIf="doingTurn" [firstCard]="turnCards[0]" [secondCard]="turnCards[1]"></mcg-turnpanel>
-<mcg-discardpanel *ngIf="discarding" (discard)="sendDiscards()"></mcg-discardpanel>
+<mcg-discardpanel *ngIf="discarding" (onDiscard)="sendDiscards()"></mcg-discardpanel>
