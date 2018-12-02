@@ -39,7 +39,7 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 export class HandComponent implements OnInit {
 
   activeHand: boolean;
-  selectedCards: number[] = [];
+  selectedCards: UiCard[] = [];
   maxSelectedCards = 1;
   hand: UiCard[] = [];
   playedCard: UiCard;
@@ -67,18 +67,18 @@ export class HandComponent implements OnInit {
       console.log(`Attempting to play ${clickedCard.card}`);
       this.socketService.sendAction('playRequest', clickedCard.card);
     } else {
-      this.selectCard(clickedCard, index);
+      this.selectCard(clickedCard);
     }
   }
 
-  selectCard(card: UiCard, index: number) {
+  selectCard(card: UiCard) {
     if (!card.isSelected) {
       card.toggleSelection();
       if (this.selectedCards.length === this.maxSelectedCards) {
         const deselectCard = this.selectedCards.shift();
-        this.hand[deselectCard].toggleSelection();
+        deselectCard.toggleSelection();
       }
-      this.selectedCards.push(index);
+      this.selectedCards.push(card);
     }
   }
 
@@ -98,9 +98,10 @@ export class HandComponent implements OnInit {
 
       this.socketService.onAction<any>('insertCard')
         .subscribe((cardInfo) => {
+            this.maxSelectedCards = 2; // TODO: put this somewhere more appropriate
             const newCard = new UiCard(cardInfo.card);
-            newCard.toggleSelection();
             this.hand.splice(cardInfo.index, 0, newCard);
+            this.selectCard(newCard);
         });
     }
 
@@ -155,9 +156,9 @@ export class HandComponent implements OnInit {
       }
       if (this.hand[i].isSelected) {
         // remove it
-        this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
+        this.selectedCards.splice(this.selectedCards.findIndex(c => c === this.hand[i]));
       }
-      this.hand.splice(i, 1);
+      this.hand.splice(i);
       this.playedCard = new UiCard(card, 'up');
       this.computeLeft(this.playedCard, i);
     } else {
