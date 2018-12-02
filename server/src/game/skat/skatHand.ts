@@ -84,8 +84,9 @@ export class SkatHand extends Hand {
                         for (const discard of cards) {
                             this.skat.push(player.heldCards.splice(
                                 player.heldCards.findIndex(
-                                    (c) => c.sort === discard.sort && c.suit === discard.suit))[0]);
+                                    (c) => c.sort === discard.sort && c.suit === discard.suit), 1)[0]);
                         }
+                        player.socket.emit("confirmDiscard", cards);
                         this.SetState(State.Play);
                     }
             });
@@ -119,7 +120,7 @@ export class SkatHand extends Hand {
             // okay
             const activePlayer = this.players[this.currentPlayer];
             while (this.skat.length) {
-                const skatCard = this.skat.splice(0, 1)[0];
+                const skatCard = this.skat.shift();
                 const position = this.InsertCard(skatCard, activePlayer.heldCards);
                 activePlayer.socket.emit("insertCard", {card: skatCard, index: position});
                 console.log(`Added ${skatCard} to ${activePlayer.user.name}'s hand`);

@@ -254,8 +254,7 @@ export class Hand {
                 console.log("current player " + this.currentPlayer
                     + " trick leader" + this.trickLeader
                     + " player.index " + player.index);
-                const playCard = player.heldCards.find((c) =>
-                                (c.suit === card.suit && c.description === card.description));
+                const playCard = player.heldCards.find((c) => Card.matches(c, card));
                 if (this.state === State.Play && this.currentPlayer === player.index
                     && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) {
                     this.currentTrick[this.currentPlayer]

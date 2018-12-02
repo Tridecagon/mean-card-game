@@ -151,6 +151,9 @@ export class PlayspaceComponent implements OnInit {
         this.doingTurn = false;
         this.discarding = true;
       });
+
+    this.socketService.onAction<Card[]>('confirmDiscard')
+      .subscribe(() => this.discarding = false);
   }
   sendDiscards() {
     const handComponent = this.hands.find((h) => h.location === 'bottom');

@@ -145,20 +145,28 @@ export class HandComponent implements OnInit {
           this.tricksTaken = 0;
         }
       });
+
+      this.socketService.onAction<Card[]>('confirmDiscard')
+      .subscribe((cards) => {
+        for (const discard of cards) {
+          this.hand.splice(this.hand.findIndex((uic) => Card.matches(uic.card, discard)), 1);
+        }
+        this.maxSelectedCards = 1;
+      });
   }
 
   private play(card: Card) {
       if (this.location === 'bottom') { // TODO: change this condition to if hand cards are visible
-      const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
+      const i = this.hand.findIndex(c => Card.matches(c.card, card));
       if (i < 0) {
         console.log('Unable to find card ' + card);
         return;
       }
       if (this.hand[i].isSelected) {
         // remove it
-        this.selectedCards.splice(this.selectedCards.findIndex(c => c === this.hand[i]));
+        this.selectedCards.splice(this.selectedCards.findIndex(c => c === this.hand[i]), 1);
       }
-      this.hand.splice(i);
+      this.hand.splice(i, 1);
       this.playedCard = new UiCard(card, 'up');
       this.computeLeft(this.playedCard, i);
     } else {
