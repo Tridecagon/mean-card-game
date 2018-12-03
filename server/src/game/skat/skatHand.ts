@@ -171,7 +171,7 @@ export class SkatHand extends Hand {
         bidInfo.mode = (newBidder > this.whoseBid) ? "bid" : "respond";
         this.whoseBid = newBidder;
         this.currentPlayer = (this.holdIndex + this.whoseBid) % this.players.length;
-        bidInfo.nextBidder = this.whoseBid;
+        bidInfo.currentPlayer = this.currentPlayer;
         return true;
     }
 

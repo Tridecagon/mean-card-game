@@ -27,8 +27,9 @@ export class OhHellHand extends Hand {
         super.CollectCards();
     }
     public SetupStateHandlers() {
+        super.SetupStateHandlers();
         this.stateHandlers[State.Bid] = () => {
-
+             this.currentPlayer = (this.dealerIndex + 1) % this.players.length;
              this.tableChan.emit("startBidding", {
                 dealerId: this.players[this.dealerIndex].user.id,
                  gameType: "Oh Hell",
@@ -48,6 +49,7 @@ export class OhHellHand extends Hand {
 
                 this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
                 bidInfo.currentPlayer = this.currentPlayer;
+                console.log(`Next bidder: ${this.players[this.currentPlayer].user.name}`);
                 if (player.index === this.dealerIndex) {
                     this.CompleteBidding();
                 }

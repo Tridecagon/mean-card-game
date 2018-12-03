@@ -173,6 +173,7 @@ export class Hand {
     }
 
     public CompleteBidding() {
+        this.tableChan.emit("biddingComplete");
         setTimeout(() => {
             this.SetState(State.Play);
             this.tableChan.emit("beginPlay", this.players[this.currentPlayer].user.id);
@@ -252,7 +253,7 @@ export class Hand {
             player.socket.on("playRequest", (card: Card) => {
                 console.log(player.user.name + " request to play " + card.suit + " " + card.description);
                 console.log("current player " + this.currentPlayer
-                    + " trick leader" + this.trickLeader
+                    + " trick leader " + this.trickLeader
                     + " player.index " + player.index);
                 const playCard = player.heldCards.find((c) => Card.matches(c, card));
                 if (this.state === State.Play && this.currentPlayer === player.index

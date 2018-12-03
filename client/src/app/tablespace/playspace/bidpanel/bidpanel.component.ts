@@ -72,17 +72,15 @@ export class BidpanelComponent implements OnInit {
         this.bids[index] = bidData.bidInfo.bid;
         this.totalTricks = bidData.bidInfo.totalTricks;
         this.totalBid = bidData.bidInfo.totalBid;
-        this.turnIndex = bidData.bidInfo.nextBidder;
+        this.turnIndex =  bidData.bidInfo.currentPlayer;
         if (bidData.bidInfo.maxBid !== undefined) {
           this.maxBid = bidData.bidInfo.maxBid;
         }
         if (bidData.bidInfo.minBid !== undefined) {
           this.minBid = bidData.bidInfo.minBid;
         }
-        if (bidData.bidInfo.nextBidder !== undefined) {
-          this.bidModes[this.turnIndex] = bidData.bidInfo.mode;
-        }
         if (this.gameType === 'Skat') {
+          this.bidModes[this.turnIndex] = bidData.bidInfo.mode;
           if (bidData.bidInfo.mode === 'respond') {
             this.bidFormControls[this.turnIndex].setValue(bidData.bidInfo.bid);
           } else if (bidData.bidInfo.mode === 'bid') {
@@ -93,14 +91,11 @@ export class BidpanelComponent implements OnInit {
             this.bidFormControls[this.turnIndex].setValue(nextBid);
           }
         }
-        // TODO: this might break skat - implement a listener
-        if (this.turnIndex === this.players.length) {
-          this.bidsComplete = true;
-        }
       });
 
       this.socketService.onAction<any>('biddingComplete')
         .subscribe((bidData) => {
+          this.turnIndex = -1;
           this.bidsComplete = true;
         });
   }
