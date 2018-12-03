@@ -15,6 +15,7 @@ export class OhHellHand extends Hand {
     public DealHands() {
         this.trumpCard = this.deck.draw();
         this.trumpSuit = Suit[this.trumpCard.suit as keyof typeof Suit];
+        this.defaultSortType = this.trumpSuit;
         this.numCards = this.params.numCards;
         this.trumpsBroken = false;
         super.DealHands();

@@ -13,7 +13,7 @@ export class SkatHand extends Hand {
 
     constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
         super(players, deck, tableChan);
-
+        this.defaultSortType = Suit.Jack;
     }
 
     public SetupListeners() {
@@ -204,7 +204,7 @@ export class SkatHand extends Hand {
         return true;
     }
 
-    public GetSuit(card: Card, sortType: Suit = this.trumpSuit): Suit {
+    public GetSuit(card: Card, sortType: Suit = this.trumpSuit || Suit.Jack): Suit {
         const naturalSuit = Suit[card.suit as keyof typeof Suit];
         switch (sortType) {
             case Suit.Null:

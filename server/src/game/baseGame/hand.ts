@@ -15,7 +15,9 @@ export class Hand {
     protected state: State;
     protected params: any;
     protected trumpSuit: Suit;
+    protected defaultSortType: any;
     protected stateHandlers: Array<() => void> = []; // array of void functions
+
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
     constructor(protected players: Player[], protected deck: any, protected tableChan: SocketIO.Namespace) {
@@ -75,14 +77,14 @@ export class Hand {
                 player.heldCards.push({suit: card.suit, description: card.description, sort: card.sort});
             }
 
-            this.SortCards(player.heldCards);
+            this.SortCards(player.heldCards, this.defaultSortType);
 
             player.socket.emit("dealHand", player.heldCards);
             this.tableChan.emit("tableDealCards", {numCards: this.numCards, toUser: player.user.id});
         }
     }
 
-    public SortCards(cards: Card[], sortType = Suit.Jack) {
+    public SortCards(cards: Card[], sortType: Suit) {
         const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card)))); // gets distinct suits
 
         // manually sort suits by color
@@ -92,7 +94,7 @@ export class Hand {
 
         let firstSuitIndex = 0;
         if (sortType !== Suit.None && sortType !== Suit.Null && suits.some((s) => s === sortType)) {
-            firstSuitIndex = suits.findIndex( (s) => s === this.trumpSuit); // if no trumps, first suit is arbitrary
+            firstSuitIndex = suits.findIndex( (s) => s === sortType); // if no trumps, first suit is arbitrary
         } else {
             if (blackSuits > redSuits) {
                 firstSuitIndex = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
