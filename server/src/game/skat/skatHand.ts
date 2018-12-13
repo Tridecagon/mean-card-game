@@ -141,7 +141,7 @@ export class SkatHand extends Hand {
             if (!this.SetNextBidder(bidInfo)) {
                 this.CompleteBidding();
             }
-            bidInfo.currentPlayer = this.currentPlayer;
+            bidInfo.activePlayer = this.players[this.currentPlayer].user.id;
             return true;
         }
         return false;
