@@ -49,10 +49,11 @@ export class OhHellHand extends Hand {
                 bidInfo.totalBid = this.bids.reduce((total, value) => total + value);
 
                 this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
-                bidInfo.activePlayer = this.players[this.currentPlayer].user.id;
                 console.log(`Next bidder: ${this.players[this.currentPlayer].user.name}`);
                 if (player.index === this.dealerIndex) {
                     this.CompleteBidding();
+                } else {
+                    bidInfo.activePlayer = this.players[this.currentPlayer].user.id;
                 }
                 return true;
         }
