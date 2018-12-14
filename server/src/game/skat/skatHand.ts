@@ -52,6 +52,7 @@ export class SkatHand extends Hand {
                             } else {
                                 console.log("Invalid state for Double Turn!");
                             }
+                            break;
                         case "Jacks":
                             if ((this.state === State.SingleTurn && this.skat[0].description === "Jack")
                              || (this.state === State.DoubleTurn && this.skat[1].description === "Jack")) {
@@ -60,16 +61,18 @@ export class SkatHand extends Hand {
                                   }
                                   this.SetState(State.Discard);
                                   // TODO: set actual trump suit
-                              }
+                            }
+                            break;
                         default:
-                              if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
-                               || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
-                                    if (this.state === State.SingleTurn) {
-                                        player.socket.emit("sendTurnCard", this.skat[1]);
-                                    }
-                                    this.SetState(State.Discard);
-                                    // TODO: set actual trump suit
-                              }
+                            if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
+                            || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
+                                if (this.state === State.SingleTurn) {
+                                    player.socket.emit("sendTurnCard", this.skat[1]);
+                                }
+                                this.SetState(State.Discard);
+                                // TODO: set actual trump suit
+                            }
+                            break;
                     }
 
                 }
