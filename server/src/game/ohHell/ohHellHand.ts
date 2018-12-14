@@ -62,7 +62,7 @@ export class OhHellHand extends Hand {
 
     public PlayIsLegal(card: Card): boolean {
         if (this.currentPlayer === this.trickLeader && this.GetSuit(card) === this.trumpSuit && !this.trumpsBroken) {
-            return this.players[this.currentPlayer].heldCards.every((c) => this.GetSuit(card) === this.trumpSuit);
+            return this.players[this.currentPlayer].heldCards.every((c) => this.GetSuit(c) === this.trumpSuit);
         } // legal to lead trump if it's all you have
         return super.PlayIsLegal(card);
     }
