@@ -25,6 +25,7 @@ export class PlayspaceComponent implements OnInit {
   dealerId: number;
   gameType: string;
   turnCards: Card[] = [];
+  totalTricks: number;
 
   numPlayers = 0;
   userIndex = -1;
@@ -112,6 +113,7 @@ export class PlayspaceComponent implements OnInit {
 
         this.gameType = info.gameType;
         this.bidding = true;
+        this.totalTricks = this.hands[0].hand.length;
 
         this.currentZIndex = 5;
         this.zIndexes.fill(this.currentZIndex, 0, 3);

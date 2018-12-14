@@ -45,7 +45,6 @@ export class OhHellHand extends Hand {
           && (player.index !== this.dealerIndex
             || this.bids.reduce((total, value) => total + value) + bidVal !== this.numCards)) {
                 this.bids[player.index] = bidVal;
-                bidInfo.totalTricks = this.numCards;
                 bidInfo.totalBid = this.bids.reduce((total, value) => total + value);
 
                 this.currentPlayer = (this.currentPlayer + 1) % this.players.length;

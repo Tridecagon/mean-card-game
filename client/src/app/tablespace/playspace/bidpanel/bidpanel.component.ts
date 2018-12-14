@@ -16,6 +16,7 @@ export class BidpanelComponent implements OnInit {
   @Input() dealerId: number;
   @Input() maxBid: number;
   @Input() gameType: string;
+  @Input() totalTricks: number;
   trumpUiCard: UiCard;
   displayedColumns = ['col'];
   players: User[] = [];
@@ -23,7 +24,6 @@ export class BidpanelComponent implements OnInit {
 
   bids: number[] = [];
   bidsComplete = false;
-  totalTricks: number;
   totalBid: number;
   turnIndex: number;
   minBid = 0;
@@ -61,6 +61,10 @@ export class BidpanelComponent implements OnInit {
 
       this.bidModes = ['respond', 'bid', 'bid'];
     }
+    if (this.gameType === 'Oh Hell') {
+      this.minBid = 0;
+      this.maxBid = this.totalTricks;
+    }
   }
 
   setupListeners() {
@@ -70,7 +74,6 @@ export class BidpanelComponent implements OnInit {
       .subscribe((bidData) => {
         const index = this.players.findIndex(p => p.id === bidData.userId);
         this.bids[index] = bidData.bidInfo.bid;
-        this.totalTricks = bidData.bidInfo.totalTricks;
         this.totalBid = bidData.bidInfo.totalBid;
         this.turnIndex =  this.players.findIndex(p => p.id === bidData.bidInfo.activePlayer);
         if (bidData.bidInfo.maxBid !== undefined) {
