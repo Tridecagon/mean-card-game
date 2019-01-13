@@ -87,6 +87,11 @@ export class PlayspaceComponent implements OnInit {
         }
       });
 
+    this.socketService.onAction<Array<Card>>('dealHand')
+      .subscribe((cards) => {
+        this.totalTricks = cards.length;
+      });
+
     this.socketService.onAction<any>('playResponse')
       .subscribe((playInfo) => {
         for (const i in this.users) {
@@ -112,7 +117,7 @@ export class PlayspaceComponent implements OnInit {
 
         this.gameType = info.gameType;
         this.bidding = true;
-        this.totalTricks = this.hands[0].hand.length;
+
 
         this.currentZIndex = 5;
         this.zIndexes.fill(this.currentZIndex, 0, 3);
