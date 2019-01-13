@@ -31,8 +31,6 @@ export class SkatHand extends Hand {
                         player.socket.emit("sendTurnCard", this.skat[0]);
                     } else if (selectedGame.selection === SkatGameType.Guetz) {
                         this.SetState(State.Discard);
-                        player.socket.emit("sendTurnCard", this.skat[0]);
-                        player.socket.emit("sendTurnCard", this.skat[1]);
                         this.tableChan.emit("gameSelected", selectedGame );
                     } else {
                         this.SetState(State.Play);
@@ -60,17 +58,26 @@ export class SkatHand extends Hand {
                                     player.socket.emit("sendTurnCard", this.skat[1]);
                                   }
                                   this.SetState(State.Discard);
-                                  // TODO: set actual trump suit
+                                  this.trumpSuit = Suit.Jack;
+                                  this.tableChan.emit("gameSelected",
+                                    {
+                                        selection: SkatGameType.Turn,
+                                        suit: Suit.Jack,
+                                        turnCard: this.state === State.SingleTurn ? this.skat[0] : this.skat[1],
+                                    });
                             }
                             break;
                         default:
                             if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
                             || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
-                                if (this.state === State.SingleTurn) {
-                                    player.socket.emit("sendTurnCard", this.skat[1]);
-                                }
                                 this.SetState(State.Discard);
-                                // TODO: set actual trump suit
+                                this.trumpSuit = Suit[turnChoice as keyof typeof Suit];
+                                this.tableChan.emit("gameSelected",
+                                {
+                                    selection: SkatGameType.Turn,
+                                    suit: turnChoice,
+                                    turnCard: this.state === State.SingleTurn ? this.skat[0] : this.skat[1],
+                                });
                             }
                             break;
                     }

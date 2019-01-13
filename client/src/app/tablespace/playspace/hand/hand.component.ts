@@ -64,7 +64,7 @@ export class HandComponent implements OnInit {
 
   onClick(clickedCard: UiCard, index: number) {
     if (clickedCard.isSelected) {
-      console.log(`Attempting to play ${clickedCard.card}`);
+      console.log('Attempting to play', clickedCard.card);
       this.socketService.sendAction('playRequest', clickedCard.card);
     } else {
       this.selectCard(clickedCard);

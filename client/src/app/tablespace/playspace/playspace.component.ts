@@ -1,9 +1,8 @@
 import { HandComponent } from './hand/hand.component';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChildren } from '@angular/core';
-import { UiCard } from '../../shared/model/uiCard';
-import { Card, Message, User } from '../../../../../shared/model';
+import { Card, User } from '../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
-import { ThrowStmt } from '@angular/compiler';
+import { SkatGameSelection } from '../../../../../shared/model/skat';
 
 @Component({
   selector: 'mcg-playspace',
@@ -151,11 +150,17 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.onAction<any>('insertCard')
       .subscribe(() => {
         this.doingTurn = false;
+        this.selectingGame = false;
         this.discarding = true;
       });
 
     this.socketService.onAction<Card[]>('confirmDiscard')
       .subscribe(() => this.discarding = false);
+
+    this.socketService.onAction<SkatGameSelection>('gameSelected')
+      .subscribe(() => {
+        const placeholder = true;
+      });
   }
   sendDiscards() {
     const handComponent = this.hands.find((h) => h.location === 'bottom');
