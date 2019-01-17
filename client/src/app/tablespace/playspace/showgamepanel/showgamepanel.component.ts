@@ -30,15 +30,15 @@ export class ShowgamepanelComponent implements OnInit {
   gameString(): string {
     switch (this._selectedGame.selection) {
       case SkatGameType.Solo:
-        return `${Suit[this._selectedGame.suit]} Solo`;
+        return `${Suit[this._selectedGame.suit as number]} Solo`;
       case SkatGameType.Turn:
         const doubleString = this._selectedGame.doubleTurn ? 'Double ' : '';
-        return  `${Suit[this._selectedGame.suit]} ${doubleString}Turn`;
+        return  `${Suit[Suit[this._selectedGame.suit as number]]} ${doubleString}Turn`;
       case SkatGameType.NullOvert:
       case SkatGameType.GrandOvert:
-        return `${SkatGameType[this._selectedGame.selection]}`.replace('Overt', ' Overt');
+        return `${SkatGameType[this._selectedGame.selection as number]}`.replace('Overt', ' Overt');
       default:
-        return `${SkatGameType[this._selectedGame.selection]}`;
+        return `${SkatGameType[this._selectedGame.selection as number]}`;
     }
   }
   getCardFace(): string {
