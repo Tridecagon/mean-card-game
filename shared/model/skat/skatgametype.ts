@@ -1,10 +1,7 @@
 export enum SkatGameType {
     None,
     Turn,
-    Clubs,
-    Spades,
-    Hearts,
-    Diamonds,
+    Solo,
     Grand,
     GrandOvert,
     Guetz,

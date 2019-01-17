@@ -1,7 +1,7 @@
 import { SocketService } from 'app/shared/services/socket.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { trigger, style, state, transition, animate } from '@angular/animations';
-import { Card, User } from 'app/../../../shared/model';
+import { Card } from 'app/../../../shared/model';
 import { UiCard } from 'app/shared/model';
 
 @Component({

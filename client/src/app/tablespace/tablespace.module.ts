@@ -16,6 +16,7 @@ import { BidcardComponent } from './playspace/bidpanel/bidcard/bidcard.component
 import { SelectpanelComponent } from './playspace/selectpanel/selectpanel.component';
 import { TurnpanelComponent } from './playspace/turnpanel/turnpanel.component';
 import { DiscardpanelComponent } from './playspace/discardpanel/discardpanel.component';
+import { ShowgamepanelComponent } from './playspace/showgamepanel/showgamepanel.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,7 @@ import { DiscardpanelComponent } from './playspace/discardpanel/discardpanel.com
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-title>A Player Bid A Thing</mat-card-title>
+    <mat-card-content>
+      <mat-grid-list cols="2" rowHeight="187.5px">
+        <mat-grid-tile style="perspective: 800px">
+              <div class="player-card" [@flipCard]="firstUiCard.face">
+                <img [src]="getCardFace(0)">
+                <img  src="./assets/img/deck/back.png" [style.transform]="'rotateY(180deg)'">
+              </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <div class="player-card" [@flipCard]="secondUiCard.face">
+            <img [src]="getCardFace(1)">
+            <img src="./assets/img/deck/back.png" [style.transform]="'rotateY(180deg)'">
+          </div>
+          </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  <mat-card-footer>
+      Total bid: something
+  </mat-card-footer>
+</mat-card>
