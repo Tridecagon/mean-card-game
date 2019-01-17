@@ -9,5 +9,6 @@ export interface SkatGameSelection {
         schwarz: boolean
     }
     turnCard?: Card;
-    suit?: Suit
+    suit?: Suit;
+    doubleTurn?: boolean;
 }

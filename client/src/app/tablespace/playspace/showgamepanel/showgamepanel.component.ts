@@ -1,6 +1,6 @@
-import { SkatGameSelection } from './../../../../../../shared/model/skat';
+import { SkatGameSelection, SkatGameType } from './../../../../../../shared/model/skat';
 import { Component, OnInit, Input } from '@angular/core';
-import { Card } from '../../../../../../shared/model';
+import { Card, Suit } from '../../../../../../shared/model';
 import { UiCard } from 'app/shared/model';
 
 @Component({
@@ -11,15 +11,37 @@ import { UiCard } from 'app/shared/model';
 export class ShowgamepanelComponent implements OnInit {
 
   _selectedGame: SkatGameSelection;
-  _trumpCard: Card;
   uiCard: UiCard;
 
-  @Input() set selectedGame(selection: SkatGameSelection) {
+  @Input() bidder: string;
 
+  @Input() set selectedGame(selection: SkatGameSelection) {
+    this._selectedGame = selection;
+    if (this._selectedGame.turnCard) {
+      this.uiCard = new UiCard(this._selectedGame.turnCard);
+      setTimeout(() => this.uiCard.flip(), 0);
+    }
   }
   constructor() { }
 
   ngOnInit() {
   }
 
+  gameString(): string {
+    switch (this._selectedGame.selection) {
+      case SkatGameType.Solo:
+        return `${Suit[this._selectedGame.suit]} Solo`;
+      case SkatGameType.Turn:
+        const doubleString = this._selectedGame.doubleTurn ? 'Double ' : '';
+        return  `${Suit[this._selectedGame.suit]} ${doubleString}Turn`;
+      case SkatGameType.NullOvert:
+      case SkatGameType.GrandOvert:
+        return `${SkatGameType[this._selectedGame.selection]}`.replace('Overt', ' Overt');
+      default:
+        return `${SkatGameType[this._selectedGame.selection]}`;
+    }
+  }
+  getCardFace(): string {
+    return this.uiCard ? this.uiCard.getFullImageString() : '';
+  }
 }

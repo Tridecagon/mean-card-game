@@ -54,26 +54,27 @@ export class SkatHand extends Hand {
                         case "Jacks":
                             if ((this.state === State.SingleTurn && this.skat[0].description === "Jack")
                              || (this.state === State.DoubleTurn && this.skat[1].description === "Jack")) {
-                                  if (this.state === State.SingleTurn) {
-                                    player.socket.emit("sendTurnCard", this.skat[1]);
-                                  }
+                                  const doubleTurn = this.state === State.DoubleTurn;
                                   this.SetState(State.Discard);
                                   this.trumpSuit = Suit.Jack;
                                   this.tableChan.emit("gameSelected",
                                     {
+                                        doubleTurn,
                                         selection: SkatGameType.Turn,
                                         suit: Suit.Jack,
-                                        turnCard: this.state === State.SingleTurn ? this.skat[0] : this.skat[1],
+                                        turnCard: doubleTurn ? this.skat[1] : this.skat[0],
                                     });
                             }
                             break;
                         default:
                             if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
                             || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
+                                const doubleTurn = this.state === State.DoubleTurn;
                                 this.SetState(State.Discard);
                                 this.trumpSuit = Suit[turnChoice as keyof typeof Suit];
                                 this.tableChan.emit("gameSelected",
                                 {
+                                    doubleTurn,
                                     selection: SkatGameType.Turn,
                                     suit: turnChoice,
                                     turnCard: this.state === State.SingleTurn ? this.skat[0] : this.skat[1],
