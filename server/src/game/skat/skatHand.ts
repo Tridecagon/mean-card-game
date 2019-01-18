@@ -33,7 +33,7 @@ export class SkatHand extends Hand {
                         this.SetState(State.Discard);
                         this.tableChan.emit("gameSelected", selectedGame );
                     } else {
-                        this.SetState(State.Play);
+                        setTimeout(() => this.SetState(State.Play), 3000);
                         this.tableChan.emit("gameSelected", selectedGame );
                     }
                 }
@@ -142,7 +142,8 @@ export class SkatHand extends Hand {
         };
 
         this.stateHandlers[State.Play] = () => {
-            this.currentPlayer = this.holdIndex;
+            this.trickLeader = this.currentPlayer = this.holdIndex;
+            this.tableChan.emit("beginPlay", this.players[this.currentPlayer].user.id);
         };
     }
 

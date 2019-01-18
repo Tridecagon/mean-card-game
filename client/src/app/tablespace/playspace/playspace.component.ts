@@ -143,6 +143,7 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.onAction<any>('beginPlay')
       .subscribe(() => {
         this.bidding = false;
+        this.showingGame = false;
       });
 
     this.socketService.onAction<Card>('sendTurnCard')
