@@ -55,14 +55,15 @@ export class SkatHand extends Hand {
                             if ((this.state === State.SingleTurn && this.skat[0].description === "Jack")
                              || (this.state === State.DoubleTurn && this.skat[1].description === "Jack")) {
                                   const doubleTurn = this.state === State.DoubleTurn;
-                                  this.SetState(State.Discard);
+                                  const turnCard = doubleTurn ? this.skat[1] : this.skat[0];
                                   this.trumpSuit = Suit.Jack;
+                                  this.SetState(State.Discard);
                                   this.tableChan.emit("gameSelected",
                                     {
                                         doubleTurn,
                                         selection: SkatGameType.Turn,
                                         suit: Suit.Jack,
-                                        turnCard: doubleTurn ? this.skat[1] : this.skat[0],
+                                        turnCard,
                                     });
                             }
                             break;
@@ -70,14 +71,15 @@ export class SkatHand extends Hand {
                             if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
                             || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
                                 const doubleTurn = this.state === State.DoubleTurn;
-                                this.SetState(State.Discard);
+                                const turnCard = doubleTurn ? this.skat[1] : this.skat[0];
                                 this.trumpSuit = Suit[turnChoice as keyof typeof Suit];
+                                this.SetState(State.Discard);
                                 this.tableChan.emit("gameSelected",
                                 {
                                     doubleTurn,
                                     selection: SkatGameType.Turn,
                                     suit: turnChoice,
-                                    turnCard: this.state === State.SingleTurn ? this.skat[0] : this.skat[1],
+                                    turnCard,
                                 });
                             }
                             break;
@@ -262,7 +264,7 @@ export class SkatHand extends Hand {
         this.tableChan.emit("biddingComplete",
         {
             bid: this.winningBid,
-            winner: this.currentPlayer,
+            winner: this.players[this.currentPlayer].user.name,
         });
     }
 

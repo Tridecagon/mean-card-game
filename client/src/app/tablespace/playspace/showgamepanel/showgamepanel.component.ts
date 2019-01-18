@@ -14,6 +14,7 @@ export class ShowgamepanelComponent implements OnInit {
   uiCard: UiCard;
 
   @Input() bidder: string;
+  @Input() winningBid: number;
 
   @Input() set selectedGame(selection: SkatGameSelection) {
     this._selectedGame = selection;

@@ -22,7 +22,7 @@ export class PlayspaceComponent implements OnInit {
   doingTurn: boolean;
   discarding: boolean;
   showingGame: boolean;
-  winningBidder: number;
+  winningBidder: string;
   winningBid: number;
   dealerId: number;
   gameType: string;
@@ -133,7 +133,7 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.onAction<any>('biddingComplete')
       .subscribe((bidData) => {
         this.winningBidder = bidData.winner;
-        if (this.userIndex === bidData.winner) {
+        if (this._user.name === bidData.winner) {
           this.bidding = false;
           this.winningBid = bidData.bid;
           this.selectingGame = true;
@@ -170,10 +170,11 @@ export class PlayspaceComponent implements OnInit {
       .subscribe((selection) => {
         this.doingTurn = false;
         this.selectingGame = false;
-        this.discarding = false;
         this.bidding = false;
         this.selectedGame = selection;
-        this.showingGame = true;
+        if (!this.discarding) {
+          this.showingGame = true;
+        }
 
       });
   }
