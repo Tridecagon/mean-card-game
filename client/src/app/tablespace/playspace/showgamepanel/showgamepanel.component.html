@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>{{bidder}} bids a {{gameString()}}</mat-card-title>
-    <mat-card-content>
+    <mat-card-content *ngIf="uiCard">
       <mat-grid-list cols="1" rowHeight="187.5px">
         <mat-grid-tile style="perspective: 800px">
               <div class="player-card" [@flipCard]="uiCard.face">
@@ -11,6 +11,6 @@
       </mat-grid-list>
     </mat-card-content>
   <mat-card-footer>
-      Total bid: something
+      Total bid: {{winningBid}}
   </mat-card-footer>
 </mat-card>
