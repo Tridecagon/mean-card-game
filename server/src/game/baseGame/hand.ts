@@ -85,7 +85,7 @@ export class Hand {
     }
 
     public SortCards(cards: Card[], sortType: Suit) {
-        const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card)))); // gets distinct suits
+        const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card, sortType)))); // gets distinct suits
 
         // manually sort suits by color
         // set first suit
@@ -128,9 +128,10 @@ export class Hand {
         }
 
         // sort cards by suit, then by sort
-        cards.sort((c1, c2) => this.GetSuit(c1) === this.GetSuit(c2)
+        cards.sort((c1, c2) => this.GetSuit(c1, sortType) === this.GetSuit(c2, sortType)
         ? this.GetSort(c2) - this.GetSort(c1)
-        : suits.findIndex((s) => s === this.GetSuit(c1)) - suits.findIndex((s) => s === this.GetSuit(c2)));
+        : suits.findIndex((s) => s === this.GetSuit(c1, sortType))
+           - suits.findIndex((s) => s === this.GetSuit(c2, sortType)));
 
     }
 
@@ -243,7 +244,7 @@ export class Hand {
         || !this.players[this.currentPlayer].heldCards.find((c) => this.GetSuit(c) === ledSuit);
     }
 
-    public GetSuit(card: Card): Suit {
+    public GetSuit(card: Card, sortType?: Suit): Suit {
         const suit: Suit = Suit[card.suit as keyof typeof Suit];
         return suit;
     }
