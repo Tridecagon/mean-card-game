@@ -1,10 +1,12 @@
 mat-card {
     margin: 5% auto;
     width: 60%;
+    text-align: center;
 }
 
-.mat-card-title { justify-content: center; }
-.mat-card-footer { justify-content: center; }
+mat-card-title { justify-content: center; }
+mat-card-content { justify-content: center; }
+mat-card-footer { justify-content: center; }
 
 .player-card {
     width: 150px;

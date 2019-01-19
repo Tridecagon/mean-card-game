@@ -7,3 +7,4 @@
 <mcg-turnpanel *ngIf="doingTurn" [firstCard]="turnCards[0]" [secondCard]="turnCards[1]"></mcg-turnpanel>
 <mcg-discardpanel *ngIf="discarding" (onDiscard)="sendDiscards()"></mcg-discardpanel>
 <mcg-showgamepanel *ngIf="showingGame" [selectedGame]="selectedGame" [bidder]="winningBidder" [winningBid]="winningBid"></mcg-showgamepanel>
+<mcg-showgamecompact *ngIf="playing" [selectedGame]="selectedGame" [bidder]="winningBidder" [winningBid]="winningBid"></mcg-showgamecompact>

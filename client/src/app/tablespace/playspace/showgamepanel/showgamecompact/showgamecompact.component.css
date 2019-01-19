@@ -1,0 +1,8 @@
+mat-card {
+    margin: 0% auto;
+    width: 40%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+mat-card-content { justify-content: center; display: inline-block;}

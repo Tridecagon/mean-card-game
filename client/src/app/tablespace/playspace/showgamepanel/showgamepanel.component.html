@@ -1,5 +1,6 @@
 <mat-card>
-  <mat-card-title>{{bidder}} bids a {{gameString()}}</mat-card-title>
+  <mat-card-title>{{bidder}} bids a {{gameString()}}
+  </mat-card-title>
     <mat-card-content *ngIf="uiCard">
       <mat-grid-list cols="1" rowHeight="187.5px">
         <mat-grid-tile style="perspective: 800px">
@@ -9,6 +10,10 @@
               </div>
         </mat-grid-tile>
       </mat-grid-list>
+    </mat-card-content>
+    <mat-card-content *ngIf="_selectedGame.declarations">
+      <span *ngIf="_selectedGame.declarations.schneider">Declared Schneider</span>
+      <span *ngIf="_selectedGame.declarations.schwarz"><br>Declared Schwarz</span>
     </mat-card-content>
   <mat-card-footer>
       Total bid: {{winningBid}}

@@ -1,6 +1,6 @@
 import { SkatGameSelection, SkatGameType } from './../../../../../../shared/model/skat';
 import { Component, OnInit, Input } from '@angular/core';
-import { Card, Suit } from '../../../../../../shared/model';
+import { Suit } from '../../../../../../shared/model';
 import { UiCard } from 'app/shared/model';
 
 @Component({
@@ -8,6 +8,7 @@ import { UiCard } from 'app/shared/model';
   templateUrl: './showgamepanel.component.html',
   styleUrls: ['./showgamepanel.component.css']
 })
+
 export class ShowgamepanelComponent implements OnInit {
 
   _selectedGame: SkatGameSelection;

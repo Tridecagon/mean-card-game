@@ -22,6 +22,7 @@ export class PlayspaceComponent implements OnInit {
   doingTurn: boolean;
   discarding: boolean;
   showingGame: boolean;
+  playing: boolean;
   winningBidder: string;
   winningBid: number;
   dealerId: number;
@@ -122,6 +123,7 @@ export class PlayspaceComponent implements OnInit {
 
         this.gameType = info.gameType;
         this.bidding = true;
+        this.playing = false;
 
 
         this.currentZIndex = 5;
@@ -146,6 +148,7 @@ export class PlayspaceComponent implements OnInit {
       .subscribe(() => {
         this.bidding = false;
         this.showingGame = false;
+        this.playing = true;
       });
 
     this.socketService.onAction<Card>('sendTurnCard')
