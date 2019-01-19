@@ -64,11 +64,15 @@ export class HandComponent implements OnInit {
   }
 
   onClick(clickedCard: UiCard, index: number) {
-    if (clickedCard.isSelected) {
-      console.log('Attempting to play', clickedCard.card);
-      this.socketService.sendAction('playRequest', clickedCard.card);
+    if (this.playing) {
+      if (clickedCard.isSelected) {
+        console.log('Attempting to play', clickedCard.card);
+        this.socketService.sendAction('playRequest', clickedCard.card);
+      } else {
+        this.selectCard(clickedCard);
+      }
     } else {
-      this.selectCard(clickedCard);
+      this.toggleSelectCard(clickedCard);
     }
   }
 
@@ -83,6 +87,20 @@ export class HandComponent implements OnInit {
     }
   }
 
+  deselectCard(card: UiCard) {
+    if (card.isSelected) {
+      card.toggleSelection();
+      this.selectedCards.splice(this.selectedCards.findIndex((c) => c === card), 1);
+    }
+  }
+
+  toggleSelectCard(card: UiCard) {
+    if (card.isSelected) {
+      this.deselectCard(card);
+    } else {
+      this.selectCard(card);
+    }
+  }
   getColor(): string {
     return (this.activeHand && this.playing) ? 'yellow' : 'lightblue';
   }
@@ -160,6 +178,7 @@ export class HandComponent implements OnInit {
         for (const discard of cards) {
           this.hand.splice(this.hand.findIndex((uic) => Card.matches(uic.card, discard)), 1);
         }
+        this.selectedCards = [];
         this.maxSelectedCards = 1;
       });
   }
