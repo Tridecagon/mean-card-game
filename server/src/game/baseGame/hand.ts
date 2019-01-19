@@ -186,7 +186,8 @@ export class Hand {
         while (!this.IsHandComplete()) {
             await this.Sleep(1000);
         }
-        this.ScoreHand();
+        await this.Sleep(500);
+        return this.ScoreHand();
     }
 
     public ScoreHand() {
@@ -211,15 +212,16 @@ export class Hand {
                 currentWinner = i;
             }
         }
+        await this.Sleep(1000);
 
         while (this.currentTrick.length > 0) {
             this.players[currentWinner].trickPile.push(this.currentTrick.pop());
         }
 
-        // TODO: wait; send message of winner
-        await this.Sleep(1000);
+        if (!this.IsHandComplete()) {
+            this.trickLeader = this.currentPlayer = currentWinner;
+        }
         this.tableChan.emit("trickWon", this.players[currentWinner].user.id);
-        this.trickLeader = this.currentPlayer = currentWinner;
     }
 
     public Beats(follow: Card, lead: Card) {

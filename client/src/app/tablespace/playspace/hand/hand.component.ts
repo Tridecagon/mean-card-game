@@ -45,6 +45,7 @@ export class HandComponent implements OnInit {
   playedCard: UiCard;
   tricksTaken: number;
   bid: number;
+  playing: boolean;
 
   @Input() player: User;
   @Input() zIndex: number;
@@ -80,6 +81,10 @@ export class HandComponent implements OnInit {
       }
       this.selectedCards.push(card);
     }
+  }
+
+  getColor(): string {
+    return (this.activeHand && this.playing) ? 'yellow' : 'lightblue';
   }
 
   private setupListeners(): void {
@@ -135,8 +140,12 @@ export class HandComponent implements OnInit {
 
       this.socketService.onAction<any>('beginPlay')
       .subscribe((activePlayerId) => {
+        this.playing = true;
         this.activeHand = this.player && (activePlayerId === this.player.id);
       });
+
+      this.socketService.onAction<any>('startBidding')
+      .subscribe(() => this.playing = false);
 
       this.socketService.onAction<any>('bidResponse')
       .subscribe((bidData) => {

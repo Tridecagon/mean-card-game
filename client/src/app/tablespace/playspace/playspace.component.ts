@@ -106,12 +106,14 @@ export class PlayspaceComponent implements OnInit {
 
     this.socketService.onAction<any>('trickWon')
       .subscribe((userId) => {
+        if (!this.bidding) {
         for (const i in this.users) {
           if (this.users[i] && this.users[i].id === userId) {
             this.zIndexes[i] = 10;
           }
         }
-      });
+      }
+    });
 
     this.socketService.onAction<any>('startBidding')
       .subscribe((info) => {
@@ -133,9 +135,9 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.onAction<any>('biddingComplete')
       .subscribe((bidData) => {
         this.winningBidder = bidData.winner;
+        this.winningBid = bidData.bid;
         if (this._user.name === bidData.winner) {
           this.bidding = false;
-          this.winningBid = bidData.bid;
           this.selectingGame = true;
         }
       });
