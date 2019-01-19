@@ -122,6 +122,7 @@ export class SkatHand extends Hand {
     }
     public SetupStateHandlers() {
         this.stateHandlers[State.Bid] = () => {
+            this.trumpSuit = Suit.Jack;
             this.bids = [-1, -1, -1];
             this.whoseBid = 1;
             this.holdIndex = (this.dealerIndex + 1) % this.players.length;
