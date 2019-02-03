@@ -40,12 +40,13 @@ export class HandComponent implements OnInit {
 
   activeHand: boolean;
   selectedCards: UiCard[] = [];
-  maxSelectedCards = 1;
+  maxSelectedCards = 0;
   hand: UiCard[] = [];
   playedCard: UiCard;
   tricksTaken: number;
   bid: number;
   playing: boolean;
+  hold: boolean;
 
   @Input() player: User;
   @Input() zIndex: number;
@@ -71,7 +72,7 @@ export class HandComponent implements OnInit {
       } else {
         this.selectCard(clickedCard);
       }
-    } else {
+    } else if ( this.maxSelectedCards > 0 ) {
       this.toggleSelectCard(clickedCard);
     }
   }
@@ -160,10 +161,17 @@ export class HandComponent implements OnInit {
       .subscribe((activePlayerId) => {
         this.playing = true;
         this.activeHand = this.player && (activePlayerId === this.player.id);
+        if (this.location === 'bottom') {
+          this.maxSelectedCards = 1;
+        }
       });
 
       this.socketService.onAction<any>('startBidding')
-      .subscribe(() => this.playing = false);
+      .subscribe((bidInfo) => {
+        this.playing = false;
+        this.hold = bidInfo.gameType === 'Skat' && this.player.id === bidInfo.holdId;
+      }
+   );
 
       this.socketService.onAction<any>('bidResponse')
       .subscribe((bidData) => {

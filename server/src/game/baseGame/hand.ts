@@ -84,7 +84,7 @@ export class Hand {
         }
     }
 
-    public SortCards(cards: Card[], sortType: Suit) {
+    public SortCards(cards: Card[], sortType: Suit = this.trumpSuit) {
         const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card, sortType)))); // gets distinct suits
 
         // manually sort suits by color

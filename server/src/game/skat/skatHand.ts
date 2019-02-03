@@ -30,8 +30,8 @@ export class SkatHand extends Hand {
                         this.SetState(State.SingleTurn);
                         player.socket.emit("sendTurnCard", this.skat[0]);
                     } else if (selectedGame.selection === SkatGameType.Guetz) {
-                        this.SetState(State.Discard);
                         this.trumpSuit = Suit.Jack;
+                        this.SetState(State.Discard);
                         this.tableChan.emit("gameSelected", selectedGame );
                     } else {
                         setTimeout(() => this.SetState(State.Play), 3000);
@@ -127,7 +127,11 @@ export class SkatHand extends Hand {
             this.whoseBid = 1;
             this.holdIndex = (this.dealerIndex + 1) % this.players.length;
             this.currentPlayer = (this.holdIndex + 1) % this.players.length;
-            this.tableChan.emit("startBidding", {gameType: "Skat", dealerId: this.players[this.dealerIndex].user.id});
+            this.tableChan.emit("startBidding", {
+                dealerId: this.players[this.dealerIndex].user.id,
+                gameType: "Skat",
+                holdId: this.players[this.holdIndex].user.id,
+            });
         };
 
         this.stateHandlers[State.Discard] = () => {
