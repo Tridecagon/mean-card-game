@@ -32,7 +32,7 @@ The following game types are possible in Skat:
 
 ​	***Null***
 
-​	***Null Overt*******
+​	***Null Overt***
 
 #### 	Ramsch
 
