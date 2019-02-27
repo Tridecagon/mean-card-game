@@ -10,12 +10,12 @@ import { Suit } from 'app/../../../shared/model';
 export class SelectsortcontrolComponent implements OnInit {
 
   private skatGameTypes: string[];
-  private selectedType: Suit;
+  private selectedType: string;
   constructor(private socketService: SocketService) {
     this.skatGameTypes = Object.keys(Suit).filter(
         (type) => isNaN(<any>type) && type !== 'values' && type !== 'None'
       );
-      this.selectedType = Suit.Jack;
+      this.selectedType = Suit[Suit.Jack];
    }
 
   ngOnInit() {
@@ -28,7 +28,7 @@ export class SelectsortcontrolComponent implements OnInit {
     this.socketService.onAction('resortHand')
       .subscribe((sortData: any) => {
         // bind data to mat table
-        this.selectedType = sortData.type;
+        this.selectedType = Suit[sortData.type];
       });
   }
   private onSortSelected(value: Suit) {
