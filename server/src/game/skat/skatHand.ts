@@ -105,6 +105,11 @@ export class SkatHand extends Hand {
                         this.SetState(State.Play);
                     }
             });
+
+            player.socket.on("selectSort", (sortType: Suit) => {
+                this.SortCards(player.heldCards, sortType);
+                player.socket.emit("resortHand", {type: sortType, order: player.heldCards});
+            });
         }
     }
 
@@ -233,11 +238,11 @@ export class SkatHand extends Hand {
             case Suit.Jack:
                 return card.description === "Jack" ? Suit.Jack : naturalSuit;
             default:
-                return card.description === "Jack" ? this.trumpSuit : naturalSuit;
+                return card.description === "Jack" ? sortType : naturalSuit;
         }
     }
 
-    public GetSort(card: Card, sortType: Suit = this.trumpSuit): number {
+    public GetSort(card: Card, sortType: Suit = this.trumpSuit || Suit.Jack): number {
         switch (sortType) {
             case Suit.Null:
                 return card.sort;

@@ -129,7 +129,7 @@ export class Hand {
 
         // sort cards by suit, then by sort
         cards.sort((c1, c2) => this.GetSuit(c1, sortType) === this.GetSuit(c2, sortType)
-        ? this.GetSort(c2) - this.GetSort(c1)
+        ? this.GetSort(c2, sortType) - this.GetSort(c1, sortType)
         : suits.findIndex((s) => s === this.GetSuit(c1, sortType))
            - suits.findIndex((s) => s === this.GetSuit(c2, sortType)));
 
@@ -249,7 +249,7 @@ export class Hand {
         return suit;
     }
 
-    public GetSort(card: Card): number {
+    public GetSort(card: Card, sortType?: Suit): number {
         return card.sort;
     }
 

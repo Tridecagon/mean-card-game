@@ -25,14 +25,14 @@ export class SelectsortcontrolComponent implements OnInit {
   private setupListeners(): void {
     this.socketService.initSocket();
     // change this; listen to hand deals and sort changes
-    this.socketService.onAction<Suit>('setSort')
-      .subscribe((sortType) => {
+    this.socketService.onAction('resortHand')
+      .subscribe((sortData: any) => {
         // bind data to mat table
-        this.selectedType = sortType;
+        this.selectedType = sortData.type;
       });
   }
   private onSortSelected(value: Suit) {
-    this.socketService.sendAction('selectSort', {gameType: Suit[value]});
+    this.socketService.sendAction('selectSort', Suit[value]);
   }
 
 }

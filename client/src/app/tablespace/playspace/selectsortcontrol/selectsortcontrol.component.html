@@ -1,5 +1,9 @@
-<mat-select [value]="selectedType" required (selectionChange)="onSortSelected($event.value)">
-  <mat-option *ngFor="let type of skatGameTypes" [value]="type" >
-   {{type}}
-  </mat-option>
-</mat-select>
+
+<mat-form-field>
+  <mat-label>Hand Sort Type</mat-label>
+  <mat-select [value]="selectedType" (selectionChange)="onSortSelected($event.value)">
+    <mat-option *ngFor="let type of skatGameTypes" [value]="type" >
+    {{type}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

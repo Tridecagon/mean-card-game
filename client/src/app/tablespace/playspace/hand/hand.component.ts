@@ -189,6 +189,16 @@ export class HandComponent implements OnInit {
         this.selectedCards = [];
         this.maxSelectedCards = 1;
       });
+
+      this.socketService.onAction('resortHand')
+      .subscribe((data: any) => {
+        for (let i = 0; i < this.hand.length; i++) {
+          if (!Card.matches(this.hand[i].card, data.order[i])) {
+            const index = this.hand.findIndex((uc) => Card.matches(uc.card, data.order[i]));
+            [this.hand[i].card, this.hand[index].card] = [this.hand[index].card, this.hand[i].card]; // swap
+          }
+        }
+      });
   }
 
   private play(card: Card) {
