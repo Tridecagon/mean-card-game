@@ -36,6 +36,7 @@ export class SkatHand extends Hand {
                     } else {
                         setTimeout(() => this.SetState(State.Play), 3000);
                         this.trumpSuit = selectedGame.suit;
+                        this.players.map((p) => this.ResortHand(p, selectedGame.suit));
                         this.tableChan.emit("gameSelected", selectedGame );
                     }
                 }
@@ -107,8 +108,7 @@ export class SkatHand extends Hand {
             });
 
             player.socket.on("selectSort", (sortType: Suit) => {
-                this.SortCards(player.heldCards, sortType);
-                player.socket.emit("resortHand", {type: sortType, order: player.heldCards});
+                this.ResortHand(player, sortType);
             });
         }
     }
@@ -142,7 +142,7 @@ export class SkatHand extends Hand {
         this.stateHandlers[State.Discard] = () => {
             // add skat cards into player's hand, sorted
             // send them to player
-            // okay
+            this.players.map((p) => this.ResortHand(p, this.trumpSuit));
             const activePlayer = this.players[this.currentPlayer];
             while (this.skat.length) {
                 const skatCard = this.skat.shift();
@@ -292,4 +292,10 @@ export class SkatHand extends Hand {
                 };
         }
     }
+
+    private ResortHand(player: Player, sortType: Suit) {
+        this.SortCards(player.heldCards, sortType);
+        player.socket.emit("resortHand", {type: sortType, order: player.heldCards});
+    }
+
 }
