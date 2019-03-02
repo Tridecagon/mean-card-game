@@ -1,4 +1,4 @@
-import { Card, SkatUtil, Suit } from "../../../../shared/model";
+import { Card, Score, SkatUtil, Suit } from "../../../../shared/model";
 import {SkatGameSelection, SkatGameType } from "../../../../shared/model/skat";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";
@@ -10,6 +10,8 @@ export class SkatHand extends Hand {
     private holdIndex: number;
     private selectedGame: SkatGameSelection;
     private winningBid: number;
+    private winningBidder: number;
+    private matadors: number;
 
     constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
         super(players, deck, tableChan);
@@ -120,7 +122,7 @@ export class SkatHand extends Hand {
     }
 
     public CollectCards() {
-        if (this.skat) {
+        if (this.skat.length > 0) {
             this.ReturnToDeck(this.skat);
         }
         super.CollectCards();
@@ -132,6 +134,7 @@ export class SkatHand extends Hand {
             this.whoseBid = 1;
             this.holdIndex = (this.dealerIndex + 1) % this.players.length;
             this.currentPlayer = (this.holdIndex + 1) % this.players.length;
+            this.winningBidder = undefined;
             this.tableChan.emit("startBidding", {
                 dealerId: this.players[this.dealerIndex].user.id,
                 gameType: "Skat",
@@ -155,6 +158,7 @@ export class SkatHand extends Hand {
 
         this.stateHandlers[State.Play] = () => {
             this.trickLeader = this.currentPlayer = this.holdIndex;
+            this.matadors = this.countMatadors();
             this.tableChan.emit("beginPlay", this.players[this.currentPlayer].user.id);
         };
     }
@@ -271,26 +275,177 @@ export class SkatHand extends Hand {
     }
 
     public CompleteBidding() {
+        this.winningBidder = this.currentPlayer;
         console.log
-          (`Bidding complete. Winning bidder: ${this.players[this.currentPlayer].user.name}, bid: ${this.winningBid}`);
+          (`Bidding complete. Winning bidder: ${this.players[this.winningBidder].user.name}, bid: ${this.winningBid}`);
         this.SetState(State.SelectSkatGame);
         this.tableChan.emit("biddingComplete",
         {
             bid: this.winningBid,
-            winner: this.players[this.currentPlayer].user.name,
+            winner: this.players[this.winningBidder].user.name,
         });
     }
 
-    // TODO: this is from a different game, fix
     public ScoreHand() {
-        this.scores = [];
-        for (const player of this.players) {
-            const numTricks = player.trickPile.length / this.players.length;
-            this.scores[player.index] = {
-                id: player.user.id,
-                points: (numTricks + (this.bids[player.index] === numTricks ? 10 : 0)),
-                };
+        this.scores = new Array<Score>(this.players.length);
+        const baseValue = this.GetBaseValue();
+        switch (this.selectedGame.selection) {
+            case SkatGameType.Null:
+            case SkatGameType.NullOvert:
+                this.scores[this.winningBidder].points +=
+                    this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue);
+                this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id;
+                break;
+            case SkatGameType.Solo:
+            case SkatGameType.Turn:
+            case SkatGameType.Guetz:
+            case SkatGameType.Grand:
+            case SkatGameType.GrandOvert:
+                this.players[this.winningBidder].trickPile.push(...this.skat);
+                this.skat = [];
+                this.scores[this.winningBidder].points +=
+                    this.EvaluateStandardGame(baseValue);
+                this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id;
+
+            case SkatGameType.Ramsch:
+                this.players[this.currentPlayer].trickPile.push(...this.skat);
+                const pointScores = this.players.map((p) => this.countCardPoints(p.trickPile));
+
         }
+    }
+
+    private EvaluateStandardGame(baseValue: number): number {
+        let wonGame: boolean;
+        const cardPoints = this.countCardPoints(this.players[this.winningBidder].trickPile);
+        if (this.selectedGame.declarations.schwarz) {
+            wonGame = this.players[this.winningBidder].trickPile.length === 32;
+        } else if (this.selectedGame.declarations.schneider) {
+            wonGame = cardPoints >= 91;
+        } else {
+            wonGame = cardPoints >= 61;
+        }
+        if (wonGame) {
+            const factors = 1 + this.matadors
+              + (cardPoints >= 91 ? 1 : 0)
+              + (this.players[this.winningBidder].trickPile.length === 32 ? 1 : 0)
+              + (this.selectedGame.declarations.schneider ? 1 : 0)
+              + (this.selectedGame.declarations.schwarz ? 1 : 0);
+            return factors * baseValue;
+        } else {
+            const factors = 1 + this.matadors
+              + ((cardPoints < 31 || this.selectedGame.declarations.schneider) ? 1 : 0)
+              + ((this.players[this.winningBidder].trickPile.length === 2
+                      || this.selectedGame.declarations.schwarz) ? 1 : 0)
+              + (this.selectedGame.declarations.schneider ? 1 : 0)
+              + (this.selectedGame.declarations.schwarz ? 1 : 0);
+            return factors * baseValue * (this.selectedGame.doubleTurn ? -2 : -1);
+        }
+
+    }
+
+    private GetBaseValue(): number {
+        switch (this.selectedGame.selection) {
+
+            case SkatGameType.Null:
+                return 20;
+            case SkatGameType.NullOvert:
+                return 40;
+            case SkatGameType.Guetz:
+                return 16;
+            case SkatGameType.Grand:
+                return 20;
+            case SkatGameType.GrandOvert:
+                return 24;
+            case SkatGameType.Solo:
+                switch (this.selectedGame.suit) {
+                    case Suit.Club:
+                        return 12;
+                    case Suit.Spade:
+                        return 11;
+                    case Suit.Heart:
+                        return 10;
+                    case Suit.Diamond:
+                        return 9;
+                }
+            case SkatGameType.Turn:
+                switch (this.selectedGame.suit) {
+                    case Suit.Jack:
+                        return 12;
+                    case Suit.Club:
+                        return 8;
+                    case Suit.Spade:
+                        return 7;
+                    case Suit.Heart:
+                        return 6;
+                    case Suit.Diamond:
+                        return 5;
+                }
+        }
+    }
+
+    private countMatadors() {
+        const sequence: Card[] = [
+            {suit: "Club", description: "Jack", sort: 0},
+            {suit: "Spade", description: "Jack", sort: 0},
+            {suit: "Heart", description: "Jack", sort: 0},
+            {suit: "Diamond", description: "Jack", sort: 0},
+        ];
+        const trumpSuit = Suit[this.selectedGame.suit];
+        if (trumpSuit in [Suit.Club, Suit.Spade, Suit.Heart, Suit.Diamond]) {
+            sequence.push(...[
+                {suit: trumpSuit, description: "Ace", sort: 0},
+                {suit: trumpSuit, description: "Ten", sort: 0},
+                {suit: trumpSuit, description: "King", sort: 0},
+                {suit: trumpSuit, description: "Queen", sort: 0},
+                {suit: trumpSuit, description: "Nine", sort: 0},
+                {suit: trumpSuit, description: "Eight", sort: 0},
+                {suit: trumpSuit, description: "Seven", sort: 0},
+            ]);
+        }
+
+        const cards = this.players[this.winningBidder].heldCards.concat(this.skat);
+        if (cards.some((c) => Card.matches(c, sequence[0]))) {
+            let numWith = 0;
+            for (const s of sequence) {
+                if (cards.some((c) => Card.matches(c, s))) {
+                    numWith++;
+                } else {
+                    return numWith;
+                }
+            }
+        } else {
+            let numWithout = 0;
+            for (const s of sequence) {
+                if (cards.some((c) => Card.matches(c, s))) {
+                    return numWithout;
+                } else {
+                    numWithout++;
+                }
+            }
+        }
+    }
+
+    private countCardPoints(cards: Card[]): number {
+        // TODO: display this result
+        const points = cards.map((c): number => {
+            switch (c.description) {
+                case "Ace":
+                    return 11;
+                case "Ten":
+                    return 10;
+                case "King":
+                    return 4;
+                case "Queen":
+                    return 3;
+                case "Jack":
+                    return 2;
+                default:
+                    return 0;
+            }
+        }).reduce((a, b) => a + b);
+
+        console.log(`Counted ${points} points`);
+        return points;
     }
 
     private ResortHand(player: Player, sortType: Suit) {
