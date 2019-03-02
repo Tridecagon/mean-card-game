@@ -219,9 +219,7 @@ export class Hand {
             this.players[currentWinner].trickPile.push(this.currentTrick.pop());
         }
 
-        if (!this.IsHandComplete()) {
-            this.trickLeader = this.currentPlayer = currentWinner;
-        }
+        this.trickLeader = this.currentPlayer = currentWinner;
         this.tableChan.emit("trickWon", this.players[currentWinner].user.id);
     }
 

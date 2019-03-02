@@ -287,14 +287,14 @@ export class SkatHand extends Hand {
     }
 
     public ScoreHand() {
-        this.scores = new Array<Score>(this.players.length);
         const baseValue = this.GetBaseValue();
         switch (this.selectedGame.selection) {
             case SkatGameType.Null:
             case SkatGameType.NullOvert:
-                this.scores[this.winningBidder].points +=
-                    this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue);
-                this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id;
+                this.scores.push({
+                    id: this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id,
+                    points: this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue),
+                });
                 break;
             case SkatGameType.Solo:
             case SkatGameType.Turn:
@@ -303,10 +303,11 @@ export class SkatHand extends Hand {
             case SkatGameType.GrandOvert:
                 this.players[this.winningBidder].trickPile.push(...this.skat);
                 this.skat = [];
-                this.scores[this.winningBidder].points +=
-                    this.EvaluateStandardGame(baseValue);
-                this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id;
-
+                this.scores.push({
+                    id: this.players[this.winningBidder].user.id,
+                    points: this.EvaluateStandardGame(baseValue),
+                });
+                break;
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);
                 const pointScores = this.players.map((p) => this.countCardPoints(p.trickPile));
@@ -314,23 +315,28 @@ export class SkatHand extends Hand {
                 const winners = pointScores.filter((s) => s === minPoints);
                 if (winners.length === 1) {
                     const winner = pointScores.findIndex((s) => s === minPoints);
-                    this.scores[winner].points +=
-                        this.players[winner].trickPile.length === 0 ? 20 : 10;
-                    this.scores[winner].id = this.players[winner].user.id;
+                    this.scores.push({
+                        id: this.players[winner].user.id,
+                        points: this.players[winner].trickPile.length === 0 ? 20 : 10,
+                    });
                 } else { // two winners or one loser
                     if (minPoints === 0) {
                         const loser = pointScores.findIndex((s) => s !== 0);
                         if (this.players[loser].trickPile.length === 32) {
-                            this.scores[loser].points = -30;
-                            this.scores[loser].id = this.players[loser].user.id;
+                            this.scores.push({
+                                id: this.players[loser].user.id,
+                                points: -30,
+                            });
                             return;
                         }
                     }
                     // for now, just award 5 to both on ties since we're not tracking trick order
                     for (let i = 0; i < this.players.length; i++) {
                         if (pointScores[i] === minPoints) {
-                            this.scores[i].points = 5;
-                            this.scores[i].id = this.players[i].user.id;
+                            this.scores.push({
+                                id: this.players[i].user.id,
+                                points: 5,
+                            });
                         }
                     }
                 }
