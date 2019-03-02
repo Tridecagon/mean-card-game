@@ -9,8 +9,8 @@ import { Suit } from 'app/../../../shared/model';
 })
 export class SelectsortcontrolComponent implements OnInit {
 
-  private skatGameTypes: string[];
-  private selectedType: string;
+  skatGameTypes: string[];
+  selectedType: string;
   constructor(private socketService: SocketService) {
     this.skatGameTypes = Object.keys(Suit).filter(
         (type) => isNaN(<any>type) && type !== 'values' && type !== 'None'
@@ -31,7 +31,7 @@ export class SelectsortcontrolComponent implements OnInit {
         this.selectedType = Suit[sortData.type];
       });
   }
-  private onSortSelected(value: Suit) {
+  onSortSelected(value: Suit) {
     this.socketService.sendAction('selectSort', Suit[value]);
   }
 
