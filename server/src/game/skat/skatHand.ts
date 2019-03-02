@@ -310,7 +310,30 @@ export class SkatHand extends Hand {
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);
                 const pointScores = this.players.map((p) => this.countCardPoints(p.trickPile));
-
+                const minPoints = Math.min(...pointScores);
+                const winners = pointScores.filter((s) => s === minPoints);
+                if (winners.length === 1) {
+                    const winner = pointScores.findIndex((s) => s === minPoints);
+                    this.scores[winner].points +=
+                        this.players[winner].trickPile.length === 0 ? 20 : 10;
+                    this.scores[winner].id = this.players[winner].user.id;
+                } else { // two winners or one loser
+                    if (minPoints === 0) {
+                        const loser = pointScores.findIndex((s) => s !== 0);
+                        if (this.players[loser].trickPile.length === 32) {
+                            this.scores[loser].points = -30;
+                            this.scores[loser].id = this.players[loser].user.id;
+                            return;
+                        }
+                    }
+                    // for now, just award 5 to both on ties since we're not tracking trick order
+                    for (let i = 0; i < this.players.length; i++) {
+                        if (pointScores[i] === minPoints) {
+                            this.scores[i].points = 5;
+                            this.scores[i].id = this.players[i].user.id;
+                        }
+                    }
+                }
         }
     }
 
