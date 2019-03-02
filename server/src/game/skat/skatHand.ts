@@ -348,11 +348,18 @@ export class SkatHand extends Hand {
             wonGame = cardPoints >= 61;
         }
         if (wonGame) {
-            const factors = 1 + this.matadors
+            let factors = 1 + this.matadors
               + (cardPoints >= 91 ? 1 : 0)
               + (this.players[this.winningBidder].trickPile.length === 32 ? 1 : 0)
               + (this.selectedGame.declarations.schneider ? 1 : 0)
               + (this.selectedGame.declarations.schwarz ? 1 : 0);
+            if (factors * baseValue < this.winningBid) {
+                console.log(`Detected underbid: bid ${this.winningBid} but earned ${factors * baseValue}`);
+                while (factors * baseValue < this.winningBid) {
+                    factors++;
+                }
+                return factors * baseValue * (this.selectedGame.doubleTurn ? -2 : -1);
+            }
             return factors * baseValue;
         } else {
             const factors = 1 + this.matadors
