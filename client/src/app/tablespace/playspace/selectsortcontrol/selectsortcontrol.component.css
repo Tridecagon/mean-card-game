@@ -3,4 +3,5 @@
     opacity: 0.9;
     background: white;
     position: absolute;
+    z-index: 19;
 }

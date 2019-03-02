@@ -2,6 +2,8 @@
     margin: 5%;
     width: 90%;
     height: 65%;
+    position: absolute;
+    z-index: 15;
 }
 button {
     width: 95%;

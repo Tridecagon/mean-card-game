@@ -46,7 +46,8 @@ export class PlayspaceComponent implements OnInit {
   @ViewChildren(HandComponent) hands: HandComponent[];
 
   constructor(private socketService: SocketService) {
-    this.zIndexes.fill(this.currentZIndex, 0, 3);
+    this.zIndexes = new Array<number>(4);
+    this.zIndexes.fill(this.currentZIndex);
   }
 
   ngOnInit() {
@@ -127,7 +128,7 @@ export class PlayspaceComponent implements OnInit {
 
 
         this.currentZIndex = 5;
-        this.zIndexes.fill(this.currentZIndex, 0, 3);
+        this.zIndexes.fill(this.currentZIndex);
 
         // make sure player's hand is visible
         this.zIndexes[0] = 20;
