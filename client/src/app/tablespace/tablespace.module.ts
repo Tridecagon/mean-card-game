@@ -15,6 +15,10 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/materi
 import { BidcardComponent } from './playspace/bidpanel/bidcard/bidcard.component';
 import { SelectpanelComponent } from './playspace/selectpanel/selectpanel.component';
 import { TurnpanelComponent } from './playspace/turnpanel/turnpanel.component';
+import { DiscardpanelComponent } from './playspace/discardpanel/discardpanel.component';
+import { ShowgamepanelComponent } from './playspace/showgamepanel/showgamepanel.component';
+import { ShowgamecompactComponent } from './playspace/showgamepanel/showgamecompact/showgamecompact.component';
+import { SelectsortcontrolComponent } from './playspace/selectsortcontrol/selectsortcontrol.component';
 
 @NgModule({
   imports: [
@@ -26,7 +30,7 @@ import { TurnpanelComponent } from './playspace/turnpanel/turnpanel.component';
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent, ShowgamecompactComponent, SelectsortcontrolComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

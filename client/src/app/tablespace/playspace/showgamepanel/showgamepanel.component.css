@@ -1,0 +1,23 @@
+mat-card {
+    margin: 5% auto;
+    width: 60%;
+    text-align: center;
+}
+
+mat-card-title { justify-content: center; }
+mat-card-content { justify-content: center; }
+mat-card-footer { justify-content: center; }
+
+.player-card {
+    width: 150px;
+    height: 187.5px;
+    position: absolute;
+    transform-style: preserve-3d;
+}
+img {
+    position:absolute;
+    top: 0; 
+    left: 0;
+    height: 100%;
+    backface-visibility: hidden;
+}

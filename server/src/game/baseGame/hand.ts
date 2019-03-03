@@ -1,5 +1,6 @@
+
 import * as socketIo from "socket.io";
-import { Card, GameType, Score } from "../../../../shared/model";
+import { Card, GameType, Score, Suit } from "../../../../shared/model";
 import {Player} from "../../model";
 import {State} from "./state";
 
@@ -13,8 +14,10 @@ export class Hand {
     protected scores: Score[] = [];
     protected state: State;
     protected params: any;
-    protected trumpSuit: string;
+    protected trumpSuit: Suit;
+    protected defaultSortType: any;
     protected stateHandlers: Array<() => void> = []; // array of void functions
+
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
     constructor(protected players: Player[], protected deck: any, protected tableChan: SocketIO.Namespace) {
@@ -74,25 +77,25 @@ export class Hand {
                 player.heldCards.push({suit: card.suit, description: card.description, sort: card.sort});
             }
 
-            this.SortCards(player.heldCards);
+            this.SortCards(player.heldCards, this.defaultSortType);
 
             player.socket.emit("dealHand", player.heldCards);
             this.tableChan.emit("tableDealCards", {numCards: this.numCards, toUser: player.user.id});
         }
     }
 
-    public SortCards(cards: Card[]) {
-        const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card)))); // gets distinct suits
+    public SortCards(cards: Card[], sortType: Suit = this.trumpSuit) {
+        const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card, sortType)))); // gets distinct suits
 
         // manually sort suits by color
         // set first suit
-        let firstSuitIndex = 0;
-        if (this.trumpSuit && this.trumpSuit.length > 0) {
-            firstSuitIndex = suits.findIndex( (s) => s === this.trumpSuit);
-        } else {
-            const blackSuits = suits.filter((s) => this.GetSuitColor(s) === "Black");
-            const redSuits = suits.filter((s) => this.GetSuitColor(s) === "Red");
+        const blackSuits = suits.filter((s) => this.GetSuitColor(s) === "Black");
+        const redSuits = suits.filter((s) => this.GetSuitColor(s) === "Red");
 
+        let firstSuitIndex = 0;
+        if (sortType !== Suit.None && sortType !== Suit.Null && suits.some((s) => s === sortType)) {
+            firstSuitIndex = suits.findIndex( (s) => s === sortType); // if no trumps, first suit is arbitrary
+        } else {
             if (blackSuits > redSuits) {
                 firstSuitIndex = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
             } else if (redSuits > blackSuits) {
@@ -101,12 +104,21 @@ export class Hand {
         }
         // set first suit
         if (firstSuitIndex !== 0) {
-            [suits[0], suits[firstSuitIndex]] = [suits[firstSuitIndex], suits[0]]; // array destructuring
+            [suits[0], suits[firstSuitIndex]] = [suits[firstSuitIndex], suits[0]]; // array destructuring swap
         }
 
         // set remaining suits
         for (let i = 1; i < suits.length - 1; i++ ) {
-            if (this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1])) {
+
+            if (i === 1 && sortType === Suit.Jack
+                                && blackSuits > redSuits && this.GetSuitColor(suits[1]) === "Red") {
+                const firstBlackSuit = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
+                [suits[1], suits[firstBlackSuit]] = [suits[firstBlackSuit], suits[1]];
+            } else if (i === 1 && sortType === Suit.Jack
+                                && redSuits > blackSuits && this.GetSuitColor(suits[1]) === "Black") {
+                const firstRedSuit = suits.findIndex((s) => this.GetSuitColor(s) === "Red");
+                [suits[1], suits[firstRedSuit]] = [suits[firstRedSuit], suits[1]];
+            } else if (this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1])) {
                 const betterSuit = suits.findIndex((s, j) => j > i
                     && this.GetSuitColor(s) !== this.GetSuitColor(suits[i - 1]));
                 if (betterSuit > 0) {
@@ -116,19 +128,47 @@ export class Hand {
         }
 
         // sort cards by suit, then by sort
-        cards.sort((c1, c2) => this.GetSuit(c1) === this.GetSuit(c2)
-        ? this.GetSort(c2) - this.GetSort(c1)
-        : suits.findIndex((s) => s === this.GetSuit(c1)) - suits.findIndex((s) => s === this.GetSuit(c2)));
+        cards.sort((c1, c2) => this.GetSuit(c1, sortType) === this.GetSuit(c2, sortType)
+        ? this.GetSort(c2, sortType) - this.GetSort(c1, sortType)
+        : suits.findIndex((s) => s === this.GetSuit(c1, sortType))
+           - suits.findIndex((s) => s === this.GetSuit(c2, sortType)));
 
     }
 
-    public GetSuitColor(suit: string): string {
+    public InsertCard(card: Card, hand: Card[]): number {
+        // if hand is not sorted, this obviously will not work
+        const cardSuit = this.GetSuit(card);
+
+        // is there a matching suit with lower rank?
+        let insertPoint = hand.findIndex(
+            (c) => cardSuit === this.GetSuit(c) && this.GetSort(c) < this.GetSort(card));
+        // is there a matching suit at all?
+        if (insertPoint === -1 && hand.some((c) => this.GetSuit(c) === cardSuit)) {
+            insertPoint = hand.findIndex((c) => this.GetSuit(c) === cardSuit)
+                + hand.filter((c) => this.GetSuit(c) === cardSuit).length;
+        }
+        if (insertPoint === -1) {
+            // no matching suit; are there two adjacent suits of same color?
+            insertPoint = hand.findIndex(
+                (c, i) => i > 0
+                    && this.GetSuit(c) !== this.GetSuit(hand[i - 1])
+                    && this.GetSuitColor(this.GetSuit(c)) === this.GetSuitColor(this.GetSuit(hand[i - 1])));
+        }
+        if (insertPoint === -1) {
+            insertPoint = hand.length;
+        }
+
+        hand.splice(insertPoint, 0, card);
+        return insertPoint;
+    }
+
+    public GetSuitColor(suit: Suit): string {
         switch (suit) {
-            case "Spade":
-            case "Club":
+            case Suit.Spade:
+            case Suit.Club:
                 return "Black";
-            case "Diamond":
-            case "Heart":
+            case Suit.Diamond:
+            case Suit.Heart:
                 return "Red";
             default:
                 return "";
@@ -136,6 +176,7 @@ export class Hand {
     }
 
     public CompleteBidding() {
+        this.tableChan.emit("biddingComplete");
         setTimeout(() => {
             this.SetState(State.Play);
             this.tableChan.emit("beginPlay", this.players[this.currentPlayer].user.id);
@@ -146,7 +187,8 @@ export class Hand {
         while (!this.IsHandComplete()) {
             await this.Sleep(1000);
         }
-        this.ScoreHand();
+        await this.Sleep(500);
+        return this.ScoreHand();
     }
 
     public ScoreHand() {
@@ -171,15 +213,14 @@ export class Hand {
                 currentWinner = i;
             }
         }
+        await this.Sleep(1000);
 
         while (this.currentTrick.length > 0) {
             this.players[currentWinner].trickPile.push(this.currentTrick.pop());
         }
 
-        // TODO: wait; send message of winner
-        await this.Sleep(1000);
-        this.tableChan.emit("trickWon", this.players[currentWinner].user.id);
         this.trickLeader = this.currentPlayer = currentWinner;
+        this.tableChan.emit("trickWon", this.players[currentWinner].user.id);
     }
 
     public Beats(follow: Card, lead: Card) {
@@ -201,11 +242,12 @@ export class Hand {
         || !this.players[this.currentPlayer].heldCards.find((c) => this.GetSuit(c) === ledSuit);
     }
 
-    public GetSuit(card: Card): string {
-        return card.suit;
+    public GetSuit(card: Card, sortType?: Suit): Suit {
+        const suit: Suit = Suit[card.suit as keyof typeof Suit];
+        return suit;
     }
 
-    public GetSort(card: Card): number {
+    public GetSort(card: Card, sortType?: Suit): number {
         return card.sort;
     }
 
@@ -214,10 +256,9 @@ export class Hand {
             player.socket.on("playRequest", (card: Card) => {
                 console.log(player.user.name + " request to play " + card.suit + " " + card.description);
                 console.log("current player " + this.currentPlayer
-                    + " trick leader" + this.trickLeader
+                    + " trick leader " + this.trickLeader
                     + " player.index " + player.index);
-                const playCard = player.heldCards.find((c) =>
-                                (c.suit === card.suit && c.description === card.description));
+                const playCard = player.heldCards.find((c) => Card.matches(c, card));
                 if (this.state === State.Play && this.currentPlayer === player.index
                     && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) {
                     this.currentTrick[this.currentPlayer]

@@ -39,12 +39,14 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
 export class HandComponent implements OnInit {
 
   activeHand: boolean;
-  selectedCards: number[] = [];
-  maxSelectedCards = 1;
+  selectedCards: UiCard[] = [];
+  maxSelectedCards = 0;
   hand: UiCard[] = [];
   playedCard: UiCard;
   tricksTaken: number;
   bid: number;
+  playing: boolean;
+  hold: boolean;
 
   @Input() player: User;
   @Input() zIndex: number;
@@ -63,23 +65,45 @@ export class HandComponent implements OnInit {
   }
 
   onClick(clickedCard: UiCard, index: number) {
-    if (clickedCard.isSelected) {
-      console.log(`Attempting to play ${clickedCard.card}`);
-      this.socketService.sendAction('playRequest', clickedCard.card);
-    } else {
-      this.selectCard(clickedCard, index);
+    if (this.playing) {
+      if (clickedCard.isSelected) {
+        console.log('Attempting to play', clickedCard.card);
+        this.socketService.sendAction('playRequest', clickedCard.card);
+      } else {
+        this.selectCard(clickedCard);
+      }
+    } else if ( this.maxSelectedCards > 0 ) {
+      this.toggleSelectCard(clickedCard);
     }
   }
 
-  selectCard(card: UiCard, index: number) {
+  selectCard(card: UiCard) {
     if (!card.isSelected) {
       card.toggleSelection();
       if (this.selectedCards.length === this.maxSelectedCards) {
         const deselectCard = this.selectedCards.shift();
-        this.hand[deselectCard].toggleSelection();
+        deselectCard.toggleSelection();
       }
-      this.selectedCards.push(index);
+      this.selectedCards.push(card);
     }
+  }
+
+  deselectCard(card: UiCard) {
+    if (card.isSelected) {
+      card.toggleSelection();
+      this.selectedCards.splice(this.selectedCards.findIndex((c) => c === card), 1);
+    }
+  }
+
+  toggleSelectCard(card: UiCard) {
+    if (card.isSelected) {
+      this.deselectCard(card);
+    } else {
+      this.selectCard(card);
+    }
+  }
+  getColor(): string {
+    return (this.activeHand && this.playing) ? 'yellow' : 'lightblue';
   }
 
   private setupListeners(): void {
@@ -94,6 +118,14 @@ export class HandComponent implements OnInit {
           {
             this.hand.push(new UiCard(card));
           }
+        });
+
+      this.socketService.onAction<any>('insertCard')
+        .subscribe((cardInfo) => {
+            this.maxSelectedCards = 2; // TODO: put this somewhere more appropriate
+            const newCard = new UiCard(cardInfo.card);
+            this.hand.splice(cardInfo.index, 0, newCard);
+            this.selectCard(newCard);
         });
     }
 
@@ -127,8 +159,19 @@ export class HandComponent implements OnInit {
 
       this.socketService.onAction<any>('beginPlay')
       .subscribe((activePlayerId) => {
+        this.playing = true;
         this.activeHand = this.player && (activePlayerId === this.player.id);
+        if (this.location === 'bottom') {
+          this.maxSelectedCards = 1;
+        }
       });
+
+      this.socketService.onAction<any>('startBidding')
+      .subscribe((bidInfo) => {
+        this.playing = false;
+        this.hold = bidInfo.gameType === 'Skat' && this.player.id === bidInfo.holdId;
+      }
+   );
 
       this.socketService.onAction<any>('bidResponse')
       .subscribe((bidData) => {
@@ -137,18 +180,37 @@ export class HandComponent implements OnInit {
           this.tricksTaken = 0;
         }
       });
+
+      this.socketService.onAction<Card[]>('confirmDiscard')
+      .subscribe((cards) => {
+        for (const discard of cards) {
+          this.hand.splice(this.hand.findIndex((uic) => Card.matches(uic.card, discard)), 1);
+        }
+        this.selectedCards = [];
+        this.maxSelectedCards = 1;
+      });
+
+      this.socketService.onAction('resortHand')
+      .subscribe((data: any) => {
+        for (let i = 0; i < this.hand.length; i++) {
+          if (!Card.matches(this.hand[i].card, data.order[i])) {
+            const index = this.hand.findIndex((uc) => Card.matches(uc.card, data.order[i]));
+            [this.hand[i].card, this.hand[index].card] = [this.hand[index].card, this.hand[i].card]; // swap
+          }
+        }
+      });
   }
 
   private play(card: Card) {
       if (this.location === 'bottom') { // TODO: change this condition to if hand cards are visible
-      const i = this.hand.findIndex(c => c.card.suit === card.suit && c.card.description === card.description);
+      const i = this.hand.findIndex(c => Card.matches(c.card, card));
       if (i < 0) {
         console.log('Unable to find card ' + card);
         return;
       }
       if (this.hand[i].isSelected) {
         // remove it
-        this.selectedCards.splice(this.selectedCards.findIndex(v => v === i));
+        this.selectedCards.splice(this.selectedCards.findIndex(c => c === this.hand[i]), 1);
       }
       this.hand.splice(i, 1);
       this.playedCard = new UiCard(card, 'up');

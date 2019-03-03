@@ -1,3 +1,4 @@
+import { Card, Suit } from '..';
 import { SkatGameType } from '.';
 
 export interface SkatGameSelection {
@@ -7,4 +8,7 @@ export interface SkatGameSelection {
         schneider: boolean,
         schwarz: boolean
     }
+    turnCard?: Card;
+    suit?: Suit;
+    doubleTurn?: boolean;
 }

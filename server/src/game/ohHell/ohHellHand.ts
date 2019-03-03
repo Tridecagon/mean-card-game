@@ -1,4 +1,4 @@
-import { Card, GameType, Score } from "../../../../shared/model";
+import { Card, GameType, Score, Suit } from "../../../../shared/model";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";
 
@@ -14,7 +14,8 @@ export class OhHellHand extends Hand {
 
     public DealHands() {
         this.trumpCard = this.deck.draw();
-        this.trumpSuit = this.trumpCard.suit;
+        this.trumpSuit = Suit[this.trumpCard.suit as keyof typeof Suit];
+        this.defaultSortType = this.trumpSuit;
         this.numCards = this.params.numCards;
         this.trumpsBroken = false;
         super.DealHands();
@@ -27,8 +28,9 @@ export class OhHellHand extends Hand {
         super.CollectCards();
     }
     public SetupStateHandlers() {
+        super.SetupStateHandlers();
         this.stateHandlers[State.Bid] = () => {
-
+             this.currentPlayer = (this.dealerIndex + 1) % this.players.length;
              this.tableChan.emit("startBidding", {
                 dealerId: this.players[this.dealerIndex].user.id,
                  gameType: "Oh Hell",
@@ -43,13 +45,14 @@ export class OhHellHand extends Hand {
           && (player.index !== this.dealerIndex
             || this.bids.reduce((total, value) => total + value) + bidVal !== this.numCards)) {
                 this.bids[player.index] = bidVal;
-                bidInfo.totalTricks = this.numCards;
                 bidInfo.totalBid = this.bids.reduce((total, value) => total + value);
 
                 this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
-                bidInfo.currentPlayer = this.currentPlayer;
+                console.log(`Next bidder: ${this.players[this.currentPlayer].user.name}`);
                 if (player.index === this.dealerIndex) {
                     this.CompleteBidding();
+                } else {
+                    bidInfo.activePlayer = this.players[this.currentPlayer].user.id;
                 }
                 return true;
         }
@@ -57,13 +60,14 @@ export class OhHellHand extends Hand {
     }
 
     public PlayIsLegal(card: Card): boolean {
-        if (this.currentPlayer === this.trickLeader && card.suit === this.trumpSuit && !this.trumpsBroken) {
-            return this.players[this.currentPlayer].heldCards.every((c) => c.suit === this.trumpSuit);
+        if (this.currentPlayer === this.trickLeader && this.GetSuit(card) === this.trumpSuit && !this.trumpsBroken) {
+            return this.players[this.currentPlayer].heldCards.every((c) => this.GetSuit(c) === this.trumpSuit);
         } // legal to lead trump if it's all you have
         return super.PlayIsLegal(card);
     }
+
     public async EvaluateTrick() {
-        if (this.currentTrick.some((c) => c.suit === this.trumpSuit)) {
+        if (this.currentTrick.some((c) => this.GetSuit(c) === this.trumpSuit)) {
             this.trumpsBroken = true;
         }
         super.EvaluateTrick();

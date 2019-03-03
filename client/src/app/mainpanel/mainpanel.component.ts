@@ -116,7 +116,7 @@ export class MainpanelComponent implements OnInit {
       message = {
         from: this.user,
         action: action
-      }
+      };
     } else if (action === Action.RENAME) {
       message = {
         action: action,

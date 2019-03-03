@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UiCard } from '../../shared/model/uiCard';
-import { Card, Message, User } from '../../../../../shared/model';
+import { HandComponent } from './hand/hand.component';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren } from '@angular/core';
+import { Card, User } from '../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
+import { SkatGameSelection } from '../../../../../shared/model/skat';
 
 @Component({
   selector: 'mcg-playspace',
@@ -17,11 +18,17 @@ export class PlayspaceComponent implements OnInit {
   zIndexes: number[] = [];
   bidding: boolean;
   selectingGame: boolean;
+  selectedGame: SkatGameSelection;
+  doingTurn: boolean;
+  discarding: boolean;
   showingGame: boolean;
+  playing: boolean;
+  winningBidder: string;
   winningBid: number;
   dealerId: number;
   gameType: string;
   turnCards: Card[] = [];
+  totalTricks: number;
 
   numPlayers = 0;
   userIndex = -1;
@@ -36,8 +43,11 @@ export class PlayspaceComponent implements OnInit {
 
   @Output() onJoinTable = new EventEmitter<{ name: string, conn: SocketService }>();
 
+  @ViewChildren(HandComponent) hands: HandComponent[];
+
   constructor(private socketService: SocketService) {
-    this.zIndexes.fill(this.currentZIndex, 0, 3);
+    this.zIndexes = new Array<number>(4);
+    this.zIndexes.fill(this.currentZIndex);
   }
 
   ngOnInit() {
@@ -82,6 +92,11 @@ export class PlayspaceComponent implements OnInit {
         }
       });
 
+    this.socketService.onAction<Array<Card>>('dealHand')
+      .subscribe((cards) => {
+        this.totalTricks = cards.length;
+      });
+
     this.socketService.onAction<any>('playResponse')
       .subscribe((playInfo) => {
         for (const i in this.users) {
@@ -93,12 +108,14 @@ export class PlayspaceComponent implements OnInit {
 
     this.socketService.onAction<any>('trickWon')
       .subscribe((userId) => {
+        if (!this.bidding) {
         for (const i in this.users) {
           if (this.users[i] && this.users[i].id === userId) {
             this.zIndexes[i] = 10;
           }
         }
-      });
+      }
+    });
 
     this.socketService.onAction<any>('startBidding')
       .subscribe((info) => {
@@ -107,9 +124,11 @@ export class PlayspaceComponent implements OnInit {
 
         this.gameType = info.gameType;
         this.bidding = true;
+        this.playing = false;
+
 
         this.currentZIndex = 5;
-        this.zIndexes.fill(this.currentZIndex, 0, 3);
+        this.zIndexes.fill(this.currentZIndex);
 
         // make sure player's hand is visible
         this.zIndexes[0] = 20;
@@ -118,9 +137,10 @@ export class PlayspaceComponent implements OnInit {
 
     this.socketService.onAction<any>('biddingComplete')
       .subscribe((bidData) => {
-        if (this.userIndex === bidData.winner) {
+        this.winningBidder = bidData.winner;
+        this.winningBid = bidData.bid;
+        if (this._user.name === bidData.winner) {
           this.bidding = false;
-          this.winningBid = bidData.bid;
           this.selectingGame = true;
         }
       });
@@ -128,18 +148,48 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.onAction<any>('beginPlay')
       .subscribe(() => {
         this.bidding = false;
+        this.showingGame = false;
+        this.playing = true;
       });
 
     this.socketService.onAction<Card>('sendTurnCard')
       .subscribe((card) => {
         this.selectingGame = false;
-        this.showingGame = true;
+        this.doingTurn = true;
         if (this.turnCards[0]) {
           this.turnCards[1] = card;
         } else {
           this.turnCards[0] = card;
         }
       });
+
+    this.socketService.onAction<any>('insertCard')
+      .subscribe(() => {
+        this.doingTurn = false;
+        this.selectingGame = false;
+        this.discarding = true;
+      });
+
+    this.socketService.onAction<Card[]>('confirmDiscard')
+      .subscribe(() => this.discarding = false);
+
+    this.socketService.onAction<SkatGameSelection>('gameSelected')
+      .subscribe((selection) => {
+        this.doingTurn = false;
+        this.selectingGame = false;
+        this.bidding = false;
+        this.selectedGame = selection;
+        if (!this.discarding) {
+          this.showingGame = true;
+        }
+
+      });
+  }
+  sendDiscards() {
+    const handComponent = this.hands.find((h) => h.location === 'bottom');
+    if (handComponent.selectedCards.length === 2) {
+      this.socketService.sendAction('discardSkat', handComponent.selectedCards.map((c) => c.card));
+    }
   }
 
 }

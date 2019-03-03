@@ -16,6 +16,7 @@ export class BidpanelComponent implements OnInit {
   @Input() dealerId: number;
   @Input() maxBid: number;
   @Input() gameType: string;
+  @Input() totalTricks: number;
   trumpUiCard: UiCard;
   displayedColumns = ['col'];
   players: User[] = [];
@@ -23,7 +24,6 @@ export class BidpanelComponent implements OnInit {
 
   bids: number[] = [];
   bidsComplete = false;
-  totalTricks: number;
   totalBid: number;
   turnIndex: number;
   minBid = 0;
@@ -43,8 +43,6 @@ export class BidpanelComponent implements OnInit {
     this.me = this.users[0];
     const dealerIndex = this.users.findIndex(u => u && u.id === this.dealerId);
 
-    // iterate through circular array
-    // for (let i = (dealerIndex + 1) % this.users.length; i === dealerIndex; i = (i + 1) % this.users.length) {
     let i = dealerIndex;
     do {
       i = (i + 1) % this.users.length;
@@ -63,6 +61,10 @@ export class BidpanelComponent implements OnInit {
 
       this.bidModes = ['respond', 'bid', 'bid'];
     }
+    if (this.gameType === 'Oh Hell') {
+      this.minBid = 0;
+      this.maxBid = this.totalTricks;
+    }
   }
 
   setupListeners() {
@@ -72,19 +74,16 @@ export class BidpanelComponent implements OnInit {
       .subscribe((bidData) => {
         const index = this.players.findIndex(p => p.id === bidData.userId);
         this.bids[index] = bidData.bidInfo.bid;
-        this.totalTricks = bidData.bidInfo.totalTricks;
         this.totalBid = bidData.bidInfo.totalBid;
-        this.turnIndex = bidData.bidInfo.nextBidder;
+        this.turnIndex =  this.players.findIndex(p => p.id === bidData.bidInfo.activePlayer);
         if (bidData.bidInfo.maxBid !== undefined) {
           this.maxBid = bidData.bidInfo.maxBid;
         }
         if (bidData.bidInfo.minBid !== undefined) {
           this.minBid = bidData.bidInfo.minBid;
         }
-        if (bidData.bidInfo.nextBidder !== undefined) {
-          this.bidModes[this.turnIndex] = bidData.bidInfo.mode;
-        }
         if (this.gameType === 'Skat') {
+          this.bidModes[this.turnIndex] = bidData.bidInfo.mode;
           if (bidData.bidInfo.mode === 'respond') {
             this.bidFormControls[this.turnIndex].setValue(bidData.bidInfo.bid);
           } else if (bidData.bidInfo.mode === 'bid') {
@@ -95,14 +94,11 @@ export class BidpanelComponent implements OnInit {
             this.bidFormControls[this.turnIndex].setValue(nextBid);
           }
         }
-        // TODO: this might break skat - implement a listener
-        if (this.turnIndex === this.players.length) {
-          this.bidsComplete = true;
-        }
       });
 
       this.socketService.onAction<any>('biddingComplete')
         .subscribe((bidData) => {
+          this.turnIndex = -1;
           this.bidsComplete = true;
         });
   }

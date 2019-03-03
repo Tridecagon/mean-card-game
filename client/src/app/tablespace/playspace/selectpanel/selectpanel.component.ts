@@ -1,6 +1,8 @@
+import { TurnpanelComponent } from './../turnpanel/turnpanel.component';
 import { Component, OnInit, Input } from '@angular/core';
-import { SkatGameSelection, SkatGameType } from '../../../../../../shared/model';
+import { SkatGameSelection, SkatGameType } from '../../../../../../shared/model/skat';
 import { SocketService } from 'app/shared/services/socket.service';
+import { Suit } from '../../../../../../shared/model';
 
 @Component({
   selector: 'mcg-selectpanel',
@@ -28,7 +30,31 @@ export class SelectpanelComponent implements OnInit {
   }
 
   selectSkatGame(choice: string) {
-    this.myGame.selection = SkatGameType[choice];
+    switch (choice) {
+      case 'Club':
+      case 'Spade':
+      case 'Heart':
+      case 'Diamond':
+        this.myGame.selection = SkatGameType.Solo;
+        this.myGame.suit = Suit[choice];
+        break;
+      case 'Grand':
+      case 'GrandOvert':
+      case 'Guetz':
+      case 'Ramsch':
+        this.myGame.selection = SkatGameType[choice];
+        this.myGame.suit = Suit.Jack;
+        break;
+      case 'Null':
+      case 'NullOvert':
+        this.myGame.selection = SkatGameType[choice];
+        this.myGame.suit = Suit.Null;
+        break;
+      default: // turn
+        this.myGame.selection = SkatGameType[choice];
+        this.myGame.suit = undefined;
+        break;
+    }
     if (!this.canDeclare()) {
       this.myGame.declarations.schneider = this.myGame.declarations.schwarz = false;
     }
@@ -46,11 +72,14 @@ export class SelectpanelComponent implements OnInit {
   }
 
   getColor(buttonName: string): string {
-    return (this.myGame && (buttonName === SkatGameType[this.myGame.selection])) ? 'accent' : 'primary';
+    return (this.myGame &&
+              (buttonName === SkatGameType[this.myGame.selection]
+              || (this.myGame.selection === SkatGameType.Solo && Suit[buttonName] === this.myGame.suit) ))
+               ? 'accent' : 'primary';
   }
 
   canDeclare(): boolean {
-    return ['Clubs', 'Spades', 'Hearts', 'Diamonds', 'Grand', 'None']
+    return ['Solo', 'Grand', 'None']
     .some(t => t === SkatGameType[this.myGame.selection]);
   }
 
