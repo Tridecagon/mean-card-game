@@ -18,7 +18,7 @@ export class EuchreMatch extends Match {
         return deck;
     }
 
-    public GetHand(players: Player[], tableChan: SocketIO.Namespace): Hand {
-        return new EuchreHand(players, this.deck, tableChan);
+    public GetHand(): Hand {
+        return new EuchreHand(this.players, this.deck, this.tableChannel);
     }
 }

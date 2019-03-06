@@ -11,8 +11,8 @@ export class SkatMatch extends Match {
         super();
     }
 
-    public GetHand(players: Player[], tableChan: SocketIO.Namespace): Hand {
-        return new SkatHand(players, this.deck, tableChan);
+    public GetHand(): Hand {
+        return new SkatHand(this.players, this.deck, this.tableChannel);
     }
 
     public GetDeck(): any {

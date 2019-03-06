@@ -11,8 +11,8 @@ export class OhHellMatch extends Match {
         super();
     }
 
-    public GetHand(players: Player[], tableChan: SocketIO.Namespace): Hand {
-        return new OhHellHand(players, this.deck, tableChan);
+    public GetHand(): Hand {
+        return new OhHellHand(this.players, this.deck, this.tableChannel);
     }
 
     public GetHandParams(): any {
