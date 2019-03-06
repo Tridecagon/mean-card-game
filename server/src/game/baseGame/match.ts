@@ -25,6 +25,7 @@ export class Match {
                 id: player.user.id,
                 points: 0,
             };
+            this.tableChannel.emit("updateScores", this.matchResults);
         }
 
         this.deck = this.GetDeck();
