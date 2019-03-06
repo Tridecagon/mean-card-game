@@ -1,4 +1,4 @@
-import { Card, Score, SkatUtil, Suit } from "../../../../shared/model";
+import { Card, SkatUtil, Suit } from "../../../../shared/model";
 import {SkatGameSelection, SkatGameType } from "../../../../shared/model/skat";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";

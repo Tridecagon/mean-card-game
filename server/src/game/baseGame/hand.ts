@@ -1,6 +1,4 @@
-
-import * as socketIo from "socket.io";
-import { Card, GameType, Score, Suit } from "../../../../shared/model";
+import { Card, Score, Suit } from "../../../../shared/model";
 import {Player} from "../../model";
 import {State} from "./state";
 

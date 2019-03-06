@@ -1,5 +1,5 @@
 
-import { Card, GameType, Score } from "../../../../shared/model";
+import { Score } from "../../../../shared/model";
 import {Player} from "../../model";
 import { Hand } from "./hand";
 
