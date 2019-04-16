@@ -1,31 +1,19 @@
 <div *ngIf="player" class="hand-wrapper" [style.transform]="getHandTransform()" [style.z-index]="zIndex">
-    <div *ngFor="let card of hand; let i = index"
-      class="player-card" 
-      [style.left.%]="computeLeft(card, i)" 
-      [style.top.%]="card.isSelected ? 70 : 80"
-      [style.zIndex] = "-1"
-      (click)="onClick(card, i)"
-      [@dealCard]
-      (@dealCard.done)="card.flip()"
-      [@flipCard]="card.face">
-      <img  src="./assets/img/deck/{{card.imageSrc}}" 
-            style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
-      <img  src="./assets/img/deck/back.png" 
-            style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
-    </div>
-    <div *ngIf="playedCard" class="player-card"
-        [style.left.%]="location === 'left' || location === 'right' ? 41.5 : 42.5"
-        [style.top.%]="location === 'left' || location === 'right' ? 1 : 37"
-        [@playCard]="{value: ':enter', params: {leftStart: playedCard.leftPos}}"
-        [@flipCard]="playedCard.face">
-        <img  src="./assets/img/deck/{{playedCard.imageSrc}}" 
-          style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
-        <img  src="./assets/img/deck/back.png" 
-          style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
-    </div>
-    <div class="nameplate" [style.transform]="getNameplateTransform()" [style.background-color]="getColor()" [style.zIndex]="5">
-      <div *ngIf="hold" style="position: absolute; left: 0; padding: 2pt; font-weight: bold">H</div>
-      <div *ngIf="bid >= 0" style="position: absolute; right: 0;">{{tricksTaken}} / {{bid}} </div>
-      <p style="display: inline-block;">{{player.name}}</p>   
-    </div>
+  <mcg-cardrow [cards]="hand" (onClick)="onClick($event)"></mcg-cardrow>
+  <div *ngIf="playedCard" class="player-card" 
+    [style.left.%]="location === 'left' || location === 'right' ? 41.5 : 42.5"
+    [style.top.%]="location === 'left' || location === 'right' ? 1 : 37"
+    [@playCard]="{value: ':enter', params: {leftStart: playedCard.leftPos}}" 
+    [@flipCard]="playedCard.face">
+    <img src="./assets/img/deck/{{playedCard.imageSrc}}"
+      style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden;">
+    <img src="./assets/img/deck/back.png"
+      style="position:absolute; height: 100%; top: 0; width: 100%; left: 0; backface-visibility: hidden; transform: rotateY(180deg)">
   </div>
+  <div class="nameplate" [style.transform]="getNameplateTransform()" [style.background-color]="getColor()"
+    [style.zIndex]="5">
+    <div *ngIf="hold" style="position: absolute; left: 0; padding: 2pt; font-weight: bold">H</div>
+    <div *ngIf="bid >= 0" style="position: absolute; right: 0;">{{tricksTaken}} / {{bid}} </div>
+    <p style="display: inline-block;">{{player.name}}</p>
+  </div>
+</div>

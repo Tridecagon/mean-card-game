@@ -2,14 +2,7 @@
   <mat-card-title>Result
   </mat-card-title>
     <mat-card-content *ngIf="uiCard">
-      <mat-grid-list cols="1" rowHeight="187.5px">
-        <mat-grid-tile style="perspective: 800px">
-              <div class="player-card" [@flipCard]="uiCard.face">
-                <img [src]="getCardFace()">
-                <img  src="./assets/img/deck/back.png" [style.transform]="'rotateY(180deg)'">
-              </div>
-        </mat-grid-tile>
-      </mat-grid-list>
+      <mcg-hand></mcg-hand>
     </mat-card-content>
     <mat-card-content>Score: {{score}}
     </mat-card-content>
