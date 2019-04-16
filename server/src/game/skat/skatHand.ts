@@ -303,9 +303,14 @@ export class SkatHand extends Hand {
             case SkatGameType.GrandOvert:
                 this.players[this.winningBidder].trickPile.push(...this.skat);
                 this.skat = [];
+                const scorePoints = this.EvaluateStandardGame(baseValue);
                 this.scores.push({
                     id: this.players[this.winningBidder].user.id,
-                    points: this.EvaluateStandardGame(baseValue),
+                    points: scorePoints,
+                });
+                this.tableChan.emit("skatGameResult", {
+                    cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
+                    score: scorePoints,
                 });
                 break;
             case SkatGameType.Ramsch:
