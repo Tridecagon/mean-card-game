@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UiCard } from 'app/shared/model/uiCard';
 import { Card, User } from 'app/../../../shared/model';
 import { trigger, style, state, transition, animate } from '@angular/animations';

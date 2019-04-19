@@ -22,6 +22,7 @@ export class PlayspaceComponent implements OnInit {
   doingTurn: boolean;
   discarding: boolean;
   showingGame: boolean;
+  showingResult: boolean;
   playing: boolean;
   winningBidder: string;
   winningBid: number;
@@ -29,6 +30,8 @@ export class PlayspaceComponent implements OnInit {
   gameType: string;
   turnCards: Card[] = [];
   totalTricks: number;
+  gameResult: any;
+  readyForNextHand: boolean;
 
   numPlayers = 0;
   userIndex = -1;
@@ -48,6 +51,7 @@ export class PlayspaceComponent implements OnInit {
   constructor(private socketService: SocketService) {
     this.zIndexes = new Array<number>(4);
     this.zIndexes.fill(this.currentZIndex);
+    this.readyForNextHand = true;
   }
 
   ngOnInit() {
@@ -118,13 +122,18 @@ export class PlayspaceComponent implements OnInit {
     });
 
     this.socketService.onAction<any>('startBidding')
-      .subscribe((info) => {
+      .subscribe(async (info) => {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
+
+        while(!this.readyForNextHand) {
+          await new Promise(res => setTimeout(res, 500));
+        }
 
         this.gameType = info.gameType;
         this.bidding = true;
         this.playing = false;
+        this.showingResult = false;
 
 
         this.currentZIndex = 5;
@@ -184,12 +193,23 @@ export class PlayspaceComponent implements OnInit {
         }
 
       });
+
+      this.socketService.onAction<any>('skatGameResult')
+        .subscribe((result) => {
+          this.readyForNextHand = false;
+          this.showingResult = true;
+          this.gameResult = result;
+        });
   }
   sendDiscards() {
     const handComponent = this.hands.find((h) => h.location === 'bottom');
     if (handComponent.selectedCards.length === 2) {
       this.socketService.sendAction('discardSkat', handComponent.selectedCards.map((c) => c.card));
     }
+  }
+
+  onGameResultOk() {
+    this.readyForNextHand = true;
   }
 
 }

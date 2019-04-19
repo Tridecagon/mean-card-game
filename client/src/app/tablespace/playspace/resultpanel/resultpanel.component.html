@@ -1,12 +1,12 @@
 <mat-card>
   <mat-card-title>Result
   </mat-card-title>
-    <mat-card-content *ngIf="uiCard">
-      <mcg-hand></mcg-hand>
+    <mat-card-content>
+      <mcg-cardrow [cards]="cards" (onClick)="onClick($event)"></mcg-cardrow> 
     </mat-card-content>
     <mat-card-content>Score: {{score}}
     </mat-card-content>
   <mat-card-footer>
-      Total bid: {{winningBid}}
+     <button mat-button  type="button" (click)="clickHandler()" >OK</button>
   </mat-card-footer>
 </mat-card>
