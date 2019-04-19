@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Card } from '../../../../../../shared/model';
 import { UiCard } from 'app/shared/model';
+import { NgOnChangesFeature } from '@angular/core/src/render3';
 
 @Component({
   selector: 'mcg-resultpanel',
@@ -22,9 +23,17 @@ export class ResultpanelComponent implements OnInit {
   }
 
   ngOnChanges() {
-    this.result.cards.forEach(card => {
-      this.uiCards.push(new UiCard(card, "up"));
-    });
+
+    if(this.result) {
+      console.log("Showing game result", this.result);
+      this.uiCards = [];
+      this.result.cards.forEach(card => {
+        this.uiCards.push(new UiCard(card, "up"));
+      });
+    } else {
+      console.log("Game result not populated");
+    }
+
   }
 
   clickHandler() {
