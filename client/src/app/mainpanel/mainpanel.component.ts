@@ -41,7 +41,7 @@ export class MainpanelComponent implements OnInit {
     }
   };
 
-  @ViewChild(ChatComponent) chatChild: ChatComponent;
+  @ViewChild(ChatComponent, {static: false}) chatChild: ChatComponent;
 
   constructor(private socketService: SocketService,
     public dialog: MatDialog) { }
