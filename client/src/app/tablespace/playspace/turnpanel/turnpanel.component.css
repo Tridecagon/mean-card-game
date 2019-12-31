@@ -9,6 +9,7 @@ mat-card {
     height: 187.5px;
     position: absolute;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
 }
 img {
     position:absolute;
@@ -16,4 +17,6 @@ img {
     left: 0;
     height: 100%;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    opacity: .99;
 }

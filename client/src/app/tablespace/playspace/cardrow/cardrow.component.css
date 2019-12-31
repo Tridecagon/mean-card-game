@@ -3,5 +3,6 @@
     height: 40%;
     width: 18%;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
     pointer-events: auto;
 }
