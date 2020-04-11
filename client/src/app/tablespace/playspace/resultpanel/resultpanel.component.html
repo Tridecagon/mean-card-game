@@ -2,9 +2,9 @@
   <mat-card-title>Result
   </mat-card-title>
     <mat-card-content>
-      <mcg-cardrow [cards]="uiCards" (onClick)="onClick($event)"></mcg-cardrow> 
+      <mcg-cardrow [cards]="uiCards"></mcg-cardrow> 
     </mat-card-content>
-    <mat-card-content>Score: {{score}}
+    <mat-card-content>Score: {{result.score}}
     </mat-card-content>
   <mat-card-footer>
      <button mat-button  type="button" (click)="clickHandler()" >OK</button>

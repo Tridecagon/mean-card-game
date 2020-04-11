@@ -312,7 +312,7 @@ export class SkatHand extends Hand {
                     cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
                     score: scorePoints,
                 });
-                await new Promise (res => setTimeout(res, 3000)); // let score show
+                await new Promise ((res) => setTimeout(res, 3000)); // let score show
                 break;
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);

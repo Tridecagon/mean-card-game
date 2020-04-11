@@ -126,7 +126,7 @@ export class PlayspaceComponent implements OnInit {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
 
-        while(!this.readyForNextHand) {
+        while (!this.readyForNextHand) {
           await new Promise(res => setTimeout(res, 500));
         }
 
@@ -196,9 +196,9 @@ export class PlayspaceComponent implements OnInit {
 
       this.socketService.onAction<any>('skatGameResult')
         .subscribe((result) => {
+          this.gameResult = result;
           this.readyForNextHand = false;
           this.showingResult = true;
-          this.gameResult = result;
         });
   }
   sendDiscards() {

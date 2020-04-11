@@ -8,5 +8,5 @@
 <mcg-discardpanel *ngIf="discarding" (onDiscard)="sendDiscards()"></mcg-discardpanel>
 <mcg-showgamepanel *ngIf="showingGame" [selectedGame]="selectedGame" [bidder]="winningBidder" [winningBid]="winningBid"></mcg-showgamepanel>
 <mcg-showgamecompact *ngIf="playing" [selectedGame]="selectedGame" [bidder]="winningBidder" [winningBid]="winningBid"></mcg-showgamecompact>
-<mcg-resultpanel *ngIf="showingResult" [result]="gameResult" (onOk)="onGameResultOk"></mcg-resultpanel>
+<mcg-resultpanel *ngIf="showingResult" [result]="gameResult" (onOk)="onGameResultOk()"></mcg-resultpanel>
 <mcg-selectsortcontrol></mcg-selectsortcontrol>
