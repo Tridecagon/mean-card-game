@@ -303,12 +303,14 @@ export class SkatHand extends Hand {
             case SkatGameType.GrandOvert:
                 this.players[this.winningBidder].trickPile.push(...this.skat);
                 this.skat = [];
-                const scorePoints = this.EvaluateStandardGame(baseValue);
+                const cardPoints = this.countCardPoints(this.players[this.winningBidder].trickPile);
+                const scorePoints = this.EvaluateStandardGame(baseValue, cardPoints);
                 this.scores.push({
                     id: this.players[this.winningBidder].user.id,
                     points: scorePoints,
                 });
                 this.tableChan.emit("skatGameResult", {
+                    cardPoints,
                     cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
                     score: scorePoints,
                 });
@@ -349,9 +351,8 @@ export class SkatHand extends Hand {
         }
     }
 
-    private EvaluateStandardGame(baseValue: number): number {
+    private EvaluateStandardGame(baseValue: number, cardPoints: number): number {
         let wonGame: boolean;
-        const cardPoints = this.countCardPoints(this.players[this.winningBidder].trickPile);
         if (this.selectedGame.declarations.schwarz) {
             wonGame = this.players[this.winningBidder].trickPile.length === 32;
         } else if (this.selectedGame.declarations.schneider) {
