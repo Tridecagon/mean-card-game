@@ -9,7 +9,7 @@ import { UiCard } from 'app/shared/model';
 })
 export class ResultpanelComponent implements OnInit, OnChanges {
 
-  @Input() result: {cards: Card[], score: number};
+  @Input() result: {cards: Card[], score: number, cardPoints: number};
   @Output() onOk = new EventEmitter();
 
   uiCards: UiCard[];
