@@ -286,7 +286,7 @@ export class SkatHand extends Hand {
         });
     }
 
-    public ScoreHand() {
+    public async ScoreHand() {
         const baseValue = this.GetBaseValue();
         switch (this.selectedGame.selection) {
             case SkatGameType.Null:
@@ -303,15 +303,18 @@ export class SkatHand extends Hand {
             case SkatGameType.GrandOvert:
                 this.players[this.winningBidder].trickPile.push(...this.skat);
                 this.skat = [];
-                const scorePoints = this.EvaluateStandardGame(baseValue);
+                const cardPoints = this.countCardPoints(this.players[this.winningBidder].trickPile);
+                const scorePoints = this.EvaluateStandardGame(baseValue, cardPoints);
                 this.scores.push({
                     id: this.players[this.winningBidder].user.id,
                     points: scorePoints,
                 });
                 this.tableChan.emit("skatGameResult", {
+                    cardPoints,
                     cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
                     score: scorePoints,
                 });
+                await new Promise ((res) => setTimeout(res, 3000)); // let score show
                 break;
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);
@@ -348,9 +351,8 @@ export class SkatHand extends Hand {
         }
     }
 
-    private EvaluateStandardGame(baseValue: number): number {
+    private EvaluateStandardGame(baseValue: number, cardPoints: number): number {
         let wonGame: boolean;
-        const cardPoints = this.countCardPoints(this.players[this.winningBidder].trickPile);
         if (this.selectedGame.declarations.schwarz) {
             wonGame = this.players[this.winningBidder].trickPile.length === 32;
         } else if (this.selectedGame.declarations.schneider) {
@@ -398,7 +400,7 @@ export class SkatHand extends Hand {
             case SkatGameType.GrandOvert:
                 return 24;
             case SkatGameType.Solo:
-                switch (this.selectedGame.suit) {
+                switch (this.trumpSuit) {
                     case Suit.Club:
                         return 12;
                     case Suit.Spade:
@@ -409,7 +411,7 @@ export class SkatHand extends Hand {
                         return 9;
                 }
             case SkatGameType.Turn:
-                switch (this.selectedGame.suit) {
+                switch (this.trumpSuit) {
                     case Suit.Jack:
                         return 12;
                     case Suit.Club:
@@ -431,7 +433,7 @@ export class SkatHand extends Hand {
             {suit: "Heart", description: "Jack", sort: 0},
             {suit: "Diamond", description: "Jack", sort: 0},
         ];
-        const trumpSuit = Suit[this.selectedGame.suit];
+        const trumpSuit = Suit[this.trumpSuit];
         if (trumpSuit in [Suit.Club, Suit.Spade, Suit.Heart, Suit.Diamond]) {
             sequence.push(...[
                 {suit: trumpSuit, description: "Ace", sort: 0},

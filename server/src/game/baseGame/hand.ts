@@ -186,7 +186,7 @@ export class Hand {
             await this.Sleep(1000);
         }
         await this.Sleep(500);
-        return this.ScoreHand();
+        return await this.ScoreHand();
     }
 
     public ScoreHand() {
