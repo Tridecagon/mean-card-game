@@ -399,7 +399,7 @@ export class SkatHand extends Hand {
             case SkatGameType.GrandOvert:
                 return 24;
             case SkatGameType.Solo:
-                switch (this.selectedGame.suit) {
+                switch (this.trumpSuit) {
                     case Suit.Club:
                         return 12;
                     case Suit.Spade:
@@ -410,7 +410,7 @@ export class SkatHand extends Hand {
                         return 9;
                 }
             case SkatGameType.Turn:
-                switch (this.selectedGame.suit) {
+                switch (this.trumpSuit) {
                     case Suit.Jack:
                         return 12;
                     case Suit.Club:
@@ -432,7 +432,7 @@ export class SkatHand extends Hand {
             {suit: "Heart", description: "Jack", sort: 0},
             {suit: "Diamond", description: "Jack", sort: 0},
         ];
-        const trumpSuit = Suit[this.selectedGame.suit];
+        const trumpSuit = Suit[this.trumpSuit];
         if (trumpSuit in [Suit.Club, Suit.Spade, Suit.Heart, Suit.Diamond]) {
             sequence.push(...[
                 {suit: trumpSuit, description: "Ace", sort: 0},
