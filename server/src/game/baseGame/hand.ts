@@ -1,6 +1,4 @@
-
-import * as socketIo from "socket.io";
-import { Card, GameType, Score, Suit } from "../../../../shared/model";
+import { Card, Score, Suit } from "../../../../shared/model";
 import {Player} from "../../model";
 import {State} from "./state";
 
@@ -188,7 +186,7 @@ export class Hand {
             await this.Sleep(1000);
         }
         await this.Sleep(500);
-        return this.ScoreHand();
+        return await this.ScoreHand();
     }
 
     public ScoreHand() {

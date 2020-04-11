@@ -1,5 +1,4 @@
-import { Card, GameType } from "../../../../shared/model";
-import {Player} from "../../model";
+import { Card } from "../../../../shared/model";
 import { Hand } from "../baseGame/hand";
 import { Match } from "../baseGame/match";
 import { EuchreHand } from "./euchreHand";
@@ -18,7 +17,7 @@ export class EuchreMatch extends Match {
         return deck;
     }
 
-    public GetHand(players: Player[], tableChan: SocketIO.Namespace): Hand {
-        return new EuchreHand(players, this.deck, tableChan);
+    public GetHand(): Hand {
+        return new EuchreHand(this.players, this.deck, this.tableChannel);
     }
 }

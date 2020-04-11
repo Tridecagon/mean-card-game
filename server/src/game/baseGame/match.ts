@@ -1,5 +1,5 @@
 
-import { Card, GameType, Score } from "../../../../shared/model";
+import { Score } from "../../../../shared/model";
 import {Player} from "../../model";
 import { Hand } from "./hand";
 
@@ -9,7 +9,7 @@ export class Match {
     protected shuffler: any;
     protected dealerIndex: number;
     protected players: Player[] = [];
-
+    protected tableChannel: SocketIO.Namespace;
     protected matchResults: Score[] = [];
     protected hand: Hand;
 
@@ -19,15 +19,17 @@ export class Match {
 
     public async beginMatch(players: Player[], tableChan: SocketIO.Namespace) {
         this.players = players;
+        this.tableChannel = tableChan;
         for (const player of this.players) {
             this.matchResults[player.index] = {
                 id: player.user.id,
                 points: 0,
             };
+            this.tableChannel.emit("updateScores", this.matchResults);
         }
 
         this.deck = this.GetDeck();
-        this.hand = this.GetHand(players, tableChan);
+        this.hand = this.GetHand();
         this.dealerIndex = this.PickRandomPlayer();
 
         while (!this.MatchComplete()) {
@@ -65,8 +67,8 @@ export class Match {
         return false;
     }
 
-    public GetHand(players: Player[], tableChan: SocketIO.Namespace): Hand {
-        return new Hand(players, this.deck, tableChan);
+    public GetHand(): Hand {
+        return new Hand(this.players, this.deck, this.tableChannel);
     }
 
 }

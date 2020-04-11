@@ -1,0 +1,12 @@
+<mat-card>
+  <mat-card-title>Score: {{result.score}}
+  </mat-card-title>
+    <mat-card-content>
+      <mcg-cardrow [cards]="uiCards"></mcg-cardrow> 
+    </mat-card-content>
+    <mat-card-content>Result: {{result.cardPoints}}
+    </mat-card-content>
+  <mat-card-footer>
+     <button mat-button  type="button" (click)="clickHandler()" >OK</button>
+  </mat-card-footer>
+</mat-card>
