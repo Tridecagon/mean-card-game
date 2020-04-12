@@ -26,9 +26,10 @@ export class ResultpanelComponent implements OnInit, OnChanges {
     if (this.result) {
       console.log('Showing game result', this.result);
       this.uiCards = [];
-      this.result.cards.forEach(card => {
-        this.uiCards.push(new UiCard(card, 'up'));
-      });
+      for (const card of this.result.cards || []) {
+        this.uiCards.push(new UiCard(card, 'down'));
+        // why is this backwards?
+      }
     } else {
       console.log('Game result not populated');
     }

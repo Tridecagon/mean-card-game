@@ -368,7 +368,7 @@ export class SkatHand extends Hand {
                     }
                 }
                 this.tableChan.emit("skatGameResult", {
-                    cardPoints,
+                    cardPoints: winners[0],
                     score: this.scores[0].points,
                     winner: winnerName,
                 });
