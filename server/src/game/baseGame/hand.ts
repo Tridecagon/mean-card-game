@@ -4,6 +4,8 @@ import {State} from "./state";
 
 export class Hand {
 
+    protected inactivePlayer: number;
+    protected activePlayers: Player[];
     protected numCards: number;
     protected currentPlayer = -1;
     protected trickLeader = -1;
@@ -32,6 +34,8 @@ export class Hand {
         this.dealerIndex = dealerIndex;
         this.params = params;
 
+        this.SetInactivePlayer();
+        this.activePlayers = this.players.filter((p, index) => index !== this.inactivePlayer);
         this.CollectCards();
         this.deck.shuffle();
         this.DealHands();
@@ -52,6 +56,11 @@ export class Hand {
         }
     }
 
+    public SetInactivePlayer() {
+        // no inactives by default
+        this.inactivePlayer = -1;
+    }
+
     public CollectCards() {
         for (const player of this.players) {
             this.ReturnToDeck(player.heldCards);
@@ -66,12 +75,10 @@ export class Hand {
     }
 
     public DealHands() {
-        for (const player of this.players) {
+        for (const player of this.activePlayers) {
             console.log(`Dealing hand to player ${player.user.name} socket ${player.socket.id}`);
             const newHand = this.deck.draw(this.numCards);
             for (const card of newHand) {
-                // TODO: add effective rank from GetSort here. Probably 'rank' is actual card and 'sort' is GetSort
-                // second thought: check if we're using Description for rank, then just pass GetSort in card.sort
                 player.heldCards.push({suit: card.suit, description: card.description, sort: card.sort});
             }
 
@@ -191,30 +198,33 @@ export class Hand {
 
     public ScoreHand() {
         this.scores = [];
-        for (const player of this.players) {
+        for (const player of this.activePlayers) {
             this.scores[player.index] = {
                 id: player.user.id,
-                points: (player.trickPile.length / this.players.length),
+                points: (player.trickPile.length / this.activePlayers.length),
             };
         }
     }
 
     public IsHandComplete(): boolean {
-        return this.players[0].heldCards.length === 0 && this.currentTrick.length === 0;
+        return this.activePlayers[0].heldCards.length === 0 && this.currentTrick.length === 0;
     }
 
     public async EvaluateTrick() {
         let currentWinner = this.trickLeader;
         for (let i = 0; i < this.currentTrick.length; i++) {
             // returns true if follower beats leader
-            if (this.Beats(this.currentTrick[i], this.currentTrick[currentWinner])) {
+            if (this.currentTrick[i] && this.Beats(this.currentTrick[i], this.currentTrick[currentWinner])) {
                 currentWinner = i;
             }
         }
         await this.Sleep(1000);
 
         while (this.currentTrick.length > 0) {
-            this.players[currentWinner].trickPile.push(this.currentTrick.pop());
+            const card = this.currentTrick.pop();
+            if (card) {
+                this.players[currentWinner].trickPile.push(card);
+            }
         }
 
         this.trickLeader = this.currentPlayer = currentWinner;
@@ -261,7 +271,9 @@ export class Hand {
                     && playCard && this.PlayIsLegal(playCard) && !this.currentTrick[this.currentPlayer]) {
                     this.currentTrick[this.currentPlayer]
                         = player.heldCards.splice(player.heldCards.indexOf(playCard), 1)[0];
-                    this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+                    do {
+                        this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
+                    } while (this.currentPlayer === this.inactivePlayer);
                     this.tableChan.emit("playResponse", {
                         activePlayer:
                             this.currentPlayer === this.trickLeader ? -1 : this.players[this.currentPlayer].user.id,

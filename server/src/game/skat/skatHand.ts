@@ -115,6 +115,14 @@ export class SkatHand extends Hand {
         }
     }
 
+    public SetInactivePlayer() {
+        if (this.players.length === 3) {
+            this.inactivePlayer = -1;
+        } else {
+            this.inactivePlayer = this.dealerIndex;
+        }
+    }
+
     public DealHands() {
         this.skat = this.deck.draw(2);
         this.numCards = 10;
@@ -318,8 +326,9 @@ export class SkatHand extends Hand {
                 break;
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);
-                const pointScores = this.players.map((p) => this.countCardPoints(p.trickPile));
-                const minPoints = Math.min(...pointScores);
+                const pointScores = this.players.map((p, index) =>
+                    index === this.inactivePlayer ? -1 : this.countCardPoints(p.trickPile));
+                const minPoints = Math.min(...pointScores.filter((s) => s >= 0));
                 const winners = pointScores.filter((s) => s === minPoints);
                 if (winners.length === 1) {
                     const winner = pointScores.findIndex((s) => s === minPoints);
@@ -485,7 +494,7 @@ export class SkatHand extends Hand {
                 default:
                     return 0;
             }
-        }).reduce((a, b) => a + b);
+        }).reduce((a, b) => a + b, 0);
 
         console.log(`Counted ${points} points`);
         return points;
