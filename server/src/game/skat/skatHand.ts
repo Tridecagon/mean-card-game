@@ -330,6 +330,7 @@ export class SkatHand extends Hand {
                 break;
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);
+                this.skat = [];
                 const pointScores = this.players.map((p, index) =>
                     index === this.inactivePlayer ? -1 : this.countCardPoints(p.trickPile));
                 const minPoints = Math.min(...pointScores.filter((s) => s >= 0));
