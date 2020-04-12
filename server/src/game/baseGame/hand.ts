@@ -17,6 +17,7 @@ export class Hand {
     protected trumpSuit: Suit;
     protected defaultSortType: any;
     protected stateHandlers: Array<() => void> = []; // array of void functions
+    protected readyForNextHand: boolean[] = [];
 
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
@@ -189,11 +190,20 @@ export class Hand {
     }
 
     public async AwaitResultAsync() {
+        this.readyForNextHand = this.players.map(() => false);
         while (!this.IsHandComplete()) {
             await this.Sleep(1000);
         }
         await this.Sleep(500);
-        return await this.ScoreHand();
+        const score = this.ScoreHand();
+
+        // wait up to 10 seconds for all players to send ready
+        for (let i = 0; i < 10; i++) {
+            if (this.readyForNextHand.some((r)  => !r )) {
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            }
+        }
+        return score;
     }
 
     public ScoreHand() {
@@ -296,6 +306,10 @@ export class Hand {
                 } else if (this.currentPlayer !== player.index) {
                     console.log(`Bid rejected: it's ${this.players[this.currentPlayer].user.name}'s turn.`);
                 }
+            });
+
+            player.socket.on("readyForNextHand", () => {
+                this.readyForNextHand[player.index] = true;
             });
 
         }

@@ -126,10 +126,6 @@ export class PlayspaceComponent implements OnInit {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
 
-        while (!this.readyForNextHand) {
-          await new Promise(res => setTimeout(res, 500));
-        }
-
         this.gameType = info.gameType;
         this.bidding = true;
         this.playing = false;
@@ -209,7 +205,7 @@ export class PlayspaceComponent implements OnInit {
   }
 
   onGameResultOk() {
-    this.readyForNextHand = true;
+    this.socketService.sendAction('readyForNextHand', null);
   }
 
 }
