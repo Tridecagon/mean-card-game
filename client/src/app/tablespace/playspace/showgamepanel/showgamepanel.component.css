@@ -21,4 +21,5 @@ img {
     left: 0;
     height: 100%;
     backface-visibility: hidden;
+    opacity: .99;
 }

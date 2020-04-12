@@ -303,6 +303,11 @@ export class SkatHand extends Hand {
                     id: this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id,
                     points: this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue),
                 });
+                this.tableChan.emit("skatGameResult", {
+                    cardPoints: 0,
+                    cards: this.players[this.winningBidder].trickPile,
+                    score: this.scores[0].points,
+                });
                 break;
             case SkatGameType.Solo:
             case SkatGameType.Turn:
@@ -330,8 +335,10 @@ export class SkatHand extends Hand {
                     index === this.inactivePlayer ? -1 : this.countCardPoints(p.trickPile));
                 const minPoints = Math.min(...pointScores.filter((s) => s >= 0));
                 const winners = pointScores.filter((s) => s === minPoints);
+                let winnerName = "";
                 if (winners.length === 1) {
                     const winner = pointScores.findIndex((s) => s === minPoints);
+                    winnerName = this.players[winner].user.name;
                     this.scores.push({
                         id: this.players[winner].user.id,
                         points: this.players[winner].trickPile.length === 0 ? 20 : 10,
@@ -340,23 +347,33 @@ export class SkatHand extends Hand {
                     if (minPoints === 0) {
                         const loser = pointScores.findIndex((s) => s !== 0);
                         if (this.players[loser].trickPile.length === 32) {
+                            winnerName = this.players[loser].user.name;
                             this.scores.push({
                                 id: this.players[loser].user.id,
                                 points: -30,
                             });
-                            return;
                         }
-                    }
-                    // for now, just award 5 to both on ties since we're not tracking trick order
-                    for (let i = 0; i < this.players.length; i++) {
-                        if (pointScores[i] === minPoints) {
-                            this.scores.push({
-                                id: this.players[i].user.id,
-                                points: 5,
-                            });
+                    } else {
+                        // for now, just award 5 to both on ties since we're not tracking trick order
+                        const winnerNameList: string[] = [];
+                        for (let i = 0; i < this.players.length; i++) {
+                            if (pointScores[i] === minPoints) {
+                                this.scores.push({
+                                    id: this.players[i].user.id,
+                                    points: 5,
+                                });
+                                winnerNameList.push(this.players[i].user.name);
+                            }
                         }
+                        winnerName = winnerNameList.join(", ");
                     }
                 }
+                this.tableChan.emit("skatGameResult", {
+                    cardPoints,
+                    score: this.scores[0].points,
+                    winner: winnerName,
+                });
+                break;
         }
     }
 
