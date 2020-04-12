@@ -4,7 +4,7 @@
     <mat-card-content>
       <mat-grid-list [cols]="calculateCols()" rowHeight="220px">
         <mat-grid-tile
-            *ngFor="let player of players; let i = index"
+            *ngFor="let player of activePlayers; let i = index"
             colspan="1"
             rowspan="1">
             <mcg-bidcard [player]="player" [activeTurn]="i === turnIndex" [canBid]="canBid(player)" [myValue]="bids[i]" [myFormControl]="bidFormControls[i]" [minBid]="minBid" [maxBid]="maxBid" [bidMode]="bidModes[i]"></mcg-bidcard>
