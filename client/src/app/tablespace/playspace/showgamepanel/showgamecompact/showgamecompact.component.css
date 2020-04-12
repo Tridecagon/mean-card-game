@@ -3,6 +3,7 @@ mat-card {
     width: 40%;
     text-align: center;
     white-space: nowrap;
+    z-index: 11;
 }
 
 mat-card-content { justify-content: center; display: inline-block;}
