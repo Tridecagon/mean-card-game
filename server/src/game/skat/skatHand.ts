@@ -300,7 +300,7 @@ export class SkatHand extends Hand {
             case SkatGameType.Null:
             case SkatGameType.NullOvert:
                 this.scores.push({
-                    id: this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id,
+                    id: this.players[this.winningBidder].user.id,
                     points: this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue),
                 });
                 this.tableChan.emit("skatGameResult", {
