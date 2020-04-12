@@ -115,6 +115,14 @@ export class SkatHand extends Hand {
         }
     }
 
+    public SetInactivePlayer() {
+        if (this.players.length === 3) {
+            this.inactivePlayer = -1;
+        } else {
+            this.inactivePlayer = this.dealerIndex;
+        }
+    }
+
     public DealHands() {
         this.skat = this.deck.draw(2);
         this.numCards = 10;
@@ -286,14 +294,19 @@ export class SkatHand extends Hand {
         });
     }
 
-    public async ScoreHand() {
+    public ScoreHand() {
         const baseValue = this.GetBaseValue();
         switch (this.selectedGame.selection) {
             case SkatGameType.Null:
             case SkatGameType.NullOvert:
                 this.scores.push({
-                    id: this.scores[this.winningBidder].id = this.players[this.winningBidder].user.id,
+                    id: this.players[this.winningBidder].user.id,
                     points: this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue),
+                });
+                this.tableChan.emit("skatGameResult", {
+                    cardPoints: 0,
+                    cards: this.players[this.winningBidder].trickPile,
+                    score: this.scores[0].points,
                 });
                 break;
             case SkatGameType.Solo:
@@ -314,15 +327,18 @@ export class SkatHand extends Hand {
                     cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
                     score: scorePoints,
                 });
-                await new Promise ((res) => setTimeout(res, 3000)); // let score show
                 break;
             case SkatGameType.Ramsch:
                 this.players[this.currentPlayer].trickPile.push(...this.skat);
-                const pointScores = this.players.map((p) => this.countCardPoints(p.trickPile));
-                const minPoints = Math.min(...pointScores);
+                this.skat = [];
+                const pointScores = this.players.map((p, index) =>
+                    index === this.inactivePlayer ? -1 : this.countCardPoints(p.trickPile));
+                const minPoints = Math.min(...pointScores.filter((s) => s >= 0));
                 const winners = pointScores.filter((s) => s === minPoints);
+                let winnerName = "";
                 if (winners.length === 1) {
                     const winner = pointScores.findIndex((s) => s === minPoints);
+                    winnerName = this.players[winner].user.name;
                     this.scores.push({
                         id: this.players[winner].user.id,
                         points: this.players[winner].trickPile.length === 0 ? 20 : 10,
@@ -331,23 +347,33 @@ export class SkatHand extends Hand {
                     if (minPoints === 0) {
                         const loser = pointScores.findIndex((s) => s !== 0);
                         if (this.players[loser].trickPile.length === 32) {
+                            winnerName = this.players[loser].user.name;
                             this.scores.push({
                                 id: this.players[loser].user.id,
                                 points: -30,
                             });
-                            return;
                         }
-                    }
-                    // for now, just award 5 to both on ties since we're not tracking trick order
-                    for (let i = 0; i < this.players.length; i++) {
-                        if (pointScores[i] === minPoints) {
-                            this.scores.push({
-                                id: this.players[i].user.id,
-                                points: 5,
-                            });
+                    } else {
+                        // for now, just award 5 to both on ties since we're not tracking trick order
+                        const winnerNameList: string[] = [];
+                        for (let i = 0; i < this.players.length; i++) {
+                            if (pointScores[i] === minPoints) {
+                                this.scores.push({
+                                    id: this.players[i].user.id,
+                                    points: 5,
+                                });
+                                winnerNameList.push(this.players[i].user.name);
+                            }
                         }
+                        winnerName = winnerNameList.join(", ");
                     }
                 }
+                this.tableChan.emit("skatGameResult", {
+                    cardPoints: winners[0],
+                    score: this.scores[0].points,
+                    winner: winnerName,
+                });
+                break;
         }
     }
 
@@ -485,7 +511,7 @@ export class SkatHand extends Hand {
                 default:
                     return 0;
             }
-        }).reduce((a, b) => a + b);
+        }).reduce((a, b) => a + b, 0);
 
         console.log(`Counted ${points} points`);
         return points;

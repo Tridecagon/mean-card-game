@@ -67,7 +67,7 @@ export class OhHellHand extends Hand {
     }
 
     public async EvaluateTrick() {
-        if (this.currentTrick.some((c) => this.GetSuit(c) === this.trumpSuit)) {
+        if (this.currentTrick.some((c) => c && this.GetSuit(c) === this.trumpSuit)) {
             this.trumpsBroken = true;
         }
         super.EvaluateTrick();

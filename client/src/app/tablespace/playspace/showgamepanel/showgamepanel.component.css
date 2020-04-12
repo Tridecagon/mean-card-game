@@ -2,6 +2,7 @@ mat-card {
     margin: 5% auto;
     width: 60%;
     text-align: center;
+    z-index: 11;
 }
 
 mat-card-title { justify-content: center; }
@@ -20,4 +21,5 @@ img {
     left: 0;
     height: 100%;
     backface-visibility: hidden;
+    opacity: .99;
 }

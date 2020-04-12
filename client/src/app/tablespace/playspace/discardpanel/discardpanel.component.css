@@ -2,4 +2,5 @@ mat-card {
     margin: 10% auto;
     width: 50%;
     text-align: center;
+    z-index: 11;
 }

@@ -20,6 +20,7 @@ export class BidpanelComponent implements OnInit {
   trumpUiCard: UiCard;
   displayedColumns = ['col'];
   players: User[] = [];
+  activePlayers: User[] = [];
   me: User;
 
   bids: number[] = [];
@@ -48,7 +49,10 @@ export class BidpanelComponent implements OnInit {
       i = (i + 1) % this.users.length;
       if (this.users[i] && this.users[i].id) {
         this.players.push(this.users[i]);
-        this.bidFormControls.push(new FormControl(this.users[i].name, [this.validateBid.bind(this), this.checkBidTotal.bind(this)]));
+        if (i !== dealerIndex) {
+          this.activePlayers.push(this.users[i]);
+          this.bidFormControls.push(new FormControl(this.users[i].name, [this.validateBid.bind(this), this.checkBidTotal.bind(this)]));
+        }
       }
     } while (i !== dealerIndex);
 

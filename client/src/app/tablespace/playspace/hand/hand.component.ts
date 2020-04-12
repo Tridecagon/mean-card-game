@@ -54,7 +54,7 @@ export class HandComponent implements OnInit {
   }
 
   onClick(data: {card: UiCard, index: number}) {
-    console.log("Hand click handler");
+    console.log('Hand click handler');
     if (this.playing) {
       if (data.card.isSelected) {
         console.log('Attempting to play', data.card.card);
