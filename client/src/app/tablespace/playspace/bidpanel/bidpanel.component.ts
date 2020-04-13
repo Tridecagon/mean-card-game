@@ -49,7 +49,7 @@ export class BidpanelComponent implements OnInit {
       i = (i + 1) % this.users.length;
       if (this.users[i] && this.users[i].id) {
         this.players.push(this.users[i]);
-        if (this.users.length === 3 || i !== dealerIndex) {
+        if (this.users.filter((u) => !!u).length === 3 || i !== dealerIndex) {
           this.activePlayers.push(this.users[i]);
           this.bidFormControls.push(new FormControl(this.users[i].name, [this.validateBid.bind(this), this.checkBidTotal.bind(this)]));
         }
