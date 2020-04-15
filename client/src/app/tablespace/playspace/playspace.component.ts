@@ -23,6 +23,7 @@ export class PlayspaceComponent implements OnInit {
   discarding: boolean;
   showingGame: boolean;
   showingResult: boolean;
+  showingScoreboard: boolean;
   playing: boolean;
   winningBidder: string;
   winningBid: number;
@@ -206,6 +207,10 @@ export class PlayspaceComponent implements OnInit {
 
   onGameResultOk() {
     this.socketService.sendAction('readyForNextHand', null);
+  }
+
+  onScoreboardClick() {
+    this.showingScoreboard = !this.showingScoreboard;
   }
 
 }

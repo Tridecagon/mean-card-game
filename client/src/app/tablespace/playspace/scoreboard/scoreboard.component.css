@@ -1,0 +1,9 @@
+.scoreboard-container {
+    margin: 10%;
+    width: 80%;
+    height: 65%;
+    position: absolute;
+}
+.mat-card {
+    z-index: 25;
+}
