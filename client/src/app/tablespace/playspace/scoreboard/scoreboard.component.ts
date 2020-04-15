@@ -12,7 +12,8 @@ export class ScoreboardComponent implements OnInit {
   tableArray: Object[];
 
   constructor() {
-    this.scores = [[0, 5, 0], [-15, 0, 0], [0, 0, 10] ];
+    this.scores = [[0, 5, 0], [-15, 0, 0], [0, 0, 10],
+                [-5, 0, 0], [20, 0, 0], [0, 15, 0] ];
     this.players = ['last', 'second', 'first'];
    }
 
