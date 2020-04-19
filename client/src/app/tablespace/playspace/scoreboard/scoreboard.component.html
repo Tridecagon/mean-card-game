@@ -2,13 +2,13 @@
     <mat-card>
         <mat-card-title>Scores</mat-card-title>
         <mat-card-content>
-            <mat-table [dataSource]="tableArray">
-            <ng-container *ngFor="let column of players" [matColumnDef]="column">
-                <mat-header-cell *matHeaderCellDef>{{ column }}</mat-header-cell>
-                <mat-cell *matCellDef="let row">{{ row[column] }}</mat-cell>
+            <mat-table [dataSource]="scores">
+            <ng-container *ngFor="let column of columnIndex" [matColumnDef]="column">
+                <mat-header-cell *matHeaderCellDef>{{ playerNames[column] }}</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row[playerNames[column]] }}</mat-cell>
             </ng-container>
-            <mat-header-row *matHeaderRowDef="players"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: players;"></mat-row>
+            <mat-header-row *matHeaderRowDef="columnIndex"></mat-header-row>
+            <mat-row *matRowDef="let rowDef; columns: columnIndex;"></mat-row>
             </mat-table>
         </mat-card-content>
         <!---

@@ -6,7 +6,6 @@ import { MaterialModule } from '../shared/material/material.module';
 
 import { TablespaceComponent } from './tablespace.component';
 import { SocketService } from '../shared/services/socket.service';
-import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 import { HandComponent } from './playspace/hand/hand.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PlayspaceComponent } from './playspace/playspace.component';
@@ -33,7 +32,9 @@ import { ScoreboardComponent } from './playspace/scoreboard/scoreboard.component
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent, ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent, ScoreboardComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent,
+    BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent,
+    ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent, ScoreboardComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

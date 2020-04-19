@@ -2,11 +2,18 @@ import { SkatGameSelection, SkatGameType } from './../../../../../../shared/mode
 import { Component, OnInit, Input } from '@angular/core';
 import { Suit } from '../../../../../../shared/model';
 import { UiCard } from 'app/shared/model';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'mcg-showgamepanel',
   templateUrl: './showgamepanel.component.html',
-  styleUrls: ['./showgamepanel.component.css']
+  styleUrls: ['./showgamepanel.component.css'],
+  animations: [
+    trigger('flipCard', [
+      state('down', style({ transform: 'rotateY(180deg)' })),
+      transition('up <=> down', animate(300))
+    ])
+  ]
 })
 
 export class ShowgamepanelComponent implements OnInit {
