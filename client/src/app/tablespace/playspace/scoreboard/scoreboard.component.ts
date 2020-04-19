@@ -13,28 +13,24 @@ export class ScoreboardComponent implements OnInit {
   scores: Object[];
   // tableArray: Object[];
   // fixedArray: Object[];
-  playerNames = {round: 'Round', player0: 'Bob', player1: 'Mike', player2: 'Steve'};
+  playerNames = {round: 'Round'};
   columnIndex = ['round', 'player0', 'player1', 'player2', 'player3'];
+  displayedCols = [];
 
   @Input() players: User[];
 
   constructor(private socketService: SocketService) {
  /*   this.scores = [{round: {name: 'Round', points: 1}, player1: {name: 'Bob', points: 5}, player2: {name: 'Steve', points: 3}},
      {round: {name: `Round`, points: 2}, player0: {name: 'Tom', points: -10} }]; */
-     this.scores = [{Round: 0, Bob: 0, Mike: 0, Steve: 0}, {Round: 1, Mike: 2}];
+     this.scores = [{Round: 1, dave: 2}, {Round: 2, mike: 5, tom: 10}];
 
    }
 
   ngOnInit() {
-    /*
-      for (const i in this.players) {
-        if (this.players.hasOwnProperty(i)) {
-          this.playerNames[`player${i}`] = this.players[i].name;
-        }
-      }
-      this.playerNames['round'] = 'Round';
-
-      */
+     this.players.map((p, i) =>
+          this.playerNames[`player${i}`] = this.players[i].name
+        );
+      this.displayedCols = this.columnIndex.filter((c) => !!this.playerNames[c]);
     this.setupListeners();
 
     // this.dataSource = new MatTableDataSource<Object>(this.scores);

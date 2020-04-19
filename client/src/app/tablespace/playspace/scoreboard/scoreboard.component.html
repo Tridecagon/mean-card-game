@@ -7,8 +7,8 @@
                 <mat-header-cell *matHeaderCellDef>{{ playerNames[column] }}</mat-header-cell>
                 <mat-cell *matCellDef="let row">{{ row[playerNames[column]] }}</mat-cell>
             </ng-container>
-            <mat-header-row *matHeaderRowDef="columnIndex"></mat-header-row>
-            <mat-row *matRowDef="let rowDef; columns: columnIndex;"></mat-row>
+            <mat-header-row *matHeaderRowDef="displayedCols"></mat-header-row>
+            <mat-row *matRowDef="let rowDef; columns: displayedCols;"></mat-row>
             </mat-table>
         </mat-card-content>
         <!---
