@@ -12,3 +12,7 @@
         height: 25vh;
     overflow-y: auto;
 }
+
+.mat-footer-row {
+    font-weight: bold;
+  }

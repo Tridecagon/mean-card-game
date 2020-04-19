@@ -6,9 +6,11 @@
             <ng-container *ngFor="let column of columnIndex" [matColumnDef]="column">
                 <mat-header-cell *matHeaderCellDef>{{ playerNames[column] }}</mat-header-cell>
                 <mat-cell *matCellDef="let row">{{ row[playerNames[column]] }}</mat-cell>
+                <mat-footer-cell *matFooterCellDef>{{ getTotal(playerNames[column]) }}</mat-footer-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedCols"></mat-header-row>
             <mat-row *matRowDef="let rowDef; columns: displayedCols;"></mat-row>
+            <mat-footer-row *matFooterRowDef="displayedCols"></mat-footer-row>
             </mat-table>
         </mat-card-content>
         <!---

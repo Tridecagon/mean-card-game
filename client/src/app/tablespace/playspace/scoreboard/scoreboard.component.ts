@@ -22,7 +22,8 @@ export class ScoreboardComponent implements OnInit {
   constructor(private socketService: SocketService) {
  /*   this.scores = [{round: {name: 'Round', points: 1}, player1: {name: 'Bob', points: 5}, player2: {name: 'Steve', points: 3}},
      {round: {name: `Round`, points: 2}, player0: {name: 'Tom', points: -10} }]; */
-     this.scores = [{Round: 1, dave: 2}, {Round: 2, mike: 5, tom: 10}];
+     this.scores = [{Round: 1, dave: 2}, {Round: 2, mike: 5, tom: 10},
+    {Round: 3}, {Round: 4}, {Round: 5}, {Round: 6}, {Round: 7}];
 
    }
 
@@ -32,8 +33,6 @@ export class ScoreboardComponent implements OnInit {
         );
       this.displayedCols = this.columnIndex.filter((c) => !!this.playerNames[c]);
     this.setupListeners();
-
-    // this.dataSource = new MatTableDataSource<Object>(this.scores);
   }
 
   setupListeners() {
@@ -46,5 +45,10 @@ export class ScoreboardComponent implements OnInit {
 
     */
 
+  }
+
+  getTotal(playerName: string): number | string {
+    return playerName = 'Round' ? 'Total'
+    : this.scores.reduce((acc, cur) => acc + (cur[playerName] || 0), 0);
   }
 }
