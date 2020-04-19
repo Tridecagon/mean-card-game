@@ -48,7 +48,7 @@ export class ScoreboardComponent implements OnInit {
   }
 
   getTotal(playerName: string): number | string {
-    return playerName = 'Round' ? 'Total'
+    return playerName === 'Round' ? 'Total'
     : this.scores.reduce((acc, cur) => acc + (cur[playerName] || 0), 0);
   }
 }
