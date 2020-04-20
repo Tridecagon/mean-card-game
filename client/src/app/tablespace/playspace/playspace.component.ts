@@ -126,6 +126,7 @@ export class PlayspaceComponent implements OnInit {
       .subscribe(async (info) => {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
+        this.turnCards = [];
 
         this.gameType = info.gameType;
         this.bidding = true;

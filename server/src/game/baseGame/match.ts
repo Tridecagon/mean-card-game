@@ -23,6 +23,7 @@ export class Match {
         this.tableChannel = tableChan;
 
         this.round = 0;
+        this.matchResults[0] = {};
 
         this.deck = this.GetDeck();
         this.hand = this.GetHand();
@@ -54,13 +55,13 @@ export class Match {
 
     public KeepScore(gameResults: Score[]) {
         this.round++;
-        this.matchResults[this.round] = {
+        this.matchResults[this.round - 1] = {
             Round: this.round,
         };
         gameResults.map((score: Score) => {
             if (score && score.points) {
              const playerIndex = this.players.findIndex((p) => p.user.id === score.id);
-             this.matchResults[this.round][this.players[playerIndex].user.name] = score.points;
+             this.matchResults[this.round - 1][this.players[playerIndex].user.name] = score.points;
             }
         });
         this.tableChannel.emit("updateScores", this.matchResults);
