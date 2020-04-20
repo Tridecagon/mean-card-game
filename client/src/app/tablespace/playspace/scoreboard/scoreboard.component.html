@@ -1,4 +1,4 @@
-<div class="scoreboard-container">
+<div *ngIf="visible" class="scoreboard-container">
     <mat-card>
         <mat-card-title>Scores</mat-card-title>
         <mat-card-content  #scrollMe [scrollTop]="scrollMe.scrollHeight">

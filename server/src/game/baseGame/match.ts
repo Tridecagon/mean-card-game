@@ -23,12 +23,6 @@ export class Match {
         this.tableChannel = tableChan;
 
         this.round = 0;
-        this.matchResults[0] = {
-            round: 0,
-        };
-        this.players.map((p, i) => this.matchResults[0][`player${i}`] = {name: p.user.name, points: 0});
-
-        this.tableChannel.emit("updateScores", this.matchResults);
 
         this.deck = this.GetDeck();
         this.hand = this.GetHand();
@@ -66,8 +60,7 @@ export class Match {
         gameResults.map((score: Score) => {
             if (score && score.points) {
              const playerIndex = this.players.findIndex((p) => p.user.id === score.id);
-             this.matchResults[this.round][`player${playerIndex}`]
-              = { name: this.players[playerIndex].user.name, points: score.points };
+             this.matchResults[this.round][this.players[playerIndex].user.name] = score.points;
             }
         });
         this.tableChannel.emit("updateScores", this.matchResults);
