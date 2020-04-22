@@ -1,6 +1,6 @@
-<div class="tablespace-container">
-  <div class="tablespace-felt-bound">
-    <div class="tablespace-felt">
+<div class="tablespace-container" [style.height]="getContainerSize()">
+  <div class="tablespace-felt-bound" [style.height]="getFeltHeight()" [style.max-width]="getFeltMaxWidth()">
+    <div class="tablespace-felt" [style.max-width]="getFeltMaxWidth()">
       
       <div *ngIf="!inGame" class="content-container">
         <mcg-lobby [user]="user"></mcg-lobby>

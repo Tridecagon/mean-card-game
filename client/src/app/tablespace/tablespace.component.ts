@@ -14,6 +14,7 @@ export class TablespaceComponent implements OnInit {
   inGame = false;
   tableId: number;
   @Input() user: User;
+  @Input() size: number;
 
   @Output() onJoinTable = new EventEmitter<{name: string, conn: SocketService}>();
 
@@ -35,6 +36,17 @@ export class TablespaceComponent implements OnInit {
   }
   handleJoinTable(tableInfo: any) {
     this.onJoinTable.emit(tableInfo);
+  }
+
+  getContainerSize(): string {
+    return `${this.size}%`;
+  }
+
+  getFeltHeight(): string {
+    return `${this.size - 5}vh`;
+  }
+  getFeltMaxWidth(): string {
+    return `${(this.size - 5) * 1.7}vh`;
   }
 
 }

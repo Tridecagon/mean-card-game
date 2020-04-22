@@ -1,4 +1,4 @@
-<mat-drawer-container class="chat-container">
+<mat-drawer-container class="chat-container" [style.height]="currentSize">
   <mat-drawer mode="side" opened="true" class="channel-drawer">
     <mat-list class="channel-list">
       <mat-list-item>
@@ -13,6 +13,9 @@
   </mat-drawer>
   <mat-drawer-content>
     <mat-card class="main-card">
+      <button mat-icon-button (click)="toggleSize()">
+        <mat-icon>{{currentIcon}}</mat-icon>
+      </button>
       <div class="chat-list-wrapper"  #scrollMe [scrollTop]="scrollMe.scrollHeight">
         <mat-list *ngIf="channelList.selectedChannel" class="chat-list">
           <mat-list-item *ngFor="let message of channelList.selectedChannel.messages" [ngClass]="[message.action === undefined ? (message.from.id === user.id ? 'chat-list-me': 'chat-list-other') : '']">

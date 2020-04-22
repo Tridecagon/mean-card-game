@@ -1,5 +1,5 @@
 <button mat-fab (click)="onClickUserInfo()">
   <mat-icon>person</mat-icon>
 </button>
-  <mcg-tablespace [user]="user" (onJoinTable)="onJoinTable($event)"></mcg-tablespace>
-  <mcg-chat [user]="user" [(channelList)]="channelList"></mcg-chat>
+  <mcg-tablespace [user]="user" (onJoinTable)="onJoinTable($event)" [size]="tablespaceSize"></mcg-tablespace>
+  <mcg-chat [user]="user" [(channelList)]="channelList" (onResize)="onChatResize($event)"></mcg-chat>

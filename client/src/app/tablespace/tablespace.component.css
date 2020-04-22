@@ -2,20 +2,16 @@
     position: relative;
     top:0px;
     width: 100%; 
-    height: 60%;  
 }
 
 .tablespace-felt-bound {
     position: relative;
-    height: 55vh;
-    max-width: 93vh;
     margin: auto;
 }
 
 .tablespace-felt {
     position: absolute;
     width: 98%;
-    max-width: 93vh;
     padding-bottom: 56.25%;
     background: green;
     border-radius: 5px;
