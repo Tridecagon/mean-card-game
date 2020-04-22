@@ -67,7 +67,7 @@ export class SkatHand extends Hand {
                                     {
                                         doubleTurn,
                                         selection: SkatGameType.Turn,
-                                        suit: Suit.Jack,
+                                        suit: "Jack",
                                         turnCard,
                                     });
                             }

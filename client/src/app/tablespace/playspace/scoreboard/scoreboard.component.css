@@ -1,0 +1,18 @@
+.scoreboard-container {
+    margin: 10%;
+    width: 80%;
+    height: 65%;
+    position: absolute;
+}
+.mat-card {
+    z-index: 25;
+}
+
+.mat-card-content {
+        height: 25vh;
+    overflow-y: auto;
+}
+
+.mat-footer-row {
+    font-weight: bold;
+  }

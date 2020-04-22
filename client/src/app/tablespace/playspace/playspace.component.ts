@@ -1,5 +1,5 @@
 import { HandComponent } from './hand/hand.component';
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { Card, User } from '../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 import { SkatGameSelection } from '../../../../../shared/model/skat';
@@ -23,6 +23,7 @@ export class PlayspaceComponent implements OnInit {
   discarding: boolean;
   showingGame: boolean;
   showingResult: boolean;
+  showingScoreboard: boolean;
   playing: boolean;
   winningBidder: string;
   winningBid: number;
@@ -48,7 +49,7 @@ export class PlayspaceComponent implements OnInit {
 
   @ViewChildren(HandComponent) hands: HandComponent[];
 
-  constructor(private socketService: SocketService) {
+  constructor(private socketService: SocketService, private ref: ChangeDetectorRef) {
     this.zIndexes = new Array<number>(4);
     this.zIndexes.fill(this.currentZIndex);
     this.readyForNextHand = true;
@@ -125,6 +126,7 @@ export class PlayspaceComponent implements OnInit {
       .subscribe(async (info) => {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
+        this.turnCards = [];
 
         this.gameType = info.gameType;
         this.bidding = true;
@@ -206,6 +208,10 @@ export class PlayspaceComponent implements OnInit {
 
   onGameResultOk() {
     this.socketService.sendAction('readyForNextHand', null);
+  }
+
+  onScoreboardClick() {
+    this.showingScoreboard = !this.showingScoreboard;
   }
 
 }

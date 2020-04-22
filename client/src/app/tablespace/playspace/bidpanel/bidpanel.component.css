@@ -2,6 +2,7 @@
     margin: 5%;
     width: 90%;
     height: 65%;
+    position: absolute;
 }
 .mat-card {
     z-index: 11;

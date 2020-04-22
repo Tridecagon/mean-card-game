@@ -6,7 +6,6 @@ import { MaterialModule } from '../shared/material/material.module';
 
 import { TablespaceComponent } from './tablespace.component';
 import { SocketService } from '../shared/services/socket.service';
-import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 import { HandComponent } from './playspace/hand/hand.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PlayspaceComponent } from './playspace/playspace.component';
@@ -21,6 +20,7 @@ import { ShowgamecompactComponent } from './playspace/showgamepanel/showgamecomp
 import { SelectsortcontrolComponent } from './playspace/selectsortcontrol/selectsortcontrol.component';
 import { ResultpanelComponent } from './playspace/resultpanel/resultpanel.component';
 import { CardrowComponent } from './playspace/cardrow/cardrow.component';
+import { ScoreboardComponent } from './playspace/scoreboard/scoreboard.component';
 
 @NgModule({
   imports: [
@@ -32,7 +32,9 @@ import { CardrowComponent } from './playspace/cardrow/cardrow.component';
   exports: [
     TablespaceComponent
   ],
-  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent, BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent, ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent],
+  declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent,
+    BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent,
+    ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent, ScoreboardComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

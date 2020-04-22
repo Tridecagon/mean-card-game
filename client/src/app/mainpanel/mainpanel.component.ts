@@ -1,16 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-
-import { ChatModule } from '../chat/chat.module';
 import { ChatComponent } from '../chat/chat.component';
-import { SharedModule } from '../shared/shared.module';
-import { TablespaceModule } from '../tablespace/tablespace.module';
-import { TablespaceComponent } from '../tablespace/tablespace.component';
 
 import { Action, Message, User } from '../../../../shared/model';
 import { Channel, ChannelCollection, Event } from '../shared/model';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { AfterViewInit, ViewChild } from '@angular/core';
+import { ViewChild } from '@angular/core';
 
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
 import { DialogUserType } from '../dialog-user/dialog-user-type';
@@ -33,6 +28,7 @@ export class MainpanelComponent implements OnInit {
   user: User;
   channelList = new ChannelCollection();
   dialogRef: MatDialogRef<DialogUserComponent> | null;
+  tablespaceSize = 60;
   defaultDialogUserParams: any = {
     disableClose: true,
     data: {
@@ -73,6 +69,10 @@ export class MainpanelComponent implements OnInit {
 
   public onJoinTable(tableInfo: any) {
     this.AddChannel(tableInfo.name, tableInfo.conn);
+  }
+
+  public onChatResize(event: any) {
+    this.tablespaceSize = 100 - event.size;
   }
 
   private initIoConnection(): void {

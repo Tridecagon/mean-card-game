@@ -1,8 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
-import { Action, Message, User } from '../../../../shared/model';
-import { Channel, ChannelCollection, Event } from '../shared/model';
-import { SocketService } from '../shared/services/socket.service';
+import { Action, User } from '../../../../shared/model';
+import {  ChannelCollection } from '../shared/model';
 
 
 
@@ -17,7 +16,16 @@ export class ChatComponent implements OnInit, OnChanges {
   @Input() channelList: ChannelCollection;
   action = Action;
   messageContent: string;
+  defaultSize = 40;
+  collapsedSize = 20;
+  collapsed = false;
+  collapsedIcon = 'keyboard_arrow_up';
+  defaultIcon = 'keyboard_arrow_down';
+  currentSize = '40%';
+  currentIcon = 'keyboard_arrow_down';
 
+
+  @Output() onResize = new EventEmitter<{size: number}>();
 
   constructor() { }
 
@@ -37,6 +45,14 @@ export class ChatComponent implements OnInit, OnChanges {
     }
     this.channelList.selectedChannel.sendMessage(this.user, this.messageContent);
     this.messageContent = '';
+  }
+
+  toggleSize() {
+    this.collapsed = !this.collapsed;
+    this.currentIcon = this.collapsed ? this.collapsedIcon : this.defaultIcon;
+    const size = this.collapsed ? this.collapsedSize : this.defaultSize;
+    this.currentSize = `${size}%`;
+    this.onResize.emit({size});
   }
 
 }

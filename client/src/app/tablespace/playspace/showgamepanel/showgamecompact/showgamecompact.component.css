@@ -1,6 +1,6 @@
 mat-card {
-    margin: 0% auto;
-    width: 40%;
+    margin: 0 auto 0 0;
+    width: fit-content;
     text-align: center;
     white-space: nowrap;
     z-index: 11;

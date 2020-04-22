@@ -34,6 +34,7 @@ export class Hand {
     public async Play(dealerIndex: number, params: any): Promise<Score[]> {
         this.dealerIndex = dealerIndex;
         this.params = params;
+        this.scores = [];
 
         this.SetInactivePlayer();
         this.activePlayers = this.players.filter((p, index) => index !== this.inactivePlayer);

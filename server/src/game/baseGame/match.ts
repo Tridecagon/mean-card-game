@@ -10,8 +10,9 @@ export class Match {
     protected dealerIndex: number;
     protected players: Player[] = [];
     protected tableChannel: SocketIO.Namespace;
-    protected matchResults: Score[] = [];
+    protected matchResults: any[] = [];
     protected hand: Hand;
+    protected round: number;
 
     constructor() {
         // this.type = GameType.Base; // base type no longer instantiable
@@ -20,13 +21,9 @@ export class Match {
     public async beginMatch(players: Player[], tableChan: SocketIO.Namespace) {
         this.players = players;
         this.tableChannel = tableChan;
-        for (const player of this.players) {
-            this.matchResults[player.index] = {
-                id: player.user.id,
-                points: 0,
-            };
-            this.tableChannel.emit("updateScores", this.matchResults);
-        }
+
+        this.round = 0;
+        this.matchResults[0] = {};
 
         this.deck = this.GetDeck();
         this.hand = this.GetHand();
@@ -57,10 +54,17 @@ export class Match {
     }
 
     public KeepScore(gameResults: Score[]) {
-        for (const score of gameResults) {
-            const matchScore = this.matchResults.find((m) => m.id === score.id);
-            matchScore.points += score.points;
-        }
+        this.round++;
+        this.matchResults[this.round - 1] = {
+            Round: this.round,
+        };
+        gameResults.map((score: Score) => {
+            if (score && score.points !== undefined) {
+             const playerIndex = this.players.findIndex((p) => p.user.id === score.id);
+             this.matchResults[this.round - 1][this.players[playerIndex].user.name] = score.points;
+            }
+        });
+        this.tableChannel.emit("updateScores", this.matchResults);
     }
 
     public MatchComplete() {
