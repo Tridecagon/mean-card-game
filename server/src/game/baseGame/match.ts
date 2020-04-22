@@ -59,7 +59,7 @@ export class Match {
             Round: this.round,
         };
         gameResults.map((score: Score) => {
-            if (score && score.points) {
+            if (score && score.points !== undefined) {
              const playerIndex = this.players.findIndex((p) => p.user.id === score.id);
              this.matchResults[this.round - 1][this.players[playerIndex].user.name] = score.points;
             }
