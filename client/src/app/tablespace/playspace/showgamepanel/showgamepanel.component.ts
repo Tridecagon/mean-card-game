@@ -28,7 +28,7 @@ export class ShowgamepanelComponent implements OnInit {
     this._selectedGame = selection;
     if (this._selectedGame.turnCard) {
       this.uiCard = new UiCard(this._selectedGame.turnCard);
-      setTimeout(() => this.uiCard.flip(), 0);
+      setTimeout(() => this.uiCard.flip(), 100);
     }
   }
   constructor() { }
