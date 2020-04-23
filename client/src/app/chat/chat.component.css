@@ -8,6 +8,7 @@
 .chat-input {
     padding-top: 20px;
     width: 80%; 
+    height:80px;
 }
 
 .chat-list-wrapper {
@@ -15,7 +16,7 @@
     top: 10px;
     left: 25px;
     right: 25px;
-    height: 80%;
+    flex:1;
 }
 
 .chat-list-me {
@@ -35,6 +36,8 @@
 .main-card {
     height: 100%;  
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 .channel-card {
     height: 100%;  
@@ -42,12 +45,16 @@
 }
 
 .chat-footer-container {
-    position:absolute;
     bottom:0px;
     left:25px;
     right:25px;
+    height: 90px;
 }
 
 .chat-notification {
     text-align: center;
+}
+
+.collapse-button {
+    margin-left: auto;
 }

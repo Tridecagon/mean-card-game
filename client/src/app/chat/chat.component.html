@@ -13,7 +13,7 @@
   </mat-drawer>
   <mat-drawer-content>
     <mat-card class="main-card">
-      <button mat-icon-button (click)="toggleSize()">
+      <button mat-icon-button class="collapse-button" (click)="toggleSize()">
         <mat-icon>{{currentIcon}}</mat-icon>
       </button>
       <div class="chat-list-wrapper"  #scrollMe [scrollTop]="scrollMe.scrollHeight">
