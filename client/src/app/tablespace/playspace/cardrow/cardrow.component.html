@@ -1,7 +1,9 @@
 <div *ngFor="let card of cards; let i = index"
   class="player-card" 
   [style.left.%]="computeLeft(card, i)" 
-  [style.top.%]="card.isSelected ? 70 : 80"
+  [style.top.%]="(card.isSelected ? -10 : 0) + offset"
+  [style.height.px]="height"
+  [style.width.px]="height * .8"
   [style.zIndex] = "-1"
   (click)="clicked(card, i)"
   [@dealCard]

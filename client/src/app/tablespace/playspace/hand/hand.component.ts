@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { UiCard } from 'app/shared/model/uiCard';
 import { Card, User } from 'app/../../../shared/model';
 import { trigger, style, state, transition, animate } from '@angular/animations';
@@ -41,10 +41,12 @@ export class HandComponent implements OnInit {
   bid: number;
   playing: boolean;
   hold: boolean;
+  cardrowHeight: number;
 
   @Input() player: User;
   @Input() zIndex: number;
   @Input() location: string;
+  @ViewChild('crWrapper', {static: true}) cardrowView: ElementRef;
 
 
   constructor(private socketService: SocketService, private sanitizer: DomSanitizer) { }
@@ -101,6 +103,7 @@ export class HandComponent implements OnInit {
     if (this.location === 'bottom') {
       this.socketService.onAction<Array<Card>>('dealHand')
         .subscribe((newHand) => {
+          this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
           // console.log(newHand);
           this.hand = [];
           this.selectedCards = [];
@@ -121,6 +124,7 @@ export class HandComponent implements OnInit {
     this.socketService.onAction<any>('tableDealCards')
       .subscribe((cards) => {
         // console.log(newHand);
+        this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
         if (this.player && cards.toUser === this.player.id && this.location !== 'bottom') {
           for (let i = 0; i < cards.numCards; i++) {
             this.hand.push(new UiCard());

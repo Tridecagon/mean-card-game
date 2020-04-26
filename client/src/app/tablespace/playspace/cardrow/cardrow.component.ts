@@ -23,6 +23,8 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
 export class CardrowComponent implements OnInit {
 
   @Input() cards: UiCard[];
+  @Input() height: 100;
+  @Input() offset = 0;
   @Output() onClick = new EventEmitter<{card: UiCard, index: number}>();
   constructor() { }
 
@@ -35,7 +37,7 @@ export class CardrowComponent implements OnInit {
   }
 
   clicked(card: UiCard, index: number) {
-    console.log("Cardrow click handler");
+    console.log('Cardrow click handler');
     this.onClick.emit({card, index});
   }
 }

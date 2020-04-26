@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import { Card } from '../../../../../../shared/model';
 import { UiCard } from 'app/shared/model';
 
@@ -7,18 +7,21 @@ import { UiCard } from 'app/shared/model';
   templateUrl: './resultpanel.component.html',
   styleUrls: ['./resultpanel.component.css']
 })
-export class ResultpanelComponent implements OnInit, OnChanges {
+export class ResultpanelComponent implements AfterViewInit, OnChanges {
 
   @Input() result: {cards: Card[], score: number, cardPoints: number, winner?: string};
   @Output() onOk = new EventEmitter();
+  @ViewChild('crContainer', {static: true}) cardrowView: ElementRef;
 
   uiCards: UiCard[];
+  cardrowHeight: number;
 
   constructor() {
     this.uiCards = [];
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
+    this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
   }
 
   ngOnChanges() {
