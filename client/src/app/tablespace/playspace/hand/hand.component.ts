@@ -136,6 +136,18 @@ export class HandComponent implements OnInit, OnChanges {
         }
       });
 
+      this.socketService.onAction<any>('showHand')
+      .subscribe((msg) => {  // cards, user
+        this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
+        if (this.player && msg.user === this.player.id && this.location !== 'bottom') {
+          this.hand = [];
+          this.selectedCards = [];
+          for (const card of msg.cards) {
+            this.hand.push(new UiCard(card));
+          }
+        }
+      });
+
     this.socketService.onAction<any>('playResponse')
       .subscribe((playInfo) => {
         if (this.player && playInfo.userId === this.player.id) {
@@ -199,7 +211,7 @@ export class HandComponent implements OnInit, OnChanges {
   }
 
   private play(card: Card) {
-    if (this.location === 'bottom') { // TODO: change this condition to if hand cards are visible
+    if (this.hand[0].face === 'up') { // cards are visible, pick the right one
       const i = this.hand.findIndex(c => Card.matches(c.card, card));
       if (i < 0) {
         console.log('Unable to find card ' + card);

@@ -91,6 +91,10 @@ export class Hand {
         }
     }
 
+    public ShowHand(player: Player) {
+        this.tableChan.emit("showHand", {cards: player.heldCards, user: player.user.id});
+    }
+
     public SortCards(cards: Card[], sortType: Suit = this.trumpSuit) {
         const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card, sortType)))); // gets distinct suits
 

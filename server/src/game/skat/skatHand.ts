@@ -41,6 +41,10 @@ export class SkatHand extends Hand {
                         setTimeout(() => this.SetState(State.Play), 3000);
                         this.trumpSuit = selectedGame.suit;
                         this.players.map((p) => this.ResortHand(p, selectedGame.suit));
+                        if (selectedGame.selection === SkatGameType.NullOvert
+                            || selectedGame.selection === SkatGameType.GrandOvert) {
+                                this.ShowHand(player);
+                            }
                         this.tableChan.emit("gameSelected", selectedGame );
                     }
                 }
