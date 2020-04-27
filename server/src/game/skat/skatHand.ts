@@ -5,6 +5,7 @@ import { Hand, State } from "../baseGame";
 
 export class SkatHand extends Hand {
     private skat: Card[] = [];
+    private rememberedSkat: Card[] = []; // for result reporting at the end
     private bids: number[] = [];
     private whoseBid: number; // 0 is hold, 1 is middle, 2 is rear
     private holdIndex: number;
@@ -33,6 +34,7 @@ export class SkatHand extends Hand {
                         player.socket.emit("sendTurnCard", this.skat[0]);
                     } else if (selectedGame.selection === SkatGameType.Guetz) {
                         this.trumpSuit = Suit.Jack;
+                        this.selectedGame.doubleTurn = true;
                         this.SetState(State.Discard);
                         this.tableChan.emit("gameSelected", selectedGame );
                     } else {
@@ -51,6 +53,7 @@ export class SkatHand extends Hand {
                         case "DoubleTurn":
                             if (this.state === State.SingleTurn) {
                                 this.state = State.DoubleTurn;
+                                this.selectedGame.doubleTurn = true;
                                 player.socket.emit("sendTurnCard", this.skat[1]);
                             } else {
                                 console.log("Invalid state for Double Turn!");
@@ -125,6 +128,7 @@ export class SkatHand extends Hand {
 
     public DealHands() {
         this.skat = this.deck.draw(2);
+        this.rememberedSkat = this.skat.map((x) => Object.assign({}, x));
         this.numCards = 10;
         super.DealHands();
     }
@@ -307,6 +311,7 @@ export class SkatHand extends Hand {
                     cardPoints: 0,
                     cards: this.players[this.winningBidder].trickPile,
                     score: this.scores[0].points,
+                    skat: this.rememberedSkat,
                 });
                 break;
             case SkatGameType.Solo:
@@ -326,6 +331,7 @@ export class SkatHand extends Hand {
                     cardPoints,
                     cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
                     score: scorePoints,
+                    skat: this.rememberedSkat,
                 });
                 break;
             case SkatGameType.Ramsch:
@@ -371,6 +377,7 @@ export class SkatHand extends Hand {
                 this.tableChan.emit("skatGameResult", {
                     cardPoints: winners[0],
                     score: this.scores[0].points,
+                    skat: this.rememberedSkat,
                     winner: winnerName,
                 });
                 break;

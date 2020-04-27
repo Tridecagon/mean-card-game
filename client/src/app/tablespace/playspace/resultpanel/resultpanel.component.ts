@@ -9,15 +9,17 @@ import { UiCard } from 'app/shared/model';
 })
 export class ResultpanelComponent implements AfterViewInit, OnChanges {
 
-  @Input() result: {cards: Card[], score: number, cardPoints: number, winner?: string};
+  @Input() result: {cards: Card[], score: number, cardPoints: number, winner?: string, skat?: Card[]};
   @Output() onOk = new EventEmitter();
   @ViewChild('crContainer', {static: true}) cardrowView: ElementRef;
 
   uiCards: UiCard[];
+  uiSkatCards: UiCard[];
   cardrowHeight: number;
 
   constructor() {
     this.uiCards = [];
+    this.uiSkatCards = [];
   }
 
   ngAfterViewInit() {
@@ -32,6 +34,9 @@ export class ResultpanelComponent implements AfterViewInit, OnChanges {
       for (const card of this.result.cards || []) {
         this.uiCards.push(new UiCard(card, 'down'));
         // why is this backwards?
+      }
+      for (const card of this.result.skat || []) {
+        this.uiSkatCards.push(new UiCard(card, 'down'));
       }
     } else {
       console.log('Game result not populated');

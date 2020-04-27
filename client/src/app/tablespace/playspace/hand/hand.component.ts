@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { UiCard } from 'app/shared/model/uiCard';
 import { Card, User } from 'app/../../../shared/model';
 import { trigger, style, state, transition, animate } from '@angular/animations';
@@ -30,7 +30,7 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
     ])
   ]
 })
-export class HandComponent implements OnInit {
+export class HandComponent implements OnInit, OnChanges {
 
   activeHand: boolean;
   selectedCards: UiCard[] = [];
@@ -53,6 +53,10 @@ export class HandComponent implements OnInit {
 
   ngOnInit() {
     this.setupListeners();
+  }
+
+  ngOnChanges() {
+    this.cardrowHeight = this.cardrowView ? this.cardrowView.nativeElement.offsetHeight : 100;
   }
 
   onClick(data: {card: UiCard, index: number}) {

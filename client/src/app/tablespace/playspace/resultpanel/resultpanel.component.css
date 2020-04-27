@@ -17,6 +17,11 @@ mcg-cardrow {
     display: flex;
 }
 
+.skat-label {
+    right: 65%;
+    position: absolute;
+}
+
 mat-card-title { justify-content: center; }
 mat-card-content { justify-content: center; }
 mat-card-footer { justify-content: center; }
