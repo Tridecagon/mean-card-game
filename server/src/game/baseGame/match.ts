@@ -64,6 +64,11 @@ export class Match {
              this.matchResults[this.round - 1][this.players[playerIndex].user.name] = score.points;
             }
         });
+        console.log("Total scores:");
+        this.players.map((p) => {
+            const totalScore = this.matchResults.reduce((acc, cur) => acc + cur[this.players[p.index].user.name], 0);
+            console.log(`${p.user.name}: ${totalScore}`);
+        });
         this.tableChannel.emit("updateScores", this.matchResults);
     }
 
