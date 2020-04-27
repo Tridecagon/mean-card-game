@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  server_url: 'http://mean-card-game-server.herokuapp.com'
+  server_url: 'https://mean-card-game-server.herokuapp.com'
 };
