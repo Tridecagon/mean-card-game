@@ -1,11 +1,15 @@
 <mat-card>
   <mat-card-title>Score: {{result.score}}
   </mat-card-title>
-    <mat-card-content>
-      <mcg-cardrow [cards]="uiCards"></mcg-cardrow> 
+    <mat-card-content #crContainer class="cardrow-container">
+      <mcg-cardrow [cards]="uiCards" [height]="cardrowHeight"></mcg-cardrow>
     </mat-card-content>
     <mat-card-content>Result: {{result.cardPoints}}</mat-card-content>
     <mat-card-content *ngIf="result.winner">Winner: {{result.winner}}</mat-card-content>
+    <mat-card-content class="cardrow-container" >
+        <p class="skat-label">Skat:</p>
+        <mcg-cardrow [height]="cardrowHeight" [cards]="uiSkatCards"></mcg-cardrow>
+    </mat-card-content>
   <mat-card-footer>
      <button mat-button  type="button" (click)="clickHandler()" >OK</button>
   </mat-card-footer>

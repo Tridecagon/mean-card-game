@@ -91,6 +91,10 @@ export class Hand {
         }
     }
 
+    public ShowHand(player: Player) {
+        this.tableChan.emit("showHand", {cards: player.heldCards, user: player.user.id});
+    }
+
     public SortCards(cards: Card[], sortType: Suit = this.trumpSuit) {
         const suits = Array.from(new Set(cards.map((card) => this.GetSuit(card, sortType)))); // gets distinct suits
 
@@ -218,7 +222,7 @@ export class Hand {
     }
 
     public IsHandComplete(): boolean {
-        return this.activePlayers[0].heldCards.length === 0 && this.currentTrick.length === 0;
+        return this.activePlayers[0] && this.activePlayers[0].heldCards.length === 0 && this.currentTrick.length === 0;
     }
 
     public async EvaluateTrick() {

@@ -115,7 +115,7 @@ export class ChatServer {
 
             socket.on("requestStartTable", (tableIndex: number) => {
                 if (this.seatMap[this.users[socket.id].id].table === tableIndex
-                    && this.lobby[tableIndex].userCount > 1) {
+                    && this.lobby[tableIndex].userCount > 0) {
                     this.lobby[tableIndex].active = true;
                     this.io.emit("lobbyState", this.lobby);
 

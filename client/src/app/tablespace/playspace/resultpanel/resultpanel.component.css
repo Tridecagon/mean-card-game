@@ -1,25 +1,27 @@
 mat-card {
-    margin: 0 20% auto;
-    width: 60%;
+    margin: 5% 15% auto;
+    width: 70%;
+    height: 70%;
     text-align: center;
     z-index: 11;
+    position: absolute;
+}
+
+mcg-cardrow {
+    position: relative;
+    width: 100%
+}
+
+.cardrow-container {
+    height: 30%;
+    display: flex;
+}
+
+.skat-label {
+    right: 65%;
     position: absolute;
 }
 
 mat-card-title { justify-content: center; }
 mat-card-content { justify-content: center; }
 mat-card-footer { justify-content: center; }
-
-.player-card {
-    width: 150px;
-    height: 187.5px;
-    position: absolute;
-    transform-style: preserve-3d;
-}
-img {
-    position:absolute;
-    top: 0; 
-    left: 0;
-    height: 100%;
-    backface-visibility: hidden;
-}

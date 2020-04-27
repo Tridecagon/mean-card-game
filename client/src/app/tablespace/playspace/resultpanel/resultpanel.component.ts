@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import { Card } from '../../../../../../shared/model';
 import { UiCard } from 'app/shared/model';
 
@@ -7,18 +7,23 @@ import { UiCard } from 'app/shared/model';
   templateUrl: './resultpanel.component.html',
   styleUrls: ['./resultpanel.component.css']
 })
-export class ResultpanelComponent implements OnInit, OnChanges {
+export class ResultpanelComponent implements AfterViewInit, OnChanges {
 
-  @Input() result: {cards: Card[], score: number, cardPoints: number, winner?: string};
+  @Input() result: {cards: Card[], score: number, cardPoints: number, winner?: string, skat?: Card[]};
   @Output() onOk = new EventEmitter();
+  @ViewChild('crContainer', {static: true}) cardrowView: ElementRef;
 
   uiCards: UiCard[];
+  uiSkatCards: UiCard[];
+  cardrowHeight: number;
 
   constructor() {
     this.uiCards = [];
+    this.uiSkatCards = [];
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
+    this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
   }
 
   ngOnChanges() {
@@ -29,6 +34,9 @@ export class ResultpanelComponent implements OnInit, OnChanges {
       for (const card of this.result.cards || []) {
         this.uiCards.push(new UiCard(card, 'down'));
         // why is this backwards?
+      }
+      for (const card of this.result.skat || []) {
+        this.uiSkatCards.push(new UiCard(card, 'down'));
       }
     } else {
       console.log('Game result not populated');

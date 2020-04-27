@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import * as socketIo from "socket.io";
 import { Factory } from ".";
-import { Action, Card, GameType, Message } from "../../shared/model";
+import { Action, Card, GameType, Message, User } from "../../shared/model";
 import { Match } from "./game/baseGame/match";
 import { Player } from "./model";
 
@@ -85,9 +85,50 @@ export class GameTable {
             });
 
             socket.on("message", (m: Message) => {
-                console.log("[server](message): %s", JSON.stringify(m));
-                this.tableChan.emit("chatMessage", m);
+                if (m.content[0] === "/") {
+                    this.executeChatCommand(m);
+                } else {
+                    console.log("[server](message): %s", JSON.stringify(m));
+                    this.tableChan.emit("chatMessage", m);
+                }
             });
         });
+    }
+
+    protected executeChatCommand(m: Message) {
+        switch ((m.content as string).toLowerCase()) {
+            case "/demoresult":
+                this.tableChan.emit("skatGameResult", {
+                    cardPoints: 25,
+                    cards: [{
+                        description: "Ten",
+                        sort: "10",
+                        suit: "Spade",
+                    }, {
+                        description: "Ace",
+                        sort: "A",
+                        suit: "Club",
+                    }, {
+                        description: "King",
+                        sort: "K",
+                        suit: "Heart",
+                    }],
+                    score: -15,
+                    winner: "no one",
+                });
+                break;
+            case "/demohands":
+                const myIndex = this.players.find((p) => p.user.id === m.from.id).index;
+                for (const index of [0, 1, 2, 3].filter((x) => x !== myIndex)) {
+                    const user: User = {name: `player${index}`,  id: Number.parseInt(`12345${index}`, 10) };
+                    this.tableChan.emit("numPlayers", 4);
+                    this.tableChan.emit("playerSat", { user, index});
+                    this.tableChan.emit("tableDealCards", { numCards: 10, toUser: user.id });
+                }
+                break;
+            default:
+                this.players.find((p) => p.user.id === m.from.id).socket.emit
+                            ("chatMessage", {from: m.from.id, content: `Unrecognized command ${m.content}`});
+        }
     }
 }

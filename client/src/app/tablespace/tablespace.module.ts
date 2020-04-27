@@ -21,6 +21,7 @@ import { SelectsortcontrolComponent } from './playspace/selectsortcontrol/select
 import { ResultpanelComponent } from './playspace/resultpanel/resultpanel.component';
 import { CardrowComponent } from './playspace/cardrow/cardrow.component';
 import { ScoreboardComponent } from './playspace/scoreboard/scoreboard.component';
+import { ClaimdialogComponent } from './playspace/claimdialog/claimdialog.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,7 @@ import { ScoreboardComponent } from './playspace/scoreboard/scoreboard.component
   ],
   declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent,
     BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent,
-    ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent, ScoreboardComponent],
+    ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent, ScoreboardComponent, ClaimdialogComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

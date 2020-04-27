@@ -32,3 +32,17 @@
     font-family: Verdana, Geneva, sans-serif;
     font-size: 100%;
 }
+
+.cardrow-wrapper {
+    display: flex;
+    height: 40%;
+    position: absolute;
+    width: 100%;
+    top: 80%;
+
+}
+
+mcg-cardrow {
+    position: relative;
+    width: 100%
+}

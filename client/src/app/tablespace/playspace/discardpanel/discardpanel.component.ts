@@ -14,7 +14,7 @@ export class DiscardpanelComponent implements OnInit {
 
   ngOnInit() {
     this.ready = false;
-    setTimeout(() => this.ready = true, 1000); // prevent accidental immediate click
+    setTimeout(() => this.ready = true, 2000); // prevent accidental immediate click
   }
 
   discard() {

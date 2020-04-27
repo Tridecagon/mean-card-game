@@ -1,5 +1,7 @@
-<div *ngIf="player" class="hand-wrapper" [style.transform]="getHandTransform()" [style.z-index]="zIndex">
-  <mcg-cardrow [cards]="hand" (onClick)="onClick($event)"></mcg-cardrow>
+<div [hidden]="!player" class="hand-wrapper" [style.transform]="getHandTransform()" [style.z-index]="zIndex">
+  <div #crWrapper class="cardrow-wrapper">
+   <mcg-cardrow [cards]="hand" [height]="cardrowHeight" (onClick)="onClick($event)"></mcg-cardrow>
+  </div>
   <div *ngIf="playedCard" class="player-card" 
     [style.left.%]="location === 'left' || location === 'right' ? 41.5 : 42.5"
     [style.top.%]="location === 'left' || location === 'right' ? 1 : 37"
