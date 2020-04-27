@@ -3,6 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ChangeDet
 import { Card, User } from '../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 import { SkatGameSelection } from '../../../../../shared/model/skat';
+import { MatDialog } from '@angular/material';
+import { ClaimdialogComponent } from './claimdialog/claimdialog.component';
 
 @Component({
   selector: 'mcg-playspace',
@@ -49,7 +51,7 @@ export class PlayspaceComponent implements OnInit {
 
   @ViewChildren(HandComponent) hands: HandComponent[];
 
-  constructor(private socketService: SocketService, private ref: ChangeDetectorRef) {
+  constructor(private socketService: SocketService, private ref: ChangeDetectorRef, private dialog: MatDialog) {
     this.zIndexes = new Array<number>(4);
     this.zIndexes.fill(this.currentZIndex);
     this.readyForNextHand = true;
@@ -127,6 +129,7 @@ export class PlayspaceComponent implements OnInit {
         this.trumpCard = info.trumpCard;
         this.dealerId = info.dealerId;
         this.turnCards = [];
+        this.winningBidder = '';
 
         this.gameType = info.gameType;
         this.bidding = true;
@@ -212,6 +215,14 @@ export class PlayspaceComponent implements OnInit {
 
   onScoreboardClick() {
     this.showingScoreboard = !this.showingScoreboard;
+  }
+
+  onClaimClick() {
+    this.dialog.open(ClaimdialogComponent);
+  }
+
+  showClaimButton(): boolean {
+    return this._user.name && (this.winningBidder === this._user.name);
   }
 
 }

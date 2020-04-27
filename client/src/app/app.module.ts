@@ -1,3 +1,4 @@
+import { ClaimdialogComponent } from './tablespace/playspace/claimdialog/claimdialog.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
@@ -35,7 +36,7 @@ import { DialogUserComponent } from 'app/dialog-user/dialog-user.component';
     MaterialModule
   ],
   providers: [SocketService],
-  entryComponents: [DialogUserComponent],
+  entryComponents: [DialogUserComponent, ClaimdialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

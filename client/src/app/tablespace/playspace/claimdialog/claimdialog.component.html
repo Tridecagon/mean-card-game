@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Claim</h2>
+
+<mat-dialog-content>
+Claim all remaining tricks?
+</mat-dialog-content>
+
+<mat-dialog-actions [attr.align]="'end'">
+  <button mat-button mat-dialog-close color="secondary">Cancel</button>
+  <button mat-raised-button color="primary" mat-dialog-close (click)="onClaim()">Claim</button>
+</mat-dialog-actions>
