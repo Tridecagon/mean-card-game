@@ -203,7 +203,7 @@ export class Hand {
         const score = this.ScoreHand();
 
         // wait up to 10 seconds for all players to send ready
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 10; i++) {
             if (this.readyForNextHand.some((r)  => !r )) {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             }
