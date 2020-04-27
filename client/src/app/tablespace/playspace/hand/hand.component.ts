@@ -239,7 +239,7 @@ export class HandComponent implements OnInit, OnChanges {
     return card.leftPos;
   }
 
-  private getHandTransform(): SafeStyle {
+  getHandTransform(): SafeStyle {
 
     let retVal = '';
     switch (this.location) {
@@ -261,7 +261,7 @@ export class HandComponent implements OnInit, OnChanges {
     return this.sanitizer.bypassSecurityTrustStyle(retVal);
   }
 
-  private getNameplateTransform(): SafeStyle {
+  getNameplateTransform(): SafeStyle {
 
     let retVal = '';
     switch (this.location) {
