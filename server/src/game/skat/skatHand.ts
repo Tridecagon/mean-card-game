@@ -167,7 +167,7 @@ export class SkatHand extends Hand {
                 const skatCard = this.skat.shift();
                 const position = this.InsertCard(skatCard, activePlayer.heldCards);
                 activePlayer.socket.emit("insertCard", {card: skatCard, index: position});
-                console.log(`Added ${skatCard} to ${activePlayer.user.name}'s hand`);
+                console.log(`Added ${skatCard.toString()} to ${activePlayer.user.name}'s hand`);
 
             }
         };
@@ -471,7 +471,7 @@ export class SkatHand extends Hand {
             {suit: "Diamond", description: "Jack", sort: 0},
         ];
         const trumpSuit = Suit[this.trumpSuit];
-        if (trumpSuit in [Suit.Club, Suit.Spade, Suit.Heart, Suit.Diamond]) {
+        if (["Club", "Spade", "Heart", "Diamond"].indexOf(trumpSuit) >= 0) {
             sequence.push(...[
                 {suit: trumpSuit, description: "Ace", sort: 0},
                 {suit: trumpSuit, description: "Ten", sort: 0},
@@ -493,6 +493,9 @@ export class SkatHand extends Hand {
                     return numWith;
                 }
             }
+            // just in case with 11.... lol
+            // wait this actually matters for Jacks with 4
+            return numWith;
         } else {
             let numWithout = 0;
             for (const s of sequence) {
@@ -502,6 +505,9 @@ export class SkatHand extends Hand {
                     numWithout++;
                 }
             }
+            // i suppose without 11 is technically possible if you're an idiot
+            // guetz without 4 is definitely possible though
+            return numWithout;
         }
     }
 
