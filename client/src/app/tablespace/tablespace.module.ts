@@ -35,7 +35,8 @@ import { ClaimdialogComponent } from './playspace/claimdialog/claimdialog.compon
   ],
   declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent,
     BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent,
-    ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent, ScoreboardComponent, ClaimdialogComponent],
+    ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent,
+    ScoreboardComponent, ClaimdialogComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
