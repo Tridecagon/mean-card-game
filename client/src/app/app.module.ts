@@ -1,3 +1,4 @@
+import { AcceptclaimdialogComponent } from './tablespace/playspace/acceptclaimdialog/acceptclaimdialog.component';
 import { ClaimdialogComponent } from './tablespace/playspace/claimdialog/claimdialog.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,7 +39,7 @@ import { DialogUserComponent } from 'app/dialog-user/dialog-user.component';
     HttpClientModule
   ],
   providers: [SocketService],
-  entryComponents: [DialogUserComponent, ClaimdialogComponent],
+  entryComponents: [DialogUserComponent, ClaimdialogComponent, AcceptclaimdialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

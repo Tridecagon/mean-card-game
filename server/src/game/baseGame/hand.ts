@@ -18,6 +18,8 @@ export class Hand {
     protected defaultSortType: any;
     protected stateHandlers: Array<() => void> = []; // array of void functions
     protected readyForNextHand: boolean[] = [];
+    protected acceptedClaimCount: number;
+    protected claimingPlayer: Player;
 
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
@@ -315,6 +317,37 @@ export class Hand {
 
             player.socket.on("readyForNextHand", () => {
                 this.readyForNextHand[player.index] = true;
+            });
+
+            player.socket.on("requestClaim", () => {
+                this.acceptedClaimCount = 1;
+                this.claimingPlayer = player;
+                console.log(player.user.name + " request to claim " + player.heldCards.length + "tricks");
+                this.ShowHand(player);
+                for (const otherPlayer of this.players.filter((p) => p !== player)) {
+                    otherPlayer.socket.emit("requestClaimAcceptance", player.heldCards.length);
+                }
+            });
+
+            player.socket.on("acceptClaim", () => {
+                this.acceptedClaimCount++;
+                if (this.acceptedClaimCount === this.players.length) { // claim accepted by all
+                    while (this.currentTrick.length > 0) {
+                        const card = this.currentTrick.pop();
+                        if (card) {
+                            this.claimingPlayer.trickPile.push(card);
+                        }
+                    }
+                    for (const otherPlayer of this.players.filter((p) => p !== this.claimingPlayer)) {
+                        this.claimingPlayer.trickPile.push(...otherPlayer.heldCards);
+                        otherPlayer.heldCards = [];
+                    }
+                }
+            });
+
+            player.socket.on("rejectClaim", () => {
+                this.acceptedClaimCount = 0;
+                this.claimingPlayer = undefined;
             });
 
         }

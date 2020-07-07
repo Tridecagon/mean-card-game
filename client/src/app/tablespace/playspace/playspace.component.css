@@ -1,6 +1,15 @@
-.button-area {
+.scoreboard-button {
     bottom: 5px;
     right: 5px;
     position: absolute;
     z-index: 19;
 }
+.claim-button {
+    top: 5px;
+    right: 5px;
+    position: absolute;
+    z-index: 19;
+}
+[hidden] {
+    display: none !important;
+  }

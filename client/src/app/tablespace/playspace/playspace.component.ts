@@ -5,6 +5,7 @@ import { SocketService } from 'app/shared/services/socket.service';
 import { SkatGameSelection } from '../../../../../shared/model/skat';
 import { MatDialog } from '@angular/material';
 import { ClaimdialogComponent } from './claimdialog/claimdialog.component';
+import { AcceptclaimdialogComponent } from './acceptclaimdialog/acceptclaimdialog.component';
 
 @Component({
   selector: 'mcg-playspace',
@@ -26,6 +27,7 @@ export class PlayspaceComponent implements OnInit {
   showingGame: boolean;
   showingResult: boolean;
   showingScoreboard: boolean;
+  hideClaim: boolean;
   playing: boolean;
   winningBidder: string;
   winningBid: number;
@@ -59,6 +61,7 @@ export class PlayspaceComponent implements OnInit {
 
   ngOnInit() {
     this.selectingGame = false;
+    this.hideClaim = true;
     this.socketService.initSocket(`/table${this.tableId}`);
     this.onJoinTable.emit({ name: 'Table', conn: this.socketService });
     this.setupTableListeners();
@@ -160,6 +163,7 @@ export class PlayspaceComponent implements OnInit {
         this.bidding = false;
         this.showingGame = false;
         this.playing = true;
+        this.hideClaim = !this.showClaimButton();
       });
 
     this.socketService.onAction<Card>('sendTurnCard')
@@ -200,6 +204,14 @@ export class PlayspaceComponent implements OnInit {
           this.gameResult = result;
           this.readyForNextHand = false;
           this.showingResult = true;
+          this.hideClaim = true;
+        });
+
+      this.socketService.onAction<number>('requestClaimAcceptance')
+        .subscribe((trickCount) => {
+          const dialogRef = this.dialog.open(AcceptclaimdialogComponent);
+          dialogRef.componentInstance.trickCount = trickCount;
+          dialogRef.componentInstance.socketService = this.socketService;
         });
   }
   sendDiscards() {
@@ -218,7 +230,8 @@ export class PlayspaceComponent implements OnInit {
   }
 
   onClaimClick() {
-    this.dialog.open(ClaimdialogComponent);
+    const dialogRef = this.dialog.open(ClaimdialogComponent);
+    dialogRef.componentInstance.socketService = this.socketService;
   }
 
   showClaimButton(): boolean {

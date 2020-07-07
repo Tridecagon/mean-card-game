@@ -22,6 +22,7 @@ import { ResultpanelComponent } from './playspace/resultpanel/resultpanel.compon
 import { CardrowComponent } from './playspace/cardrow/cardrow.component';
 import { ScoreboardComponent } from './playspace/scoreboard/scoreboard.component';
 import { ClaimdialogComponent } from './playspace/claimdialog/claimdialog.component';
+import { AcceptclaimdialogComponent } from './playspace/acceptclaimdialog/acceptclaimdialog.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,7 @@ import { ClaimdialogComponent } from './playspace/claimdialog/claimdialog.compon
   declarations: [TablespaceComponent, HandComponent, LobbyComponent, PlayspaceComponent, BidpanelComponent,
     BidcardComponent, SelectpanelComponent, TurnpanelComponent, DiscardpanelComponent, ShowgamepanelComponent,
     ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent,
-    ScoreboardComponent, ClaimdialogComponent],
+    ScoreboardComponent, ClaimdialogComponent, AcceptclaimdialogComponent],
   providers: [
     SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

@@ -8,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClaimdialogComponent implements OnInit {
 
-  constructor(private socketService: SocketService) { }
+  socketService: SocketService;
+
+  constructor() { }
 
   ngOnInit() {
   }

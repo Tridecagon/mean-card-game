@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Accept Claim?</h2>
+
+<mat-dialog-content>
+Concede remaining {{trickCount}} tricks?
+</mat-dialog-content>
+
+<mat-dialog-actions [attr.align]="'end'">
+  <button mat-button mat-dialog-close color="secondary" (click)="onRejectClaim()">Reject</button>
+  <button mat-raised-button color="primary" mat-dialog-close (click)="onAcceptClaim()">Accept</button>
+</mat-dialog-actions>
