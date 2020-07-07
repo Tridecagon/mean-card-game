@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Card, Message, User } from '../../../../shared/model';
+import { User } from '../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'environments/environment';
 
 
 @Component({
@@ -18,11 +20,17 @@ export class TablespaceComponent implements OnInit {
 
   @Output() onJoinTable = new EventEmitter<{name: string, conn: SocketService}>();
 
-  constructor(private socketService: SocketService) {
+  constructor(private socketService: SocketService, private http: HttpClient) {
   }
 
   ngOnInit() {
     this.setupListeners();
+
+    setInterval(this.keepAlive.bind(this) , 20 * 60 * 1000); // keepalive ping
+  }
+
+  private keepAlive() {
+    this.http.get(environment.server_url).subscribe();
   }
 
   private setupListeners(): void {

@@ -1,7 +1,9 @@
+import { AcceptclaimdialogComponent } from './tablespace/playspace/acceptclaimdialog/acceptclaimdialog.component';
 import { ClaimdialogComponent } from './tablespace/playspace/claimdialog/claimdialog.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,10 +35,11 @@ import { DialogUserComponent } from 'app/dialog-user/dialog-user.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    HttpClientModule
   ],
   providers: [SocketService],
-  entryComponents: [DialogUserComponent, ClaimdialogComponent],
+  entryComponents: [DialogUserComponent, ClaimdialogComponent, AcceptclaimdialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

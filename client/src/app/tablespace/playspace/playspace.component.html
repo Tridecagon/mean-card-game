@@ -11,7 +11,9 @@
 <mcg-resultpanel *ngIf="showingResult" [result]="gameResult" (onOk)="onGameResultOk()"></mcg-resultpanel>
 <mcg-scoreboard [visible]="showingScoreboard" [players]="users"></mcg-scoreboard>
 <mcg-selectsortcontrol></mcg-selectsortcontrol>
-<div class="button-area">
-   <!-- <button mat-raised-button [style.display]="showClaimButton() ? 'initial' : 'none'" (click)="onClaimClick()">Claim</button>-->
+<div class="scoreboard-button">
     <button mat-raised-button (click)="onScoreboardClick()">Scoreboard</button>
 </div>
+<div class="claim-button">
+     <button mat-raised-button [hidden]="hideClaim" (click)="onClaimClick()">Claim</button>
+ </div>
