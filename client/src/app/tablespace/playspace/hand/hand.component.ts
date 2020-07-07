@@ -128,8 +128,8 @@ export class HandComponent implements OnInit, OnChanges {
     this.socketService.onAction<any>('tableDealCards')
       .subscribe((cards) => {
         // console.log(newHand);
-        this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
         if (this.player && cards.toUser === this.player.id && this.location !== 'bottom') {
+          this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
           for (let i = 0; i < cards.numCards; i++) {
             this.hand.push(new UiCard());
           }
@@ -208,6 +208,11 @@ export class HandComponent implements OnInit, OnChanges {
           }
         }
       });
+
+    this.socketService.onAction('skatGameResult')
+    .subscribe(() => {
+      this.hand = [];
+    });
   }
 
   private play(card: Card) {
