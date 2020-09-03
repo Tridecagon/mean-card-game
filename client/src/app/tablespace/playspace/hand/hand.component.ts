@@ -212,6 +212,7 @@ export class HandComponent implements OnInit, OnChanges {
     this.socketService.onAction('skatGameResult')
     .subscribe(() => {
       this.hand = [];
+      this.playedCard = undefined;
     });
   }
 
