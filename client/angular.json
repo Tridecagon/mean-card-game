@@ -31,7 +31,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -117,14 +116,16 @@
       }
     }
   },
-  "defaultProject": "mean-card-game-engine",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "mcg",
-      "styleext": "css"
+      "style": "css"
     },
     "@schematics/angular:directive": {
       "prefix": "mcg"
     }
+  },
+  "cli": {
+    "analytics": "eed72345-7bb4-4410-a3a0-3f624cbc4473"
   }
 }
