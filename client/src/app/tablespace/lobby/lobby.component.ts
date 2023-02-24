@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SocketService } from 'app/shared/services/socket.service';
 import { User, Table, GameType } from '../../../../../shared/model';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'mcg-lobby',

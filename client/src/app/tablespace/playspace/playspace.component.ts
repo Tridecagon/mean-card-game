@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ChangeDet
 import { Card, User } from '../../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 import { SkatGameSelection } from '../../../../../shared/model/skat';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ClaimdialogComponent } from './claimdialog/claimdialog.component';
 import { AcceptclaimdialogComponent } from './acceptclaimdialog/acceptclaimdialog.component';
 
