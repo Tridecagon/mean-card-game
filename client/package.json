@@ -29,7 +29,7 @@
     "@angular/platform-browser": "^14.2.12",
     "@angular/platform-browser-dynamic": "^14.2.12",
     "@angular/router": "^14.2.12",
-    "@ngtools/webpack": "^13.3.10",
+    "@ngtools/webpack": "^15.2.0",
     "@schematics/angular": "^8.3.21",
     "@schematics/package-update": "^0.7.5",
     "@types/express": "~4.17.2",
