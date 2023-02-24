@@ -1,4 +1,4 @@
-
+import { Namespace } from "socket.io";
 import { Score } from "../../../../shared/model";
 import {Player} from "../../model";
 import { Hand } from "./hand";
@@ -9,7 +9,7 @@ export class Match {
     protected shuffler: any;
     protected dealerIndex: number;
     protected players: Player[] = [];
-    protected tableChannel: SocketIO.Namespace;
+    protected tableChannel: Namespace;
     protected matchResults: any[] = [];
     protected hand: Hand;
     protected round: number;
@@ -18,7 +18,7 @@ export class Match {
         // this.type = GameType.Base; // base type no longer instantiable
     }
 
-    public async beginMatch(players: Player[], tableChan: SocketIO.Namespace) {
+    public async beginMatch(players: Player[], tableChan: Namespace) {
         this.players = players;
         this.tableChannel = tableChan;
 

@@ -1,3 +1,4 @@
+import { Namespace } from "socket.io";
 import { Card, GameType, Score, Suit } from "../../../../shared/model";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";
@@ -8,7 +9,7 @@ export class OhHellHand extends Hand {
     private trumpCard: Card;
     private bids: number[] = [];
 
-    constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
+    constructor(players: Player[], deck: any, tableChan: Namespace) {
         super(players, deck, tableChan);
     }
 

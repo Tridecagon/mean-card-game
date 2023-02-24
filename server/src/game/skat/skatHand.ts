@@ -1,3 +1,4 @@
+import { Namespace } from "socket.io";
 import { Card, SkatUtil, Suit } from "../../../../shared/model";
 import {SkatGameSelection, SkatGameType } from "../../../../shared/model/skat";
 import { Player } from "../../model";
@@ -14,7 +15,7 @@ export class SkatHand extends Hand {
     private winningBidder: number;
     private matadors: number;
 
-    constructor(players: Player[], deck: any, tableChan: SocketIO.Namespace) {
+    constructor(players: Player[], deck: any, tableChan: Namespace) {
         super(players, deck, tableChan);
         this.defaultSortType = Suit.Jack;
     }

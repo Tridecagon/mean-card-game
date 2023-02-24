@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import { Card, User } from "../../../shared/model";
 
 export class Player {
@@ -7,6 +8,6 @@ export class Player {
     public ready = false;
     public index: number;
 
-    constructor(public user: User, public socket: SocketIO.Socket) {}
+    constructor(public user: User, public socket: Socket) {}
 
 }

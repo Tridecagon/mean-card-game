@@ -1,6 +1,7 @@
+import { Namespace } from "socket.io";
 import { Card, Score, Suit } from "../../../../shared/model";
-import {Player} from "../../model";
-import {State} from "./state";
+import { Player } from "../../model";
+import { State } from "./state";
 
 export class Hand {
 
@@ -23,14 +24,14 @@ export class Hand {
 
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
-    constructor(protected players: Player[], protected deck: any, protected tableChan: SocketIO.Namespace) {
+    constructor(protected players: Player[], protected deck: any, protected tableChan: Namespace) {
         this.numCards = 10;
         this.SetupListeners();
         this.SetupStateHandlers();
     }
 
     public Sleep(ms: number): Promise<void> {
-        return new Promise((resolve) => {setTimeout(resolve, ms); });
+        return new Promise((resolve) => { setTimeout(resolve, ms); });
     }
 
     public async Play(dealerIndex: number, params: any): Promise<Score[]> {
@@ -83,18 +84,18 @@ export class Hand {
             console.log(`Dealing hand to player ${player.user.name} socket ${player.socket.id}`);
             const newHand = this.deck.draw(this.numCards);
             for (const card of newHand) {
-                player.heldCards.push({suit: card.suit, description: card.description, sort: card.sort});
+                player.heldCards.push({ suit: card.suit, description: card.description, sort: card.sort });
             }
 
             this.SortCards(player.heldCards, this.defaultSortType);
 
             player.socket.emit("dealHand", player.heldCards);
-            this.tableChan.emit("tableDealCards", {numCards: this.numCards, toUser: player.user.id});
+            this.tableChan.emit("tableDealCards", { numCards: this.numCards, toUser: player.user.id });
         }
     }
 
     public ShowHand(player: Player) {
-        this.tableChan.emit("showHand", {cards: player.heldCards, user: player.user.id});
+        this.tableChan.emit("showHand", { cards: player.heldCards, user: player.user.id });
     }
 
     public SortCards(cards: Card[], sortType: Suit = this.trumpSuit) {
@@ -107,7 +108,7 @@ export class Hand {
 
         let firstSuitIndex = 0;
         if (sortType !== Suit.None && sortType !== Suit.Null && suits.some((s) => s === sortType)) {
-            firstSuitIndex = suits.findIndex( (s) => s === sortType); // if no trumps, first suit is arbitrary
+            firstSuitIndex = suits.findIndex((s) => s === sortType); // if no trumps, first suit is arbitrary
         } else {
             if (blackSuits > redSuits) {
                 firstSuitIndex = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
@@ -121,14 +122,14 @@ export class Hand {
         }
 
         // set remaining suits
-        for (let i = 1; i < suits.length - 1; i++ ) {
+        for (let i = 1; i < suits.length - 1; i++) {
 
             if (i === 1 && sortType === Suit.Jack
-                                && blackSuits > redSuits && this.GetSuitColor(suits[1]) === "Red") {
+                && blackSuits > redSuits && this.GetSuitColor(suits[1]) === "Red") {
                 const firstBlackSuit = suits.findIndex((s) => this.GetSuitColor(s) === "Black");
                 [suits[1], suits[firstBlackSuit]] = [suits[firstBlackSuit], suits[1]];
             } else if (i === 1 && sortType === Suit.Jack
-                                && redSuits > blackSuits && this.GetSuitColor(suits[1]) === "Black") {
+                && redSuits > blackSuits && this.GetSuitColor(suits[1]) === "Black") {
                 const firstRedSuit = suits.findIndex((s) => this.GetSuitColor(s) === "Red");
                 [suits[1], suits[firstRedSuit]] = [suits[firstRedSuit], suits[1]];
             } else if (this.GetSuitColor(suits[i]) === this.GetSuitColor(suits[i - 1])) {
@@ -142,9 +143,9 @@ export class Hand {
 
         // sort cards by suit, then by sort
         cards.sort((c1, c2) => this.GetSuit(c1, sortType) === this.GetSuit(c2, sortType)
-        ? this.GetSort(c2, sortType) - this.GetSort(c1, sortType)
-        : suits.findIndex((s) => s === this.GetSuit(c1, sortType))
-           - suits.findIndex((s) => s === this.GetSuit(c2, sortType)));
+            ? this.GetSort(c2, sortType) - this.GetSort(c1, sortType)
+            : suits.findIndex((s) => s === this.GetSuit(c1, sortType))
+            - suits.findIndex((s) => s === this.GetSuit(c2, sortType)));
 
     }
 
@@ -206,7 +207,7 @@ export class Hand {
 
         // wait up to 10 seconds for all players to send ready
         for (let i = 0; i < 10; i++) {
-            if (this.readyForNextHand.some((r)  => !r )) {
+            if (this.readyForNextHand.some((r) => !r)) {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             }
         }
@@ -264,7 +265,7 @@ export class Hand {
         if (this.trickLeader === this.currentPlayer) { return true; }
         const ledSuit = this.GetSuit(this.currentTrick[this.trickLeader]);
         return this.GetSuit(card) === ledSuit
-        || !this.players[this.currentPlayer].heldCards.find((c) => this.GetSuit(c) === ledSuit);
+            || !this.players[this.currentPlayer].heldCards.find((c) => this.GetSuit(c) === ledSuit);
     }
 
     public GetSuit(card: Card, sortType?: Suit): Suit {
@@ -296,7 +297,7 @@ export class Hand {
                             this.currentPlayer === this.trickLeader ? -1 : this.players[this.currentPlayer].user.id,
                         card,
                         userId: player.user.id,
-                     });
+                    });
                     if (this.currentPlayer === this.trickLeader) { // trick is complete
                         this.currentPlayer = -1; // prevent more plays
                         this.EvaluateTrick();
@@ -307,9 +308,9 @@ export class Hand {
             player.socket.on("bidRequest", (bidInfo: any) => {
                 console.log(player.user.name + " request to bid " + JSON.stringify(bidInfo));
                 if (this.state === State.Bid && this.currentPlayer === player.index
-                        && this.ProcessBid(player, bidInfo)) {
-                    console.log(`Bid accepted: ${JSON.stringify(bidInfo)}` );
-                    this.tableChan.emit("bidResponse", {bidInfo, userId: player.user.id});
+                    && this.ProcessBid(player, bidInfo)) {
+                    console.log(`Bid accepted: ${JSON.stringify(bidInfo)}`);
+                    this.tableChan.emit("bidResponse", { bidInfo, userId: player.user.id });
                 } else if (this.currentPlayer !== player.index) {
                     console.log(`Bid rejected: it's ${this.players[this.currentPlayer].user.name}'s turn.`);
                 }
@@ -363,8 +364,8 @@ export class Hand {
     public SetupStateHandlers() {
         this.stateHandlers[State.Bid] = () => { this.SetState(State.Play); }; // no bidding function for base game (yet)
         this.stateHandlers[State.Play] = () => {
-              this.trickLeader = this.currentPlayer = (this.dealerIndex + 1) % this.players.length;
-            };
+            this.trickLeader = this.currentPlayer = (this.dealerIndex + 1) % this.players.length;
+        };
     }
 
 }
