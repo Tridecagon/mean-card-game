@@ -15,8 +15,7 @@
         "node_modules/core-js/proposals/reflect-metadata"
       ]
     },
-
-    "target": "es2020",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -24,6 +23,7 @@
       "es2016",
       "dom"
     ],
-    "module": "es2020"
+    "module": "es2020",
+    "useDefineForClassFields": false
   }
 }

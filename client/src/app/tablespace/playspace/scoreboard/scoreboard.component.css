@@ -4,15 +4,15 @@
     height: 65%;
     position: absolute;
 }
-.mat-card {
+.mat-mdc-card {
     z-index: 25;
 }
 
-.mat-card-content {
+.mat-mdc-card-content {
         height: 25vh;
     overflow-y: auto;
 }
 
-.mat-footer-row {
+.mat-mdc-footer-row {
     font-weight: bold;
   }

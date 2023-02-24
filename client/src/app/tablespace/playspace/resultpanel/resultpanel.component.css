@@ -1,3 +1,5 @@
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
     margin: 5% 15% auto;
     width: 70%;
@@ -22,6 +24,9 @@ mcg-cardrow {
     position: absolute;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-title { justify-content: center; }
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-content { justify-content: center; }
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-footer { justify-content: center; }
