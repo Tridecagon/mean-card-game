@@ -15,7 +15,7 @@ import {
   MatSelectModule,
   MatGridListModule,
   MatCheckboxModule
-} from '@angular/material';
+} from '@angular/material/dialog';
 
 @NgModule({
   imports: [
