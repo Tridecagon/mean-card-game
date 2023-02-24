@@ -4,7 +4,7 @@ import { ChatComponent } from '../chat/chat.component';
 import { Action, Message, User } from '../../../../shared/model';
 import { Channel, ChannelCollection, Event } from '../shared/model';
 
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ViewChild } from '@angular/core';
 
 import { DialogUserComponent } from '../dialog-user/dialog-user.component';
