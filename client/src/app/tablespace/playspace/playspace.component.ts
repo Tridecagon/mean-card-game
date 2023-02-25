@@ -62,10 +62,11 @@ export class PlayspaceComponent implements OnInit {
   ngOnInit() {
     this.selectingGame = false;
     this.hideClaim = true;
-    this.socketService.initSocket(`/table${this.tableId}`);
+    this.socketService.initSocket();
     this.onJoinTable.emit({ name: 'Table', conn: this.socketService });
     this.setupTableListeners();
     this.socketService.sendAction('requestTableInfo', null);
+    console.log("requested table info");
   }
   private setupTableListeners(): void {
     this.socketService.onAction<number>('numPlayers')

@@ -1,4 +1,4 @@
-import { Namespace } from "socket.io";
+import { Server } from "socket.io";
 import { Card, GameType, Score, Suit } from "../../../../shared/model";
 import { Player } from "../../model";
 import { Hand, State } from "../baseGame";
@@ -9,8 +9,8 @@ export class OhHellHand extends Hand {
     private trumpCard: Card;
     private bids: number[] = [];
 
-    constructor(players: Player[], deck: any, tableChan: Namespace) {
-        super(players, deck, tableChan);
+    constructor(players: Player[], deck: any, protected io: Server, protected tableChan: string) {
+        super(players, deck, io, tableChan);
     }
 
     public DealHands() {
@@ -32,7 +32,7 @@ export class OhHellHand extends Hand {
         super.SetupStateHandlers();
         this.stateHandlers[State.Bid] = () => {
              this.currentPlayer = (this.dealerIndex + 1) % this.players.length;
-             this.tableChan.emit("startBidding", {
+             this.io.to(this.tableChan).emit("startBidding", {
                 dealerId: this.players[this.dealerIndex].user.id,
                  gameType: "Oh Hell",
                  trumpCard: this.trumpCard,

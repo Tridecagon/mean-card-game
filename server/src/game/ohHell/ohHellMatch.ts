@@ -10,7 +10,7 @@ export class OhHellMatch extends Match {
     }
 
     public GetHand(): Hand {
-        return new OhHellHand(this.players, this.deck, this.tableChannel);
+        return new OhHellHand(this.players, this.deck, this.io, this.tableChan);
     }
 
     public GetHandParams(): any {

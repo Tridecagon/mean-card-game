@@ -123,6 +123,7 @@ export class ChatServer {
                     for (const user of this.lobby[tableIndex].users) {
                         if (user && user.id) {
                             const newPlayer = new Player(user, this.socketMap[user.id]);
+                            console.log(`Creating ${user.name} = ${this.socketMap[user.id].id} at ${tableIndex}`);
                             tablePlayers.push(newPlayer);
 
                             newPlayer.socket.emit("startTable", tableIndex);
@@ -130,7 +131,7 @@ export class ChatServer {
                     }
 
                     const activeTable = new GameTable(tablePlayers, tableIndex,
-                            this.lobby[tableIndex].gameType, this.io.of(`/table${tableIndex}`));
+                            this.lobby[tableIndex].gameType, this.io,`table${tableIndex}`);
                     activeTable.gameTableEventEmitter.on("end", () => {
                         this.lobby[tableIndex].active = false;
                         this.io.emit("lobbyState", this.lobby);

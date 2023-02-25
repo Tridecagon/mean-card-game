@@ -1,4 +1,4 @@
-import { Namespace } from "socket.io";
+import { Server } from "socket.io";
 import { Score } from "../../../../shared/model";
 import {Player} from "../../model";
 import { Hand } from "./hand";
@@ -9,18 +9,20 @@ export class Match {
     protected shuffler: any;
     protected dealerIndex: number;
     protected players: Player[] = [];
-    protected tableChannel: Namespace;
     protected matchResults: any[] = [];
     protected hand: Hand;
     protected round: number;
+    protected io: Server;
+    protected tableChan: string;
 
     constructor() {
         // this.type = GameType.Base; // base type no longer instantiable
     }
 
-    public async beginMatch(players: Player[], tableChan: Namespace) {
+    public async beginMatch(players: Player[], srv: Server, tableChannel: string) {
         this.players = players;
-        this.tableChannel = tableChan;
+        this.io = srv;
+        this.tableChan = tableChannel;
 
         this.round = 0;
         this.matchResults[0] = {};
@@ -70,7 +72,7 @@ export class Match {
                 (acc, cur) => acc + (cur[this.players[p.index].user.name] || 0), 0);
             console.log(`${p.user.name}: ${totalScore}`);
         });
-        this.tableChannel.emit("updateScores", this.matchResults);
+        this.io.to(this.tableChan).emit("updateScores", this.matchResults);
     }
 
     public MatchComplete() {
@@ -78,7 +80,7 @@ export class Match {
     }
 
     public GetHand(): Hand {
-        return new Hand(this.players, this.deck, this.tableChannel);
+        return new Hand(this.players, this.deck, this.io, this.tableChan);
     }
 
 }

@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { Namespace, Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Factory } from ".";
 import { Action, Card, GameType, Message, User } from "../../shared/model";
 import { Match } from "./game/baseGame/match";
@@ -16,7 +16,7 @@ export class GameTable {
     private matchActive: boolean;
 
     constructor(private players: Player[], private tableId: number,
-                private gameType: GameType, private tableChan: Namespace) {
+                private gameType: GameType, private io: Server, private tableChan: string) {
         const asyncLock = require("async-lock");
         this.lock = new asyncLock();
         this.gameTableEventEmitter = new EventEmitter();
@@ -26,20 +26,23 @@ export class GameTable {
     public startSession() {
 
         // wait for players to connect
-        this.tableChan.on("connection", (socket: Socket) => {
+        this.players.map((p) => {
+            const socket = p.socket;
+            console.log("Player connected to table");
             // find player and assign appropriate socket
             for (let i = 0; i < this.players.length; i++) {
                 // substring search to see if socket ID's are matching
-                if (socket.id.indexOf(this.players[i].socket.id) >= 0) {
+                if (socket.id === this.players[i].socket.id) {
 
-                    // console.log('Connected %s to table %s', this.players[i].user.name, this.tableId);
+                    console.log("Connected %s to table %s", this.players[i].user.name, this.tableId);
                     this.lock.acquire("key", () => {
                         this.players[i].socket = socket;
                         this.players[i].index = i;
 
-                        this.tableChan.emit("playerSat", { user: this.players[i].user, index: i });
+                        this.io.to(this.tableChan).emit("playerSat", { user: this.players[i].user, index: i });
 
                         this.players[i].connected = true;
+                        console.log(this.players.filter((p) => p.connected).length, "players connected");
                     });
                 }
             }
@@ -49,9 +52,9 @@ export class GameTable {
                     // substring search to see if socket ID's are matching
                     if (socket.id.indexOf(player.socket.id) >= 0) {
                         player.connected = false;
-                        if (this.players.every((p) => !p.connected)) {
+                        if (this.players.every((pl) => !pl.connected)) {
                             // reset table
-                            this.tableChan.removeAllListeners();
+                            this.players.map((p) => p.socket.leave(this.tableChan));
                             this.gameTableEventEmitter.emit("end");
                         }
                     }
@@ -59,8 +62,10 @@ export class GameTable {
             });
 
             socket.on("requestTableInfo", () => {
+                console.log("received requestTableInfo");
                 this.lock.acquire("key", () => {
                     // console.log(`Entering locked section for ${this.players[i].user.name}`);
+                    console.log(`RequestTableInfo: entering locked section with ${this.players.length} players`)
                     socket.emit("numPlayers", this.players.length);
 
                     // share connected players
@@ -68,18 +73,21 @@ export class GameTable {
                         socket.emit("playerSat", { user: sittingPlayer.user, index: sittingPlayer.index });
                     }
 
+                    console.log(`Searching for ${socket.id} in ${this.players.map((p)  => p.socket.id)}`);
                     const player = this.players.find((p) => p.socket.id === socket.id);
                     if (player) {
                         player.ready = true;
-
+                        console.log("Checking match readiness");
                         if (!this.matchActive && this.players.every((p) => p.ready)) {
                             this.matchActive = true;
-
+                            console.log("Starting match");
                             this.match = Factory.buildMatch(this.gameType);
-                            this.match.beginMatch(this.players, this.tableChan);
+                            this.match.beginMatch(this.players, this.io, this.tableChan);
                         }
+                    } else {
+                        console.error("Sitting player not found");
                     }
-                    // console.log(`Leaving locked section for ${this.players[i].user.name}`);
+                    console.log(`RequestTableInfo: Leaving locked section`);
                 });
 
             });
@@ -89,7 +97,7 @@ export class GameTable {
                     this.executeChatCommand(m);
                 } else {
                     console.log("[server](message): %s", JSON.stringify(m));
-                    this.tableChan.emit("chatMessage", m);
+                    this.io.to(this.tableChan).emit("chatMessage", m);
                 }
             });
         });
@@ -98,7 +106,7 @@ export class GameTable {
     protected executeChatCommand(m: Message) {
         switch ((m.content as string).toLowerCase()) {
             case "/demoresult":
-                this.tableChan.emit("skatGameResult", {
+                this.io.to(this.tableChan).emit("skatGameResult", {
                     cardPoints: 25,
                     cards: [{
                         description: "Ten",
@@ -121,9 +129,9 @@ export class GameTable {
                 const myIndex = this.players.find((p) => p.user.id === m.from.id).index;
                 for (const index of [0, 1, 2, 3].filter((x) => x !== myIndex)) {
                     const user: User = { name: `player${index}`, id: Number.parseInt(`12345${index}`, 10) };
-                    this.tableChan.emit("numPlayers", 4);
-                    this.tableChan.emit("playerSat", { user, index });
-                    this.tableChan.emit("tableDealCards", { numCards: 10, toUser: user.id });
+                    this.io.to(this.tableChan).emit("numPlayers", 4);
+                    this.io.to(this.tableChan).emit("playerSat", { user, index });
+                    this.io.to(this.tableChan).emit("tableDealCards", { numCards: 10, toUser: user.id });
                 }
                 break;
             default:

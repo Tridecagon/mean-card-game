@@ -1,4 +1,4 @@
-import { Namespace } from "socket.io";
+import { Server } from "socket.io";
 import { Card, Score, Suit } from "../../../../shared/model";
 import { Player } from "../../model";
 import { State } from "./state";
@@ -24,7 +24,7 @@ export class Hand {
 
     // protected sleep = (ms) => { return new Promise(resolve => {setTimeout(resolve, ms)}) };
 
-    constructor(protected players: Player[], protected deck: any, protected tableChan: Namespace) {
+    constructor(protected players: Player[], protected deck: any, protected io: Server, protected tableChan: string) {
         this.numCards = 10;
         this.SetupListeners();
         this.SetupStateHandlers();
@@ -90,12 +90,12 @@ export class Hand {
             this.SortCards(player.heldCards, this.defaultSortType);
 
             player.socket.emit("dealHand", player.heldCards);
-            this.tableChan.emit("tableDealCards", { numCards: this.numCards, toUser: player.user.id });
+            this.io.to(this.tableChan).emit("tableDealCards", { numCards: this.numCards, toUser: player.user.id });
         }
     }
 
     public ShowHand(player: Player) {
-        this.tableChan.emit("showHand", { cards: player.heldCards, user: player.user.id });
+        this.io.to(this.tableChan).emit("showHand", { cards: player.heldCards, user: player.user.id });
     }
 
     public SortCards(cards: Card[], sortType: Suit = this.trumpSuit) {
@@ -190,10 +190,10 @@ export class Hand {
     }
 
     public CompleteBidding() {
-        this.tableChan.emit("biddingComplete");
+        this.io.to(this.tableChan).emit("biddingComplete");
         setTimeout(() => {
             this.SetState(State.Play);
-            this.tableChan.emit("beginPlay", this.players[this.currentPlayer].user.id);
+            this.io.to(this.tableChan).emit("beginPlay", this.players[this.currentPlayer].user.id);
         }, 5000);
     }
 
@@ -246,7 +246,7 @@ export class Hand {
         }
 
         this.trickLeader = this.currentPlayer = currentWinner;
-        this.tableChan.emit("trickWon", this.players[currentWinner].user.id);
+        this.io.to(this.tableChan).emit("trickWon", this.players[currentWinner].user.id);
     }
 
     public Beats(follow: Card, lead: Card) {
@@ -292,7 +292,7 @@ export class Hand {
                     do {
                         this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
                     } while (this.currentPlayer === this.inactivePlayer);
-                    this.tableChan.emit("playResponse", {
+                    this.io.to(this.tableChan).emit("playResponse", {
                         activePlayer:
                             this.currentPlayer === this.trickLeader ? -1 : this.players[this.currentPlayer].user.id,
                         card,
@@ -310,7 +310,7 @@ export class Hand {
                 if (this.state === State.Bid && this.currentPlayer === player.index
                     && this.ProcessBid(player, bidInfo)) {
                     console.log(`Bid accepted: ${JSON.stringify(bidInfo)}`);
-                    this.tableChan.emit("bidResponse", { bidInfo, userId: player.user.id });
+                    this.io.to(this.tableChan).emit("bidResponse", { bidInfo, userId: player.user.id });
                 } else if (this.currentPlayer !== player.index) {
                     console.log(`Bid rejected: it's ${this.players[this.currentPlayer].user.name}'s turn.`);
                 }

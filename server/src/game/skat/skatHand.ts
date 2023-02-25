@@ -1,4 +1,4 @@
-import { Namespace } from "socket.io";
+import { Server } from "socket.io";
 import { Card, SkatUtil, Suit } from "../../../../shared/model";
 import {SkatGameSelection, SkatGameType } from "../../../../shared/model/skat";
 import { Player } from "../../model";
@@ -15,8 +15,8 @@ export class SkatHand extends Hand {
     private winningBidder: number;
     private matadors: number;
 
-    constructor(players: Player[], deck: any, tableChan: Namespace) {
-        super(players, deck, tableChan);
+    constructor(players: Player[], deck: any, protected io: Server, protected tableChan: string) {
+        super(players, deck, io, tableChan);
         this.defaultSortType = Suit.Jack;
     }
 
@@ -37,7 +37,7 @@ export class SkatHand extends Hand {
                         this.trumpSuit = Suit.Jack;
                         this.selectedGame.doubleTurn = true;
                         this.SetState(State.Discard);
-                        this.tableChan.emit("gameSelected", selectedGame );
+                        this.io.to(this.tableChan).emit("gameSelected", selectedGame );
                     } else {
                         setTimeout(() => this.SetState(State.Play), 3000);
                         this.trumpSuit = selectedGame.suit;
@@ -46,7 +46,7 @@ export class SkatHand extends Hand {
                             || selectedGame.selection === SkatGameType.GrandOvert) {
                                 this.ShowHand(player);
                             }
-                        this.tableChan.emit("gameSelected", selectedGame );
+                        this.io.to(this.tableChan).emit("gameSelected", selectedGame );
                     }
                 }
             });
@@ -71,7 +71,7 @@ export class SkatHand extends Hand {
                                   const turnCard = doubleTurn ? this.skat[1] : this.skat[0];
                                   this.trumpSuit = Suit.Jack;
                                   this.SetState(State.Discard);
-                                  this.tableChan.emit("gameSelected",
+                                  this.io.to(this.tableChan).emit("gameSelected",
                                     {
                                         doubleTurn,
                                         selection: SkatGameType.Turn,
@@ -87,7 +87,7 @@ export class SkatHand extends Hand {
                                 const turnCard = doubleTurn ? this.skat[1] : this.skat[0];
                                 this.trumpSuit = Suit[turnChoice as keyof typeof Suit];
                                 this.SetState(State.Discard);
-                                this.tableChan.emit("gameSelected",
+                                this.io.to(this.tableChan).emit("gameSelected",
                                 {
                                     doubleTurn,
                                     selection: SkatGameType.Turn,
@@ -152,7 +152,7 @@ export class SkatHand extends Hand {
             this.holdIndex = (this.dealerIndex + 1) % this.players.length;
             this.currentPlayer = (this.holdIndex + 1) % this.players.length;
             this.winningBidder = undefined;
-            this.tableChan.emit("startBidding", {
+            this.io.to(this.tableChan).emit("startBidding", {
                 dealerId: this.players[this.dealerIndex].user.id,
                 gameType: "Skat",
                 holdId: this.players[this.holdIndex].user.id,
@@ -176,7 +176,7 @@ export class SkatHand extends Hand {
         this.stateHandlers[State.Play] = () => {
             this.trickLeader = this.currentPlayer = this.holdIndex;
             this.matadors = this.countMatadors();
-            this.tableChan.emit("beginPlay", this.players[this.currentPlayer].user.id);
+            this.io.to(this.tableChan).emit("beginPlay", this.players[this.currentPlayer].user.id);
         };
     }
 
@@ -296,7 +296,7 @@ export class SkatHand extends Hand {
         console.log
           (`Bidding complete. Winning bidder: ${this.players[this.winningBidder].user.name}, bid: ${this.winningBid}`);
         this.SetState(State.SelectSkatGame);
-        this.tableChan.emit("biddingComplete",
+        this.io.to(this.tableChan).emit("biddingComplete",
         {
             bid: this.winningBid,
             winner: this.players[this.winningBidder].user.name,
@@ -312,7 +312,7 @@ export class SkatHand extends Hand {
                     id: this.players[this.winningBidder].user.id,
                     points: this.players[this.winningBidder].trickPile.length === 0 ? baseValue : (-1 * baseValue),
                 });
-                this.tableChan.emit("skatGameResult", {
+                this.io.to(this.tableChan).emit("skatGameResult", {
                     cardPoints: 0,
                     cards: this.players[this.winningBidder].trickPile,
                     score: this.scores[0].points,
@@ -332,7 +332,7 @@ export class SkatHand extends Hand {
                     id: this.players[this.winningBidder].user.id,
                     points: scorePoints,
                 });
-                this.tableChan.emit("skatGameResult", {
+                this.io.to(this.tableChan).emit("skatGameResult", {
                     cardPoints,
                     cards: this.players[this.winningBidder].trickPile.filter((c) => c.sort > 9),
                     score: scorePoints,
@@ -379,7 +379,7 @@ export class SkatHand extends Hand {
                         winnerName = winnerNameList.join(", ");
                     }
                 }
-                this.tableChan.emit("skatGameResult", {
+                this.io.to(this.tableChan).emit("skatGameResult", {
                     cardPoints: winners[0],
                     score: this.scores[0].points,
                     skat: this.rememberedSkat,
