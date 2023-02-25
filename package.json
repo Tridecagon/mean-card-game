@@ -1,6 +1,9 @@
 {
-    "engines": {
-        "node": "12.16.2",
-        "npm": "6.14.4"
+    "scripts": {
+        "start:client": "cd client && npm start",
+        "start:server": "cd server && npm start",
+        "build:client": "cd client && npm run build",
+        "build:server": "cd server && npm run build",
+        "build": "npm run build:server && npm run build:client"
     }
 }
