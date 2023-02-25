@@ -216,6 +216,7 @@ export class PlayspaceComponent implements OnInit {
         });
   }
   sendDiscards() {
+    console.log("Attempting to send discards");
     const handComponent = this.hands.find((h) => h.location === 'bottom');
     if (handComponent.selectedCards.length === 2) {
       this.socketService.sendAction('discardSkat', handComponent.selectedCards.map((c) => c.card));
