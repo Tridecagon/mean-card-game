@@ -26,8 +26,8 @@ export class GameTable {
     public startSession() {
 
         // wait for players to connect
-        this.players.map((p) => {
-            const socket = p.socket;
+        this.players.map((pl) => {
+            const socket = pl.socket;
             console.log("Player connected to table");
             // find player and assign appropriate socket
             for (let i = 0; i < this.players.length; i++) {
@@ -35,6 +35,7 @@ export class GameTable {
                 if (socket.id === this.players[i].socket.id) {
 
                     console.log("Connected %s to table %s", this.players[i].user.name, this.tableId);
+                    socket.join(this.tableChan);
                     this.lock.acquire("key", () => {
                         this.players[i].socket = socket;
                         this.players[i].index = i;
@@ -52,7 +53,7 @@ export class GameTable {
                     // substring search to see if socket ID's are matching
                     if (socket.id.indexOf(player.socket.id) >= 0) {
                         player.connected = false;
-                        if (this.players.every((pl) => !pl.connected)) {
+                        if (this.players.every((p) => !p.connected)) {
                             // reset table
                             this.players.map((p) => p.socket.leave(this.tableChan));
                             this.gameTableEventEmitter.emit("end");
@@ -65,7 +66,7 @@ export class GameTable {
                 console.log("received requestTableInfo");
                 this.lock.acquire("key", () => {
                     // console.log(`Entering locked section for ${this.players[i].user.name}`);
-                    console.log(`RequestTableInfo: entering locked section with ${this.players.length} players`)
+                    console.log(`RequestTableInfo: entering locked section with ${this.players.length} players`);
                     socket.emit("numPlayers", this.players.length);
 
                     // share connected players
@@ -96,8 +97,9 @@ export class GameTable {
                 if (m.content[0] === "/") {
                     this.executeChatCommand(m);
                 } else {
-                    console.log("[server](message): %s", JSON.stringify(m));
-                    this.io.to(this.tableChan).emit("chatMessage", m);
+                    // do nothing, this gets handled in the main server now
+                    // console.log("[server](message): %s", JSON.stringify(m));
+                    // this.io.to(this.tableChan).emit("chatMessage", m);
                 }
             });
         });

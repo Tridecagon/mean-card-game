@@ -11,7 +11,6 @@ import { AcceptclaimdialogComponent } from './acceptclaimdialog/acceptclaimdialo
   selector: 'mcg-playspace',
   templateUrl: './playspace.component.html',
   styleUrls: ['./playspace.component.css'],
-  providers: [SocketService]
 })
 export class PlayspaceComponent implements OnInit {
 
@@ -62,6 +61,7 @@ export class PlayspaceComponent implements OnInit {
   ngOnInit() {
     this.selectingGame = false;
     this.hideClaim = true;
+    console.log("initializing playspace component");
     this.socketService.initSocket();
     this.onJoinTable.emit({ name: 'Table', conn: this.socketService });
     this.setupTableListeners();

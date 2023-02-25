@@ -115,11 +115,13 @@ export class MainpanelComponent implements OnInit {
     if (action === Action.JOINED) {
       message = {
         from: this.user,
+        room: 'lobby',
         action: action
       };
     } else if (action === Action.RENAME) {
       message = {
         action: action,
+        room: 'lobby',
         content: {
           username: this.user.name,
           previousUsername: params.previousUsername

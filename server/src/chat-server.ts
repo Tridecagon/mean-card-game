@@ -131,7 +131,7 @@ export class ChatServer {
                     }
 
                     const activeTable = new GameTable(tablePlayers, tableIndex,
-                            this.lobby[tableIndex].gameType, this.io,`table${tableIndex}`);
+                            this.lobby[tableIndex].gameType, this.io, `table${tableIndex}`);
                     activeTable.gameTableEventEmitter.on("end", () => {
                         this.lobby[tableIndex].active = false;
                         this.io.emit("lobbyState", this.lobby);

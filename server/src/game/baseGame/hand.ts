@@ -90,6 +90,7 @@ export class Hand {
             this.SortCards(player.heldCards, this.defaultSortType);
 
             player.socket.emit("dealHand", player.heldCards);
+            console.log("Sending tableDealCards", this.tableChan, this.numCards, player.user.id);
             this.io.to(this.tableChan).emit("tableDealCards", { numCards: this.numCards, toUser: player.user.id });
         }
     }

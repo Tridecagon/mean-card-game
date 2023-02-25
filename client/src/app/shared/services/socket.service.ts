@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from '../../../../../shared/model';
 import { Event } from '../model/event';
-import { v4 } from "uuid";
 
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'environments/environment';
@@ -10,9 +9,8 @@ import { environment } from 'environments/environment';
 // const SERVER_URL = process.env.SERVER_URL || 'http://localhost:8080';
 // const SERVER_URL = 'https://mean-card-game-server.herokuapp.com';
 const SERVER_URL = environment.server_url;
-const clientId = v4();
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class SocketService {
     private socket: Socket;
     public onInit: Event;
@@ -56,6 +54,6 @@ export class SocketService {
         } else {
             this.socket =  io(SERVER_URL);
         }
-        console.log(`Socket open for channel ${channel} with ID ${this.socket.id}`);
+        console.log(`Socket open for channel ${channel}`);
     }
 }
