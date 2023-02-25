@@ -6,8 +6,6 @@ import { Event } from '../model/event';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'environments/environment';
 
-// const SERVER_URL = process.env.SERVER_URL || 'http://localhost:8080';
-// const SERVER_URL = 'https://mean-card-game-server.herokuapp.com';
 const SERVER_URL = environment.server_url;
 
 @Injectable({providedIn: 'root'})

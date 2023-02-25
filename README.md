@@ -2,14 +2,16 @@
 This project will become an app for hosting playing card games in the browser. I am using the wonderful SocketIO Typescript Chat project below as a starting point. The rest of the info in this file regards that project; more info regarding the card game engine as it's built.
 
 ## Progress
-Many features are functional; more are being added. This app is now being hosted on Heroku!
+Many features are functional; more are being added. This app is now being hosted on Railway!
 
-[Card-game Client](http://mean-card-game-client.herokuapp.com)
+[Card-game Client](skat.up.railway.app)
 
 You may have to poke the server and wait a moment, since free heroku dynos tend to fall asleep.
 Note there is literally no web front-end, so this call will return an error (cannot GET /), but it will wake the server up.
 
-[Card-game Server](http://mean-card-game-server.herokuapp.com)
+I'm not on Heroku anymore, I have no idea if this is true for Railway.
+
+[Card-game Server](skat-server.up.railway.app)
 
 
 
