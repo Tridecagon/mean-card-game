@@ -6,6 +6,5 @@
         "build:client": "cd client && npm run build",
         "build:server": "cd server && npm run build",
         "build": "npm run build:server && npm run build:client"
-
     }
 }
