@@ -43,7 +43,8 @@ export class ChatComponent implements OnInit, OnChanges {
     if (!this.channelList.selectedChannel) {
       this.selectChannel('lobby');
     }
-    this.channelList.selectedChannel.sendMessage(this.user, this.messageContent);
+    this.channelList.selectedChannel.sendMessage(this.user, this.messageContent, 
+      this.channelList.selectedChannel.channelName);
     this.messageContent = '';
   }
 

@@ -11,7 +11,7 @@ export class SkatMatch extends Match {
     }
 
     public GetHand(): Hand {
-        return new SkatHand(this.players, this.deck, this.tableChannel);
+        return new SkatHand(this.players, this.deck, this.io, this.tableChan);
     }
 
     public GetDeck(): any {

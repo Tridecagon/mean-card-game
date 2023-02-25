@@ -1,5 +1,5 @@
 <div *ngIf="visible" class="scoreboard-container">
-    <mat-card>
+    <mat-card appearance="outlined">
         <mat-card-title>Scores</mat-card-title>
         <mat-card-content  #scrollMe [scrollTop]="scrollMe.scrollHeight">
             <mat-table [dataSource]="scores">

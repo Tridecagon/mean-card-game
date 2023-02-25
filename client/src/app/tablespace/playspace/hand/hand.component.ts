@@ -127,7 +127,7 @@ export class HandComponent implements OnInit, OnChanges {
 
     this.socketService.onAction<any>('tableDealCards')
       .subscribe((cards) => {
-        // console.log(newHand);
+        console.log('tableDealCards', cards);
         if (this.player && cards.toUser === this.player.id && this.location !== 'bottom') {
           this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
           for (let i = 0; i < cards.numCards; i++) {

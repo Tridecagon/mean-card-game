@@ -8,17 +8,20 @@ export class Channel {
     constructor(public channelName: string, private socket: SocketService) {
         this.socket.onMessage('chatMessage')
         .subscribe((message: Message) => {
-        this.messages.push(message);
+            if(message.room === channelName) {
+                this.messages.push(message);
+            }
         });
     }
 
-    sendMessage(user: User, message: string): void {
+    sendMessage(user: User, message: string, room = 'lobby'): void {
         if (!message) {
             return;
         }
 
         this.socket.send({
             from: user,
+            room,
             content: message
         });
     }

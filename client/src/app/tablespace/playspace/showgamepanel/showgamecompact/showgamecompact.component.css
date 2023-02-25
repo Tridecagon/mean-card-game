@@ -1,3 +1,5 @@
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
     margin: 0 auto 0 0;
     width: fit-content;
@@ -6,4 +8,5 @@ mat-card {
     z-index: 11;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-content { justify-content: center; display: inline-block;}
