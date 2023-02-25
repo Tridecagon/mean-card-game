@@ -54,7 +54,7 @@ export class ChatServer {
             this.socketOpts.pingTimeout = 300000;
         }
         this.socketOpts.cors = {
-            origin: "http://localhost:4200",
+            origin: ["http://localhost:4200", "https://skat.up.railway.app:*"]
           };
     }
 
