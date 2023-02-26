@@ -18,6 +18,6 @@ export class EuchreMatch extends Match {
     }
 
     public GetHand(): Hand {
-        return new EuchreHand(this.players, this.deck, this.tableChannel);
+        return new EuchreHand(this.players, this.deck, this.io, this.tableChan);
     }
 }

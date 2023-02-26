@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/.angular
 
 # dependencies
 /node_modules
@@ -25,6 +26,7 @@
 !.vscode/extensions.json
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage
@@ -32,6 +34,7 @@
 npm-debug.log
 testem.log
 /typings
+/.angulars
 
 # e2e
 /e2e/*.js

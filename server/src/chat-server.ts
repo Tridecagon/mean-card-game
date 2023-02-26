@@ -1,6 +1,6 @@
 import * as express from "express";
-import { createServer, Server } from "http";
-import * as socketIo from "socket.io";
+import { createServer } from "http";
+import { Server, ServerOptions, Socket } from "socket.io";
 
 // global
 declare var v8debug: any;
@@ -15,8 +15,8 @@ export class ChatServer {
     public debug = typeof v8debug === "object" || /--debug|--inspect/.test(process.execArgv.join(" "));
 
     private app: express.Application;
-    private server: Server;
-    private io: SocketIO.Server;
+    private io: Server<any, any, any, any>;
+    private socketOpts: any = {};
     private port: string | number;
     private maxTables = 5;
 
@@ -29,8 +29,8 @@ export class ChatServer {
         this.tableSetup();
         this.createApp();
         this.config();
-        this.createServer();
         this.sockets();
+        this.createServer();
         this.listen();
 
     }
@@ -43,11 +43,6 @@ export class ChatServer {
         console.log("Creating express app...");
         this.app = express();
     }
-
-    private createServer(): void {
-        this.server = createServer(this.app);
-    }
-
     private config(): void {
         this.port = process.env.PORT || ChatServer.PORT;
         console.log("Configuring port " + this.port + "...");
@@ -55,19 +50,26 @@ export class ChatServer {
     }
 
     private sockets(): void {
-        const socketOpts: socketIo.ServerOptions = {};
         if (this.debug) {
-            socketOpts.pingTimeout = 300000;
+            this.socketOpts.pingTimeout = 300000;
         }
-        this.io = socketIo.listen(this.server, socketOpts);
+        this.socketOpts.cors = {
+            methods: ["GET", "POST"],
+            origins: ["http://skat.up.railway.app:1234", "http://localhost:4200", "https://skat.up.railway.app" ],
+
+          };
+    }
+
+    private createServer(): void {
+        this.io = new Server(this.socketOpts);
     }
 
     private listen(): void {
-        this.server.listen(this.port, () => {
-            console.log("Running server on port %s", this.port);
-        });
 
-        this.io.on("connect", (socket: SocketIO.Socket) => {
+        this.io.listen(+this.port);
+        console.log("Listening on port", this.port);
+
+        this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s.", this.port);
             socket.on("message", (m: Message) => {
                 console.log("[server](message): %s", JSON.stringify(m));
@@ -123,6 +125,7 @@ export class ChatServer {
                     for (const user of this.lobby[tableIndex].users) {
                         if (user && user.id) {
                             const newPlayer = new Player(user, this.socketMap[user.id]);
+                            console.log(`Creating ${user.name} = ${this.socketMap[user.id].id} at ${tableIndex}`);
                             tablePlayers.push(newPlayer);
 
                             newPlayer.socket.emit("startTable", tableIndex);
@@ -130,7 +133,7 @@ export class ChatServer {
                     }
 
                     const activeTable = new GameTable(tablePlayers, tableIndex,
-                            this.lobby[tableIndex].gameType, this.io.of(`/table${tableIndex}`));
+                            this.lobby[tableIndex].gameType, this.io, `table${tableIndex}`);
                     activeTable.gameTableEventEmitter.on("end", () => {
                         this.lobby[tableIndex].active = false;
                         this.io.emit("lobbyState", this.lobby);
@@ -147,6 +150,7 @@ export class ChatServer {
                 this.io.emit("lobbyState", this.lobby);
             });
         });
+
     }
 
     private tableSetup() {

@@ -4,6 +4,6 @@
     height: 65%;
     position: absolute;
 }
-.mat-card {
+.mat-mdc-card {
     z-index: 11;
 }

@@ -39,7 +39,6 @@ import { AcceptclaimdialogComponent } from './playspace/acceptclaimdialog/accept
     ShowgamecompactComponent, SelectsortcontrolComponent, ResultpanelComponent, CardrowComponent,
     ScoreboardComponent, ClaimdialogComponent, AcceptclaimdialogComponent],
   providers: [
-    SocketService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
   ]
 })

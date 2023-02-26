@@ -6,7 +6,6 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
       "core-js/es7/reflect": [
@@ -16,8 +15,7 @@
         "node_modules/core-js/proposals/reflect-metadata"
       ]
     },
-
-    "target": "es5",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -25,6 +23,7 @@
       "es2016",
       "dom"
     ],
-    "module": "es2015"
+    "module": "es2020",
+    "useDefineForClassFields": false
   }
 }

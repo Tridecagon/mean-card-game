@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  server_url: 'https://mean-card-game-server.herokuapp.com'
+  old_server_url: 'https://mean-card-game-server.herokuapp.com',
+  server_url: 'https://skat-server.up.railway.app'
 };
