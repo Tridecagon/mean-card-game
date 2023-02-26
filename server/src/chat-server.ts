@@ -24,6 +24,7 @@ export class ChatServer {
     private lobby: Table[] = [];
     private seatMap: Array<{table: number, seat: number}> = [];
     private socketMap: any[] = [];
+    private recordedConnections: string[] = [];
 
     constructor() {
         this.tableSetup();
@@ -49,6 +50,16 @@ export class ChatServer {
 
     }
 
+    private monitorConnections() {
+        const clients = Array.from(this.io.sockets.sockets.keys());
+        let unrecognizedClients = clients.filter((c) => !this.recordedConnections.includes(c));
+        if(unrecognizedClients.length > 0) {
+          console.log('Sockets changed. Connected clients: ' , clients);
+          this.recordedConnections = clients;
+        }
+        setTimeout(() => this.monitorConnections(), 5000);
+    }
+
     private sockets(): void {
         if (this.debug) {
             this.socketOpts.pingTimeout = 300000;
@@ -58,10 +69,12 @@ export class ChatServer {
             origins: ["http://skat.up.railway.app:1234", "http://localhost:4200", "https://skat.up.railway.app", "https://skat-dev.up.railway.app" ],
 
           };
+        // this.socketOpts.wsEngine = require("eiows").Server;
     }
 
     private createServer(): void {
         this.io = new Server(this.socketOpts);
+        this.monitorConnections();
     }
 
     private listen(): void {

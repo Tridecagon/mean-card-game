@@ -13,9 +13,9 @@ export class SocketService {
     private socket: Socket;
     public onInit: Event;
 
-    public initSocket(channel: string = null): void {
+    public initSocket(): void {
         if (!this.socket) {
-            this.setNamespace(channel);
+            this.connect();
         }
     }
 
@@ -45,13 +45,11 @@ export class SocketService {
         });
     }
 
-    public setNamespace(channel: string) {
-        console.log('Opening socket on ' + SERVER_URL + ' at channel ' + channel);
-        if (channel) {
-            this.socket = io(SERVER_URL + channel, );
-        } else {
-            this.socket =  io(SERVER_URL);
-        }
-        console.log(`Socket open for channel ${channel}`);
+    public connect() {
+        console.log('Opening socket on ' + SERVER_URL );
+
+        this.socket =  io(SERVER_URL);
+
+        console.log(`Socket connected`);
     }
 }
