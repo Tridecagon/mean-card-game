@@ -4,7 +4,9 @@
         "start:server": "cd server && npm start",
         "start": "npm run start:server && npm run start:client",
         "build:client": "cd client && npm ci && npm run build",
+        "build:client:dev": "cd client && npm ci && npm run build:dev",
         "build:server": "cd server && npm ci && npm run build",
-        "build": "npm run build:server && npm run build:client"
+        "build": "npm run build:server && npm run build:client",
+        "build:dev": "npm run build:server && npm run build:client:dev"
     }
 }

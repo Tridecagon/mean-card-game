@@ -55,7 +55,7 @@ export class ChatServer {
         }
         this.socketOpts.cors = {
             methods: ["GET", "POST"],
-            origins: ["http://skat.up.railway.app:1234", "http://localhost:4200", "https://skat.up.railway.app" ],
+            origins: ["http://skat.up.railway.app:1234", "http://localhost:4200", "https://skat.up.railway.app", "https://skat-dev.up.railway.app" ],
 
           };
     }
