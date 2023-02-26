@@ -86,6 +86,9 @@
           "configurations": {
             "production": {
               "browserTarget": "mean-card-game-engine:build:production"
+            },
+            "dev": {
+              "browserTarget": "mean-card-game-engine:build:dev"
             }
           }
         },
