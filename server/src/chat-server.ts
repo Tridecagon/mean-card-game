@@ -42,6 +42,7 @@ export class ChatServer {
     private createApp(): void {
         console.log("Creating express app...");
         this.app = express();
+        this.app.get('/', (req, res) => res.send (`Server up!`));
     }
     private config(): void {
         this.port = process.env.PORT || ChatServer.PORT;
