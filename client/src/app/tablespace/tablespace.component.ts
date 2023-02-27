@@ -26,7 +26,7 @@ export class TablespaceComponent implements OnInit {
   ngOnInit() {
     this.setupListeners();
 
-    setInterval(this.keepAlive.bind(this) , 20 * 60 * 1000); // keepalive ping
+    setInterval(this.keepAlive.bind(this) , 4 * 60 * 1000); // keepalive ping
   }
 
   private keepAlive() {
