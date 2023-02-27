@@ -12,6 +12,7 @@ const SERVER_URL = environment.server_url;
 export class SocketService {
     private socket: Socket;
     public onInit: Event;
+    private userId: number;
 
     public initSocket(): void {
         if (!this.socket) {
@@ -19,12 +20,20 @@ export class SocketService {
         }
     }
 
+    public setUserId(id: number): void {
+        this.userId = id;
+        console.log(`Setting client user id = ${id}`);
+    }
+
     public send(message: Message): void {
         this.socket.emit('message', message);
     }
 
     public sendAction(actionType: string, data: any): void {
-        this.socket.emit(actionType, data);
+        //console.log(`$Sending action from userId ${this.userId}`);
+        const payload =  Object.assign(data, {from: this.userId});
+        this.socket.emit(actionType, payload);
+        console.log (`Sent action type=${actionType}, data=${JSON.stringify(payload)}`)
     }
 
     public onMessage(messageType: string): Observable<Message> {

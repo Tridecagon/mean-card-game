@@ -23,7 +23,7 @@ export class ChatServer {
     private users: { [key: string]: User } = {};
     private lobby: Table[] = [];
     private seatMap: Array<{table: number, seat: number}> = [];
-    private socketMap: any[] = [];
+    private socketMap: Socket[] = [];
     private recordedConnections: string[] = [];
 
     constructor() {
@@ -89,21 +89,21 @@ export class ChatServer {
                 switch (m.action) {
                     case Action.JOINED:
                         socket.emit("lobbyState", this.lobby);
-                        this.users[socket.id] = m.from;
+                        this.users[m.from.id] = m.from;
                         this.socketMap[m.from.id] = socket;
                         break;
                     case Action.RENAME:
-                        const seatLoc = this.seatMap[this.users[socket.id].id];
-                        this.users[socket.id].name = m.content.username;
+                        const seatLoc = this.seatMap[m.from.id];
+                        this.users[m.from.id].name = m.content.username;
                         if (seatLoc) {
-                            this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
+                            this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[m.from.id];
                             this.io.emit("lobbyState", this.lobby);
                         }
                         break;
                     case Action.LEFT:
-                        this.unseatUser(socket.id);
-                        delete this.socketMap[this.users[socket.id].id];
-                        delete this.users[socket.id];
+                        this.unseatUser(m.from.id);
+                        delete this.socketMap[m.from.id];
+                        delete this.users[m.from.id];
                         this.io.emit("lobbyState", this.lobby);
                         break;
                     default:
@@ -112,43 +112,44 @@ export class ChatServer {
                 this.io.emit("chatMessage", m);
             });
 
-            socket.on("requestSeat", (seatLoc: {table: number, seat: number}) => {
-                this.unseatUser(socket.id);
+            socket.on("requestSeat", (data: {table: number, seat: number, from: number}) => {
+                console.log(`requestSeat ${data.table} ${data.seat} ${data.from}`)
+                this.unseatUser(data.from);
 
-                this.lobby[seatLoc.table].users[seatLoc.seat] = this.users[socket.id];
-                this.lobby[seatLoc.table].userCount++;
-                this.seatMap[this.users[socket.id].id] = seatLoc;
+                this.lobby[data.table].users[data.seat] = this.users[data.from];
+                this.lobby[data.table].userCount++;
+                this.seatMap[data.from] = {table: data.table, seat: data.seat};
                 this.io.emit("lobbyState", this.lobby);
             });
 
-            socket.on("selectGame", (request: {table: number, gameType: GameType}) => {
-                if (this.seatMap[this.users[socket.id].id].table === request.table) {
+            socket.on("selectGame", (request: {table: number, gameType: GameType, from: number} ) => {
+                if (this.seatMap[request.from].table === request.table) {
                     this.lobby[request.table].gameType = request.gameType;
                     this.io.emit("lobbyState", this.lobby);
                 }
             });
 
-            socket.on("requestStartTable", (tableIndex: number) => {
-                if (this.seatMap[this.users[socket.id].id].table === tableIndex
-                    && this.lobby[tableIndex].userCount > 0) {
-                    this.lobby[tableIndex].active = true;
+            socket.on("requestStartTable", (data: {tableIndex: number, from: number}) => {
+                if (this.seatMap[data.from].table === data.tableIndex
+                    && this.lobby[data.tableIndex].userCount > 0) {
+                    this.lobby[data.tableIndex].active = true;
                     this.io.emit("lobbyState", this.lobby);
 
                     const tablePlayers = new Array<Player>();
-                    for (const user of this.lobby[tableIndex].users) {
+                    for (const user of this.lobby[data.tableIndex].users) {
                         if (user && user.id) {
                             const newPlayer = new Player(user, this.socketMap[user.id]);
-                            console.log(`Creating ${user.name} = ${this.socketMap[user.id].id} at ${tableIndex}`);
+                            console.log(`Creating ${user.name} = ${data.from} = ${this.socketMap[user.id].id} at ${data.tableIndex}`);
                             tablePlayers.push(newPlayer);
 
-                            newPlayer.socket.emit("startTable", tableIndex);
+                            newPlayer.socket.emit("startTable", data.tableIndex);
                         }
                     }
 
-                    const activeTable = new GameTable(tablePlayers, tableIndex,
-                            this.lobby[tableIndex].gameType, this.io, `table${tableIndex}`);
+                    const activeTable = new GameTable(tablePlayers, data.tableIndex,
+                            this.lobby[data.tableIndex].gameType, this.io, `table${data.tableIndex}`);
                     activeTable.gameTableEventEmitter.on("end", () => {
-                        this.lobby[tableIndex].active = false;
+                        this.lobby[data.tableIndex].active = false;
                         this.io.emit("lobbyState", this.lobby);
                     });
                 }
@@ -156,10 +157,13 @@ export class ChatServer {
             });
 
             socket.on("disconnect", () => {
-                this.unseatUser(socket.id);
-                console.log(`Client ${this.users[socket.id]
-                    ? this.users[socket.id].name : "unnamed user"} disconnected`);
+                // this.socket();
+                const user = this.socketMap.findIndex((s) => s && s.id === socket.id);
+                console.log(`Client ${user >= 0
+                    ? this.users[user].name : "unnamed user"} disconnected`);
+                /*
                 delete this.users[socket.id];
+                */
                 this.io.emit("lobbyState", this.lobby);
             });
         });
@@ -173,12 +177,12 @@ export class ChatServer {
         }
     }
 
-       private unseatUser = (socketId: string) => {
-        if (this.users[socketId] && this.seatMap[this.users[socketId].id]) {
-            this.lobby[this.seatMap[this.users[socketId].id].table]
-                        .users[this.seatMap[this.users[socketId].id].seat] = {};
-            this.lobby[this.seatMap[this.users[socketId].id].table].userCount--;
-            delete this.seatMap[this.users[socketId].id];
+       private unseatUser = (userId: number) => {
+        if (this.users[userId] && this.seatMap[userId]) {
+            this.lobby[this.seatMap[userId].table]
+                        .users[this.seatMap[userId].seat] = {};
+            this.lobby[this.seatMap[userId].table].userCount--;
+            delete this.seatMap[userId];
         }
     }
 }
