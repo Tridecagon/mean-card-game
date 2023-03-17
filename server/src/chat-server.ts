@@ -1,6 +1,7 @@
 import * as express from "express";
-import { createServer } from "http";
-import { Server, ServerOptions, Socket } from "socket.io";
+import { createServer, Server } from "http";
+import { Server as SocketServer, ServerOptions, Socket } from "socket.io";
+import * as cors from "cors";
 
 // global
 declare var v8debug: any;
@@ -15,16 +16,19 @@ export class ChatServer {
     public debug = typeof v8debug === "object" || /--debug|--inspect/.test(process.execArgv.join(" "));
 
     private app: express.Application;
-    private io: Server<any, any, any, any>;
+    private io: SocketServer<any, any, any, any>;
     private socketOpts: any = {};
     private port: string | number;
     private maxTables = 5;
+    private server: Server;
 
     private users: { [key: string]: User } = {};
     private lobby: Table[] = [];
     private seatMap: Array<{table: number, seat: number}> = [];
     private socketMap: Socket[] = [];
     private recordedConnections: string[] = [];
+    private corsOrigins = ["http://skat.up.railway.app:1234", "http://localhost:4200", "https://skat-dev.up.railway.app", "https://skat.up.railway.app" ];
+   
 
     constructor() {
         this.tableSetup();
@@ -42,7 +46,11 @@ export class ChatServer {
 
     private createApp(): void {
         console.log("Creating express app...");
+        this.port = process.env.PORT || 8080;
         this.app = express();
+        this.app.use(cors({ origin:  this.corsOrigins    }));
+        this.server = createServer(this.app);
+        this.app.get('/', (req, res) => res.send (`Server up!`));
     }
     private config(): void {
         this.port = process.env.PORT || ChatServer.PORT;
@@ -66,21 +74,20 @@ export class ChatServer {
         }
         this.socketOpts.cors = {
             methods: ["GET", "POST"],
-            origins: ["http://skat.up.railway.app:1234", "http://localhost:4200", "https://skat.up.railway.app", "https://skat-dev.up.railway.app" ],
-
+            origin: this.corsOrigins
           };
         // this.socketOpts.wsEngine = require("eiows").Server;
     }
 
     private createServer(): void {
-        this.io = new Server(this.socketOpts);
+        this.io = new SocketServer();
         this.monitorConnections();
     }
 
     private listen(): void {
+        this.io.attach(this.server, this.socketOpts);
 
-        this.io.listen(+this.port);
-        console.log("Listening on port", this.port);
+        this.server.listen(+this.port, () => console.log(`Listening on ${this.port}`));
 
         this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s.", this.port);
