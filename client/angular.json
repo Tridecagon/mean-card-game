@@ -74,6 +74,20 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "local": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": false,
+              "sourceMap": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           },
           "defaultConfiguration": ""
@@ -89,6 +103,9 @@
             },
             "dev": {
               "browserTarget": "mean-card-game-engine:build:dev"
+            },
+            "local": {
+              "browserTarget": "mean-card-game-engine:build:local"
             }
           }
         },
