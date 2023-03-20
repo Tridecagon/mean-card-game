@@ -29,9 +29,9 @@ export class SocketService {
         this.socket.emit('message', message);
     }
 
-    public sendAction(actionType: string, data: any): void {
-        //console.log(`$Sending action from userId ${this.userId}`);
+    public sendAction(actionType: string, data: object): void {
         const payload =  Object.assign(data, {from: this.userId});
+        console.log(`Sending message:`, actionType, payload);
         this.socket.emit(actionType, payload);
         console.log (`Sent action type=${actionType}, data=${JSON.stringify(payload)}`)
     }

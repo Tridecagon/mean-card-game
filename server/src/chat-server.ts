@@ -136,29 +136,35 @@ export class ChatServer {
                 }
             });
 
-            socket.on("requestStartTable", (data: {tableIndex: number, from: number}) => {
-                if (this.seatMap[data.from].table === data.tableIndex
-                    && this.lobby[data.tableIndex].userCount > 0) {
-                    this.lobby[data.tableIndex].active = true;
+            socket.on("requestStartTable", (data: {table: number, from: number}) => {
+                if(!this.seatMap[data.from]) {
+                    console.log(`requestStartTable: can't find user in seatMap!`, data, this.seatMap);
+                    return;
+                }
+                if (this.seatMap[data.from].table === data.table
+                    && this.lobby[data.table].userCount > 0) {
+                    this.lobby[data.table].active = true;
                     this.io.emit("lobbyState", this.lobby);
 
                     const tablePlayers = new Array<Player>();
-                    for (const user of this.lobby[data.tableIndex].users) {
+                    for (const user of this.lobby[data.table].users) {
                         if (user && user.id) {
                             const newPlayer = new Player(user, this.socketMap[user.id]);
-                            console.log(`Creating ${user.name} = ${data.from} = ${this.socketMap[user.id].id} at ${data.tableIndex}`);
+                            console.log(`Creating ${user.name} = ${data.from} = ${this.socketMap[user.id].id} at ${data.table}`);
                             tablePlayers.push(newPlayer);
 
-                            newPlayer.socket.emit("startTable", data.tableIndex);
+                            newPlayer.socket.emit("startTable", data.table);
                         }
                     }
 
-                    const activeTable = new GameTable(tablePlayers, data.tableIndex,
-                            this.lobby[data.tableIndex].gameType, this.io, `table${data.tableIndex}`);
+                    const activeTable = new GameTable(tablePlayers, data.table,
+                            this.lobby[data.table].gameType, this.io, `table${data.table}`);
                     activeTable.gameTableEventEmitter.on("end", () => {
-                        this.lobby[data.tableIndex].active = false;
+                        this.lobby[data.table].active = false;
                         this.io.emit("lobbyState", this.lobby);
                     });
+                } else {
+                    console.log(`Error: no users counted at table ${data.table} when attempting to start game!`);
                 }
 
             });

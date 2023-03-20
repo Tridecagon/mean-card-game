@@ -78,7 +78,7 @@ export class TurnpanelComponent implements OnInit {
   }
 
   confirmChoice() {
-    this.socketService.sendAction('chooseTurn', this.selectedTurn);
+    this.socketService.sendAction('chooseTurn', {selectedTurn: this.selectedTurn});
   }
 
   getColor(button: string): string {

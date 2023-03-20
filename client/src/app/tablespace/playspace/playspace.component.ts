@@ -65,7 +65,7 @@ export class PlayspaceComponent implements OnInit {
     this.socketService.initSocket();
     this.onJoinTable.emit({ name: 'Table', conn: this.socketService });
     this.setupTableListeners();
-    this.socketService.sendAction('requestTableInfo', null);
+    this.socketService.sendAction('requestTableInfo', {});
     console.log("requested table info");
   }
   private setupTableListeners(): void {
@@ -224,7 +224,7 @@ export class PlayspaceComponent implements OnInit {
   }
 
   onGameResultOk() {
-    this.socketService.sendAction('readyForNextHand', null);
+    this.socketService.sendAction('readyForNextHand', {});
   }
 
   onScoreboardClick() {
