@@ -27,7 +27,7 @@ export class ChatServer {
     private seatMap: Array<{table: number, seat: number}> = [];
     private socketMap: Socket[] = [];
     private recordedConnections: string[] = [];
-    private corsOrigins = [/skat(-dev)?.up.railway.app/, /localhost/, /mean-card-game-client-mean-card-game-pr-[0-9]*.up.railway.app/ ];
+    private corsOrigins = [/skat(-dev)?\.up\.railway\.app/, /localhost/, /mean-card-game-client-mean-card-game-pr-[0-9]*\.up\.railway\.app/ ];
    
 
     constructor() {
