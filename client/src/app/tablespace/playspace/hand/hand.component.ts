@@ -221,7 +221,7 @@ export class HandComponent implements OnInit, OnChanges {
   }
 
   private play(card: Card) {
-    if (this.hand[0].face === 'up') { // cards are visible, pick the right one
+    if (this.location === 'bottom' && this.hand[0] && this.hand[0].face === 'up') { // cards are visible, pick the right one
       const i = this.hand.findIndex(c => Card.matches(c.card, card));
       if (i < 0) {
         console.log('Unable to find card ' + card);
