@@ -50,7 +50,7 @@ export class ChatServer {
         this.app = express();
         this.app.use(cors({ origin:  this.corsOrigins    }));
         this.server = createServer(this.app);
-        this.app.get('/', (req, res) => res.send (`Server up!`));
+        this.app.get('/', (req, res) => res.send ({msg: `Server up!`}));
     }
     private config(): void {
         this.port = process.env.PORT || ChatServer.PORT;
