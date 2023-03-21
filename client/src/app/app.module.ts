@@ -1,8 +1,9 @@
+import { ConfigService } from './shared/services/config.service';
 import { AcceptclaimdialogComponent } from './tablespace/playspace/acceptclaimdialog/acceptclaimdialog.component';
 import { ClaimdialogComponent } from './tablespace/playspace/claimdialog/claimdialog.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { CommonModule } from '@angular/common';
@@ -18,6 +19,7 @@ import { MainpanelComponent } from './mainpanel/mainpanel.component';
 
 import { SocketService } from './shared/services/socket.service';
 import { DialogUserComponent } from 'app/dialog-user/dialog-user.component';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +40,7 @@ import { DialogUserComponent } from 'app/dialog-user/dialog-user.component';
     MaterialModule,
     HttpClientModule
   ],
-  providers: [SocketService],
+  providers: [SocketService, ConfigService],
   entryComponents: [DialogUserComponent, ClaimdialogComponent, AcceptclaimdialogComponent],
   bootstrap: [AppComponent]
 })

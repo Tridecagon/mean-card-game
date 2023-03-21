@@ -1,8 +1,8 @@
+import { ConfigService } from './../shared/services/config.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../../../shared/model';
 import { SocketService } from 'app/shared/services/socket.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment';
 
 
 @Component({
@@ -13,6 +13,7 @@ import { environment } from 'environments/environment';
 
 export class TablespaceComponent implements OnInit {
 
+  serverUrl = '';
   inGame = false;
   tableId: number;
   @Input() user: User;
@@ -20,7 +21,7 @@ export class TablespaceComponent implements OnInit {
 
   @Output() onJoinTable = new EventEmitter<{name: string, conn: SocketService}>();
 
-  constructor(private socketService: SocketService, private http: HttpClient) {
+  constructor(private socketService: SocketService, private http: HttpClient, private cfg: ConfigService) {
   }
 
   ngOnInit() {
@@ -30,7 +31,7 @@ export class TablespaceComponent implements OnInit {
   }
 
   private keepAlive() {
-    this.http.get(environment.server_url).subscribe();
+    this.http.get(this.cfg.serverUrl).subscribe();
   }
 
   private setupListeners(): void {

@@ -32,7 +32,7 @@ export class SelectsortcontrolComponent implements OnInit {
       });
   }
   onSortSelected(value: Suit) {
-    this.socketService.sendAction('selectSort', Suit[value]);
+    this.socketService.sendAction('selectSort', {suit: Suit[value]});
   }
 
 }

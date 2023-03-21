@@ -36,7 +36,7 @@ export class LobbyComponent implements OnInit {
   }
 
   private onStartClick(table: number) {
-    this.socketService.sendAction('requestStartTable', table);
+    this.socketService.sendAction('requestStartTable', {table});
   }
 
   private onSeatClick(table: number, seat: number) {
@@ -50,7 +50,7 @@ export class LobbyComponent implements OnInit {
   }
 
   private isMyTable(table: Table): boolean {
-    return table.users.some(u => u.id === this.user.id);
+    return table.users.some(u => u && u.id === this.user.id);
   }
 
   private getGameType(table: Table): string {

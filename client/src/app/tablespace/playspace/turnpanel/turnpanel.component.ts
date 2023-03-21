@@ -31,7 +31,7 @@ export class TurnpanelComponent implements OnInit {
   @Input() set secondCard(card: Card) {
     this._secondCard = card;
     this.secondUiCard.card = card;
-    if (card.description !== 'Jack') {
+    if (card && card.description !== 'Jack') {
       this.selectTrump();
     }
     setTimeout(() => this.secondUiCard.flip(), 0);
@@ -78,7 +78,7 @@ export class TurnpanelComponent implements OnInit {
   }
 
   confirmChoice() {
-    this.socketService.sendAction('chooseTurn', this.selectedTurn);
+    this.socketService.sendAction('chooseTurn', {selectedTurn: this.selectedTurn});
   }
 
   getColor(button: string): string {

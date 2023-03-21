@@ -45,6 +45,7 @@ export class MainpanelComponent implements OnInit {
   ngOnInit() {
     this.initModel();
     // Using timeout due to https://github.com/angular/angular/issues/14748
+    this.socketService.setUserId(this.user.id);
     setTimeout(() => {
       this.openUserPopup(this.defaultDialogUserParams);
     }, 0);
@@ -105,7 +106,7 @@ export class MainpanelComponent implements OnInit {
   }
 
   private getRandomId(): number {
-    return Math.floor(Math.random() * (1000000)) + 1;
+    return Math.floor(Math.random() * (100000000)) + 1;
   }
 
 

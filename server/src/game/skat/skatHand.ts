@@ -51,10 +51,10 @@ export class SkatHand extends Hand {
                 }
             });
 
-            player.socket.on("chooseTurn", (turnChoice: string) => {
+            player.socket.on("chooseTurn", (data: {selectedTurn: string, from: number}) => {
                 if (player.index === this.currentPlayer
                     && (this.state === State.SingleTurn || this.state === State.DoubleTurn)) {
-                    switch (turnChoice) {
+                    switch (data.selectedTurn) {
                         case "DoubleTurn":
                             if (this.state === State.SingleTurn) {
                                 this.state = State.DoubleTurn;
@@ -81,17 +81,17 @@ export class SkatHand extends Hand {
                             }
                             break;
                         default:
-                            if ((this.state === State.SingleTurn && this.skat[0].suit === turnChoice)
-                            || (this.state === State.DoubleTurn && this.skat[1].suit === turnChoice)) {
+                            if ((this.state === State.SingleTurn && this.skat[0].suit === data.selectedTurn)
+                            || (this.state === State.DoubleTurn && this.skat[1].suit === data.selectedTurn)) {
                                 const doubleTurn = this.state === State.DoubleTurn;
                                 const turnCard = doubleTurn ? this.skat[1] : this.skat[0];
-                                this.trumpSuit = Suit[turnChoice as keyof typeof Suit];
+                                this.trumpSuit = Suit[data.selectedTurn as keyof typeof Suit];
                                 this.SetState(State.Discard);
                                 this.io.to(this.tableChan).emit("gameSelected",
                                 {
                                     doubleTurn,
                                     selection: SkatGameType.Turn,
-                                    suit: turnChoice,
+                                    suit: data.selectedTurn,
                                     turnCard,
                                 });
                             }
@@ -117,8 +117,8 @@ export class SkatHand extends Hand {
                     }
             });
 
-            player.socket.on("selectSort", (sortType: Suit) => {
-                this.ResortHand(player, sortType);
+            player.socket.on("selectSort", (data: {suit: Suit, from: number}) => {
+                this.ResortHand(player, data.suit);
             });
         }
     }
@@ -168,7 +168,7 @@ export class SkatHand extends Hand {
                 const skatCard = this.skat.shift();
                 const position = this.InsertCard(skatCard, activePlayer.heldCards);
                 activePlayer.socket.emit("insertCard", {card: skatCard, index: position});
-                console.log(`Added ${skatCard.toString()} to ${activePlayer.user.name}'s hand`);
+                console.log(`Added ${skatCard.suit} ${skatCard.description} to ${activePlayer.user.name}'s hand`);
 
             }
         };

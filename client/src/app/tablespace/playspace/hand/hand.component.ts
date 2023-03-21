@@ -14,15 +14,15 @@ import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
     trigger('playCard', [
       transition(
         ':enter', [
-          style({ top: '70%', left: '{{leftStart}}%' }),
-          animate(300, style({ top: '*', left: '*' }))
-        ]),
+        style({ top: '70%', left: '{{leftStart}}%' }),
+        animate(300, style({ top: '*', left: '*' }))
+      ]),
       transition(
         ':leave', [
-          style({ top: '*', left: '*' }),
-          animate(500, style({ top: '40%', left: '40%' })),
-          animate(500, style({ top: '100%', left: '40%' }))
-        ])
+        style({ top: '*', left: '*' }),
+        animate(500, style({ top: '40%', left: '40%' })),
+        animate(500, style({ top: '100%', left: '40%' }))
+      ])
     ]),
     trigger('flipCard', [
       state('down', style({ transform: 'rotateY(180deg)' })),
@@ -46,7 +46,7 @@ export class HandComponent implements OnInit, OnChanges {
   @Input() player: User;
   @Input() zIndex: number;
   @Input() location: string;
-  @ViewChild('crWrapper', {static: true}) cardrowView: ElementRef;
+  @ViewChild('crWrapper', { static: true }) cardrowView: ElementRef;
 
 
   constructor(private socketService: SocketService, private sanitizer: DomSanitizer) { }
@@ -59,7 +59,7 @@ export class HandComponent implements OnInit, OnChanges {
     this.cardrowHeight = this.cardrowView ? this.cardrowView.nativeElement.offsetHeight : 100;
   }
 
-  onClick(data: {card: UiCard, index: number}) {
+  onClick(data: { card: UiCard, index: number }) {
     console.log('Hand click handler');
     if (this.playing) {
       if (data.card.isSelected) {
@@ -136,7 +136,7 @@ export class HandComponent implements OnInit, OnChanges {
         }
       });
 
-      this.socketService.onAction<any>('showHand')
+    this.socketService.onAction<any>('showHand')
       .subscribe((msg) => {  // cards, user
         this.cardrowHeight = this.cardrowView.nativeElement.offsetHeight;
         if (this.player && msg.user === this.player.id && this.location !== 'bottom') {
@@ -201,19 +201,23 @@ export class HandComponent implements OnInit, OnChanges {
 
     this.socketService.onAction('resortHand')
       .subscribe((data: any) => {
-        for (let i = 0; i < this.hand.length; i++) {
-          if (!Card.matches(this.hand[i].card, data.order[i])) {
-            const index = this.hand.findIndex((uc) => Card.matches(uc.card, data.order[i]));
-            [this.hand[i].card, this.hand[index].card] = [this.hand[index].card, this.hand[i].card]; // swap
+        if (this.location === 'bottom') {
+          console.log(`sorting input`, data);
+          console.log(`sorting hand`, this.hand);
+          for (let i = 0; i < this.hand.length; i++) {
+            if (!Card.matches(this.hand[i].card, data.order[i])) {
+              const index = this.hand.findIndex((uc) => Card.matches(uc.card, data.order[i]));
+              [this.hand[i].card, this.hand[index].card] = [this.hand[index].card, this.hand[i].card]; // swap
+            }
           }
         }
       });
 
     this.socketService.onAction('skatGameResult')
-    .subscribe(() => {
-      this.hand = [];
-      this.playedCard = undefined;
-    });
+      .subscribe(() => {
+        this.hand = [];
+        this.playedCard = undefined;
+      });
   }
 
   private play(card: Card) {

@@ -52,7 +52,7 @@ public getFullImageString(): string {
 // TODO: refactor this to use Description, or pass true Sort along with numeric rank
 private getImageString(): string {
   if (!this._card) {
-    return '';
+    return 'blank.png';
   }
   let value;
   switch (this._card.sort) {
