@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 
 import { Action, Message, User } from '../../../../shared/model';
@@ -23,7 +23,7 @@ const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 
 
 
-export class MainpanelComponent implements OnInit {
+export class MainpanelComponent implements OnInit, OnDestroy {
   action = Action;
   user: User;
   channelList = new ChannelCollection();
@@ -38,9 +38,15 @@ export class MainpanelComponent implements OnInit {
   };
 
   @ViewChild(ChatComponent, {static: false}) chatChild: ChatComponent;
+  
 
   constructor(private socketService: SocketService,
     public dialog: MatDialog) { }
+
+  @HostListener(`window:beforeunload`, [ `$event` ])
+   beforeUnloadHandler(event) {
+     this.sendNotification({}, Action.LEFT);
+   }
 
   ngOnInit() {
     this.initModel();
@@ -66,6 +72,10 @@ export class MainpanelComponent implements OnInit {
         this.sendNotification(paramsDialog, Action.RENAME);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.sendNotification({}, Action.LEFT);
   }
 
   public onJoinTable(tableInfo: any) {
@@ -128,6 +138,12 @@ export class MainpanelComponent implements OnInit {
           previousUsername: params.previousUsername
         }
       };
+    } else if (action === Action.LEFT) {
+      message = {
+        action: action,
+        room: 'lobby',
+        from: this.user
+      }
     }
 
     this.socketService.send(message);
