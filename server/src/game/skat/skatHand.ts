@@ -513,7 +513,6 @@ export class SkatHand extends Hand {
     }
 
     private countCardPoints(cards: Card[]): number {
-        // TODO: display this result
         const points = cards.map((c): number => {
             switch (c.description) {
                 case "Ace":

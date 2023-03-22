@@ -150,7 +150,7 @@ export class ChatServer {
                     for (const user of this.lobby[data.table].users) {
                         if (user && user.id) {
                             const newPlayer = new Player(user, this.socketMap[user.id]);
-                            console.log(`Creating ${user.name} = ${data.from} = ${this.socketMap[user.id].id} at ${data.table}`);
+                            console.log(`Creating ${user.name} = ${user.id} = ${this.socketMap[user.id].id} at ${data.table}`);
                             tablePlayers.push(newPlayer);
 
                             newPlayer.socket.emit("startTable", data.table);
@@ -171,12 +171,18 @@ export class ChatServer {
 
             socket.on("disconnect", () => {
                 // this.socket();
-                const user = this.socketMap.findIndex((s) => s && s.id === socket.id);
-                console.log(`Client ${user >= 0
-                    ? this.users[user].name : "unnamed user"} disconnected`);
-                /*
-                delete this.users[socket.id];
-                */
+                const userId = this.socketMap.findIndex((s) => s && s.id === socket.id);
+                console.log(`Client ${userId >= 0
+                    ? this.users[userId].name : "unnamed user"} disconnected`);
+
+                // cleanup timeout
+                setTimeout(() => {
+                    if(!this.socketMap[userId] || !this.socketMap[userId].connected) { // user is dead
+                        // TODO: edge case - make sure socket hasn't reconnected and disconnected again
+                        this.unseatUser(userId);
+                        this.io.emit("lobbyState", this.lobby);
+                    }
+                }, 300000), // user has 5 minutes to reconnect
                 this.io.emit("lobbyState", this.lobby);
             });
         });
