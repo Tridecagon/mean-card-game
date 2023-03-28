@@ -6,13 +6,12 @@ const fs = require('fs');
 
 const skatRules = fs.readFileSync('./src/assets/skatrules.md').toString();
 
-console.log('skat Rules content:', skatRules);
-
 async function render(markdown) {
     return (await fetch('https://api.github.com/markdown', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${process.env.SKAT_ACCESS_TOKEN}`
         },
         body: JSON.stringify({'mode': 'markdown', 'text': markdown})
     })).text();
