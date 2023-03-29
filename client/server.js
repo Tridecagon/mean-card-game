@@ -2,6 +2,21 @@
 //Install express server
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
+const fetch = require('node-fetch');
+
+const skatRules = fs.readFileSync('./src/assets/skatrules.md').toString();
+
+async function render(markdown) {
+    return (await fetch('https://api.github.com/markdown', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${process.env.SKAT_ACCESS_TOKEN}`
+        },
+        body: JSON.stringify({'mode': 'markdown', 'text': markdown})
+    })).text();
+}
 
 const app = express();
 
@@ -13,9 +28,13 @@ app.get('/skat-server-url', (req, res) =>
     res.send({url: process.env.SKAT_SERVER_URL || ''});
 })
 
+app.get('/skatrules.html', async (req, res) => 
+{
+    res.send(await render(skatRules));
+})
+
 app.get('/*', function(req,res) {
-    
-res.sendFile(path.join(__dirname+'/dist/index.html'));
+    res.sendFile(path.join(__dirname+'/dist/index.html'));
 });
 
 // Start the app by listening on the host-provided port

@@ -18,17 +18,20 @@ The standard order of dealing (much faster than dealing one card at a time) is t
 
 The following game types are possible in Skat:
 
-#### 	Standard
+#### 	Standard:
 
 ​	***Solo***
 
 ​	***Turn***
 
-​	***Grand***
-
 ​	***Guetz***
 
-#### 	Null
+​	***Grand***
+
+ ***Grand Overt***
+
+
+#### 	Null:
 
 ​	***Null***
 
@@ -78,7 +81,7 @@ There are a few ways the winning bidder may determine the trump suit in Skat. Th
 
 A **Grand** is simply a Solo in which only the Jacks are trumps - again, constituting a fifth "suit" to which only the four Jacks belong. We won't get into scoring just yet, but a Grand is generally the highest-scoring game.
 
-A **Guetz** (pronounced "goots", also called "Guckser") is like a Grand, except that the winning bidder may pick up both Skat cards, add them to his hand, and then discard two cards into the Skat. Again, all points in the Skat belong to the winning bidder and are counted into his point total. This ability to adjust one's hand is very powerful, but it comes at a cost: if a Guetz is lost, the negative score is doubled. More on scoring later.
+A **Guetz** (pronounced "goots", also called "Guckser", German for "looker") is like a Grand, except that the winning bidder may pick up both Skat cards, add them to his hand, and then discard two cards into the Skat. Again, all points in the Skat belong to the winning bidder and are counted into his point total. This ability to adjust one's hand is very powerful, but it comes at a cost: if a Guetz is lost, the negative score is doubled. More on scoring later.
 
 The last, and probably the most common, way to determine trumps is a **Turn**. In a Turn, the winning bidder is at the mercy of the Skat for determining the trump suit.
 
@@ -104,13 +107,13 @@ Each game is worth a different base point value, as follows:
 | **Grand** (Jacks) | 20   | 12   |
 | **Guetz**         | --   | 16   |
 
-This base value is then multiplied by a factor, calculated as follows:
+This base value is then multiplied by a *factor*, calculated as follows:
 
 - **Matadors**, a.k.a. "with or without". The primary determiner of the factor is how many consecutive trumps, from the Jack of Clubs down, the winning bidder either holds ("with") or does not hold ("without"). If the player has the Jack of Clubs,  he is "with" some number, found by counting down through the trumps until the first trump the player does not hold. For example, If he holds the Jack of Clubs and the Jack of Spades, but is missing the Jack of Hearts, he is "with 2". If he holds all four Jacks and the Ace and Ten of the trump suit, but is missing the King, he is "with 6".
 
   If the player is missing the Jack of Clubs, he is "without" some number, found in the same way, counting down through the trump suit until the first card the winning bidder does hold. If he is missing the Jack of Clubs, Jack of Spades, and Jack of Hearts, but holds the Jack of Diamonds, he is "without 3".
 
-  Note that for purposes of calculating the factor, a player's hand includes the two cards in the Skat - even if he has not seen them during the play! This can increase or decrease the factor.
+  Note that for purposes of calculating the factor, a player's hand includes the two cards in the Skat - even if he has not seen them during the play! This could either increase or decrease the factor unexpectedly.
 
 - **Game**. An additional factor is always earned simply for winning the bidding and naming the game. When calculating the factor at the end of a hand, players will typically say "without 1, game 2" or "with 4, game 5".
 
@@ -118,9 +121,9 @@ This base value is then multiplied by a factor, calculated as follows:
 
   In games where the Skat is not used, Schneider and Schwarz may also be declared. This is worth an additional bonus factor for each declaration, but this is very rare, because the requirements for winning the hand become considerably more difficult - failure to reach the declared condition results in losing the entire hand. One should not declare Schneider or Schwarz unless one is absolutely certain of reaching it.
 
-  There exists a special type of Grand called **Grand Overt**, which automatically includes declared Schneider and declared Schwarz. Additionally, it must be played with the winning bidder's hand face up. It is worth an incredible 24 points per factor. In almost two decades of playing Skat, I have never seen this happen.
+  There exists a special type of Grand called **Grand Overt**, which automatically includes declared Schneider and declared Schwarz. Additionally, it must be played with the winning bidder's hand face up. It is worth an incredible 24 points per factor. In over two decades of playing Skat, I have never seen this happen.
 
-Note that a player always receives one factor for game, and is always with or without at least 1. Therefore, 2 is the minimum factor, and the smallest standard game (a diamond turn, with or without 1) is worth 10 points.
+Note that a player always receives one factor for game, and is always either with or without at least 1. Therefore, 2 is the minimum factor, and the smallest standard game (a diamond turn, with or without 1) is worth 10 points.
 
 
 
@@ -154,19 +157,23 @@ If both middlehand and third hand have passed, the "hold" hand may name any game
 
 A sample round of bidding is given below. Note that certain numbers are skipped because they do not represent valid score totals; there is no Skat hand that can score, for example, 11, 13, 17, or 19 points.
 
-H = hold hand, M = middle hand, T = third hand
-M: Ten.
-H: Yes.
-M: Twelve.
-H: Yes.
-M:  Fourteen.
-H. Pass. (At this point the bidding between M and H is over, and now T and M bid.)
-T: Fifteen.
-M.  Yes.
-T: Sixteen.
-M: Pass.
+H = hold hand, M = middle hand, T = third hand  
+M: Ten.  
+H: Yes.  
+M: Twelve.  
+H: Yes.  
+M:  Fourteen.  
+H. Pass. (At this point the bidding between M and H is over, and now T and M bid.)  
+T: Fifteen.  
+M.  Yes.  
+T: Sixteen.  
+M: Yes.  
+T: Eighteen.  
+M: Yes.  
+T: Twenty.  
+M: Pass.  
 
-Third hand has now won the bidding at 16 and may name any game he wishes (other than Ramsch), provided that the value of the game, after factors are included, is at least 16. Regardless of who wins the bidding, the hold hand always has the privilege of the opening lead.
+Third hand has now won the bidding at 20 and may name any game he wishes (other than Ramsch), provided that the value of the game, after factors are included, is at least 20. Regardless of who wins the bidding, the hold hand always has the privilege of the opening lead.
 
 ### Keeping Score and Settling Up
 
