@@ -3,6 +3,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const fetch = require('node-fetch');
 
 const skatRules = fs.readFileSync('./src/assets/skatrules.md').toString();
 
