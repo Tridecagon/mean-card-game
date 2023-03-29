@@ -167,10 +167,10 @@ H. Pass. (At this point the bidding between M and H is over, and now T and M bid
 T: Fifteen.  
 M.  Yes.  
 T: Sixteen.  
-M: Yes.
-T: Eighteen.
-M: Yes.
-T: Twenty.
+M: Yes.  
+T: Eighteen.  
+M: Yes.  
+T: Twenty.  
 M: Pass.  
 
 Third hand has now won the bidding at 20 and may name any game he wishes (other than Ramsch), provided that the value of the game, after factors are included, is at least 20. Regardless of who wins the bidding, the hold hand always has the privilege of the opening lead.
