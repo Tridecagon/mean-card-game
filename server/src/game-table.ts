@@ -94,7 +94,7 @@ export class GameTable {
             });
 
             socket.on("message", (m: Message) => {
-                if (m.content[0] === "/") {
+                if (m.content && m.content[0] === "/") {
                     this.executeChatCommand(m);
                 } else {
                     // do nothing, this gets handled in the main server now
